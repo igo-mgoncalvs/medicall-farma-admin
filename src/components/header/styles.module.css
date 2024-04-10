@@ -1,0 +1,36 @@
+.header_container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 35px;
+  background-color: #E8F1EA;
+  z-index: 1;
+  min-height: var(--header-min-height);
+  position: fixed;
+  width: 100vw;
+}
+
+.logo {
+  width: 165px;
+  height: 40px;
+}
+
+.links_container {
+  display: flex;
+  gap: 100px;
+  font-size: 14px;
+}
+
+.logout {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 10px
+}
+
+.active {
+  border: 0px solid #0E66CA;
+  border-bottom-width: 2px;
+  padding-bottom: 4px;
+  font-weight: 600;
+}
