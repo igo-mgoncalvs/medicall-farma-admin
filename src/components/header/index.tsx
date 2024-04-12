@@ -14,17 +14,20 @@ function Header () {
   const routes = [
     {
       id: 0,
-      page: '/',
+      activePage: ['/', '/fornecedores', '/clientes'],
+      route: '/',
       title: 'Cadastros'
     },
     {
       id: 1,
-      page: '/paginas',
+      activePage: ['/paginas'],
+      route: '/paginas',
       title: 'Páginas'
     },
     {
       id: 2,
-      page: '/usuarios',
+      activePage: ['/usuarios'],
+      route: '/usuarios',
       title: 'Usuários'
     }
   ]
@@ -42,9 +45,9 @@ function Header () {
       >
         {routes.map((item) => (
           <Link
-            href={item.page}
+            href={item.route}
             key={item.id}
-            className={`${pathname === `/${item.page.replace('/', '')}` && styles.active}`}
+            className={`${pathname === `${item.activePage.find((e) => e === pathname)}` && styles.active}`}
           >
             {item.title}
           </Link>

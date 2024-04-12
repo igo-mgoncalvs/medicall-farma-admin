@@ -1,137 +1,46 @@
+'use client'
+
+import { usePathname } from 'next/navigation'
+
 import styles from './styles.module.css'
+import Link from 'next/link'
 
 export default function LeftMenu() {
-  const et = [
+  const route = usePathname()
+
+  const types = [
     {
       id: 0,
+      title: 'Produtos',
+      routes: '/'
     },
     {
-      id: 0,
+      id: 1,
+      title: 'Fornecedores',
+      routes: '/fornecedores'
     },
     {
-      id: 0,
-    },
-    {
-      id: 0,
-    },
-    {
-      id: 0,
-    },
-    {
-      id: 0,
-    },
-    {
-      id: 0,
-    },
-    {
-      id: 0,
-    },
-    {
-      id: 0,
-    },
-    {
-      id: 0,
-    },
-    {
-      id: 0,
-    },
-    {
-      id: 0,
-    },
-    {
-      id: 0,
-    },
-    {
-      id: 0,
-    },
-    {
-      id: 0,
-    },
-    {
-      id: 0,
-    },
-    {
-      id: 0,
-    },
-    {
-      id: 0,
-    },
-    {
-      id: 0,
-    },
-    {
-      id: 0,
-    },
-    {
-      id: 0,
-    },
-    {
-      id: 0,
-    },
-    {
-      id: 0,
-    },
-    {
-      id: 0,
-    },
-    {
-      id: 0,
-    },
-    {
-      id: 0,
-    },
-    {
-      id: 0,
-    },
-    {
-      id: 0,
-    },
-    {
-      id: 0,
-    },
-    {
-      id: 0,
-    },
-    {
-      id: 0,
-    },
-    {
-      id: 0,
-    },
-    {
-      id: 0,
-    },
-    {
-      id: 0,
-    },
-    {
-      id: 0,
-    },
-    {
-      id: 0,
-    },
-    {
-      id: 0,
-    },
-    {
-      id: 0,
-    },
-    {
-      id: 0,
-    },
-    {
-      id: 0,
+      id: 2,
+      title: 'Clientes',
+      routes: '/clientes'
     },
   ]
 
   return (
     <div className={styles.menu_container}>
-      {et.map(item => (
-        <p
-        key={item.id}>
-          left  
-        </p>
-      ))}
+      <h2>Cadastros</h2>
+
+      <div className={styles.links_container}>
+        {types.map((item) => (
+          <Link
+            key={item.id}
+            className={`${styles.link} ${route === item.routes && styles.link_active}`}
+            href={item.routes}
+          >
+            {item.title}
+          </Link>
+        ))}
+      </div>
     </div>
   )
 } 
