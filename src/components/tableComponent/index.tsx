@@ -18,6 +18,7 @@ function TableComponent ({ rows, columns }:IProps) {
             paginationModel: { page: 0, pageSize: 6 },
           },
         }}
+        getRowHeight={() => 'auto'}
         localeText={{
           footerTotalVisibleRows: (visibleCount, totalCount) =>
           `${visibleCount.toLocaleString()} de ${totalCount.toLocaleString()}`,

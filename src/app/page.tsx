@@ -1,5 +1,3 @@
-'use client'
-
 import Image from "next/image";
 import Link from "next/link";
 import { GridRowsProp } from "@mui/x-data-grid";
@@ -8,11 +6,9 @@ import search_icon from '@/components/icons/search.svg'
 import AddIcon from '@/components/icons/add'
 import TableComponent from "@/components/tableComponent";
 import { ProductsColumns } from "@/components/tableComponent/pagesColumns";
+import BASE_URL from "@/lib/axios";
 
 import styles from "./page.module.css";
-import BASE_URL from "@/lib/axios";
-import { useEffect } from "react";
-
 
 interface IProduct {
   id: string

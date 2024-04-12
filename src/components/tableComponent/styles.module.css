@@ -32,3 +32,9 @@
 .action_icon_delete, .action_icon_edit {
   cursor: pointer;
 }
+
+.cell_aling {
+  display: flex;
+  align-items: center;
+  margin: auto;
+}

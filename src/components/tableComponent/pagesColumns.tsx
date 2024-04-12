@@ -30,7 +30,7 @@ export const ProductsColumns: GridColDef[] = [
     headerName: 'Grupo',
     width: 250,
     disableColumnMenu: true,
-    sortable: false
+    sortable: false,
   },
   { 
     field: 'image',
@@ -46,6 +46,7 @@ export const ProductsColumns: GridColDef[] = [
         alt=""
         width={50}
         height={50}
+        className={styles.cell_aling}
       />
     )
   },
@@ -54,41 +55,141 @@ export const ProductsColumns: GridColDef[] = [
     headerName: 'Nome',
     width: 150,
     disableColumnMenu: true,
-    sortable: false
+    sortable: false,
+    renderCell: (params) => (
+      <p className={styles.cell_aling}>
+        {params.value}
+      </p>
+    )
   },
   { 
     field: 'summary',
     headerName: 'Resumo',
     width: 250,
     disableColumnMenu: true,
-    sortable: false
+    sortable: false,
+    renderCell: (params) => (
+      <p className={styles.cell_aling}>
+        {params.value}
+      </p>
+    )
   },
   { 
     field: 'description',
     headerName: 'Descrição',
     width: 250,
     disableColumnMenu: true,
-    sortable: false
+    sortable: false,
+    renderCell: (params) => (
+      <p className={styles.cell_aling}>
+        {params.value}
+      </p>
+    )
   },
   { 
     field: 'whatsapp',
     headerName: 'Whatsapp',
     width: 200,
     disableColumnMenu: true,
-    sortable: false
+    sortable: false,
+    renderCell: (params) => (
+      <p className={styles.cell_aling}>
+        {params.value}
+      </p>
+    )
   },
   { 
     field: 'route',
     headerName: 'Rota',
     width: 200,
     disableColumnMenu: true,
-    sortable: false
+    sortable: false,
+    renderCell: (params) => (
+      <p className={styles.cell_aling}>
+        {params.value}
+      </p>
+    )
   },
   { 
     field: 'link',
     headerName: 'Link',
     width: 250,
     disableColumnMenu: true,
-    sortable: false
+    sortable: false,
+    renderCell: (params) => (
+      <p className={styles.cell_aling}>
+        {params.value}
+      </p>
+    )
+  }
+]
+
+export const SuppliersColumns: GridColDef[] = [
+  { 
+    field: 'image',
+    headerName: 'Imagem',
+    flex: 1,
+    disableColumnMenu: true,
+    align: 'center',
+    headerAlign: 'center',
+    sortable: false,
+    renderCell: (params) => (
+      <Image
+        src={params.value}
+        alt=""
+        width={100}
+        height={100}
+        style={{
+          padding: 10
+        }}
+      />
+    )
+  },
+  { 
+    field: 'name',
+    headerName: 'Nome',
+    flex: 3,
+    disableColumnMenu: true,
+    sortable: false,
+    renderCell: (params) => (
+      <p className={styles.cell_aling}>
+        {params.value}
+      </p>
+    )
+  }
+]
+
+export const ClientsColumns: GridColDef[] = [
+  { 
+    field: 'image',
+    headerName: 'Imagem',
+    flex: 1,
+    disableColumnMenu: true,
+    align: 'center',
+    headerAlign: 'center',
+    sortable: false,
+    renderCell: (params) => (
+      <Image
+        src={params.value}
+        alt=""
+        width={100}
+        height={100}
+        style={{
+          padding: 10
+        }}
+      />
+    )
+  },
+  { 
+    field: 'name',
+    headerName: 'Nome',
+    flex: 3,
+    disableColumnMenu: true,
+    sortable: false,
+    renderCell: (params) => (
+      <p className={styles.cell_aling}>
+        {params.value}
+      </p>
+    )
   }
 ]
