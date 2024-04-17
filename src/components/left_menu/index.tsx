@@ -24,7 +24,7 @@ export default function LeftMenu() {
     {
       id: 2,
       title: 'Fornecedores',
-      activePage: ['/fornecedores'],
+      activePage: ['/fornecedores', '/cadastrar-fornecedor'],
       route: '/fornecedores'
     },
     {

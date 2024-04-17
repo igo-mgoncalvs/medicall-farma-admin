@@ -88,11 +88,19 @@ export default function GroupForm ({ id }: { id: string }) {
         <Controller
           control={control}
           name="group_name"
-          render={({ field: { onChange, value } }) => (
+          rules={{
+            required: {
+              value: true,
+              message: 'Esse campo é necessario'
+            }
+          }}
+          render={({ field: { onChange, value }, fieldState: { error } }) => (
             <TextField
               label='Nome do grupo'
               onChange={onChange}
               value={value}
+              error={!!error}
+              helperText={error?.message}
               defaultValue={id ? ' ': ''}
             />
           )}

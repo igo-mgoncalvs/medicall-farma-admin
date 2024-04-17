@@ -14,7 +14,7 @@ function Header () {
   const routes = [
     {
       id: 0,
-      activePage: ['/', '/fornecedores', '/clientes', '/cadastrar-produto', '/cadastrar-grupo'],
+      activePage: ['/', '/fornecedores', '/clientes', '/cadastrar-produto', '/cadastrar-grupo', '/cadastrar-fornecedor'],
       route: '/',
       title: 'Cadastros'
     },

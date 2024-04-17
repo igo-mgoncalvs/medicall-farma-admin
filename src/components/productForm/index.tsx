@@ -144,10 +144,8 @@ export default function ProductForm ({ id }: { id: string }) {
     setLoading(true)
 
     if(!id) {
-      BASE_URL.post('/add-product', {
+      BASE_URL.post('/add-supplier', {
           ...data,
-          route: `${data.name.replace(' ', '-')}`,
-          whatsapp: `${whatsappUrl}${encodeURI(data.whatsapp)}`
       })
         .then(() => {
           toast.dismiss()
