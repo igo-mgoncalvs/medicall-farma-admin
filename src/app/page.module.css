@@ -50,3 +50,37 @@
   fill: rgb(167, 167, 167)
 }
 
+.actions_icons_container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  gap: 10px
+}
+
+.action_icon_delete {
+  color: #ff2626;
+  height: 100%;
+}
+
+.action_icon_delete:hover {
+  transition: all ease-in-out 0.2s;
+  border: 1px solid #ff2626;
+  border-radius: 100%;
+  padding: 4px;
+}
+
+.action_icon_edit{
+  color:#0E66CA
+}
+
+.action_icon_edit:hover {
+  transition: all ease-in-out 0.2s;
+  border: 1px solid #0E66CA;
+  border-radius: 100%;
+  padding: 3px;
+}
+
+.action_icon_delete, .action_icon_edit {
+  cursor: pointer;
+}

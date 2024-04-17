@@ -1,14 +1,18 @@
+'use client'
+
+import { useEffect, useState } from 'react'
 import Image from "next/image";
 import Link from "next/link";
-import { GridRowsProp } from "@mui/x-data-grid";
+import { GridColDef, GridDeleteIcon, GridRenderCellParams, GridRowsProp } from "@mui/x-data-grid";
+import BASE_URL from "@/lib/axios";
+import { toast } from "react-toastify";
 
 import search_icon from '@/components/icons/search.svg'
 import AddIcon from '@/components/icons/add'
 import TableComponent from "@/components/tableComponent";
-import { ProductsColumns } from "@/components/tableComponent/pagesColumns";
-import BASE_URL from "@/lib/axios";
 
 import styles from "./page.module.css";
+import { Edit } from '@mui/icons-material';
 
 interface IProduct {
   id: string
@@ -17,6 +21,7 @@ interface IProduct {
   link: string
   description: string
   group: string
+  route: string
 }
 
 interface IGroups {
@@ -25,29 +30,184 @@ interface IGroups {
   products_list: IProduct[]
 }
 
-
-const getData = async () => {
-  return await BASE_URL.get<IGroups[]>('/products')
-  .then(({data}) => {
-    const list: IProduct[] = []
-
-    data.forEach((groups) => {
-      groups.products_list.map((product) => {
-        list.push({
-          ...product,
-          group: groups.group_name
+export default function Home() {
+  const [rows, setRows] = useState<GridRowsProp>()
+  
+  const getData = async () => {
+    return await BASE_URL.get<IGroups[]>('/products')
+    .then(({data}) => {
+      const list: IProduct[] = []
+  
+      data.forEach((groups) => {
+        groups.products_list.map((product) => {
+          list.push({
+            ...product,
+            group: groups.group_name
+          })
         })
+  
       })
-
+  
+      setRows(list)
     })
+  }
 
-    return list
-  })
-}
+  useEffect(() => {
+    getData()
+  }, [])
 
+  const handleDeleteProduct = ({ id } : { id: string }) => {
+    toast.info('Aguarde um instante', {
+      position: "top-right",
+      pauseOnHover: false,
+      autoClose: false,
+    });
+  
+    BASE_URL.delete(`/remove-product/${id}`)
+      .then(() => {
+        toast.dismiss()
+        toast.success('Produto excluido com sucesso!', {
+          position: "top-right",
+          pauseOnHover: false,
+          autoClose: false,
+        });
+        getData()
+      })
+      .catch(() => {
+        toast.dismiss()
+        toast.error('Erro ao excluir o produto', {
+          position: "top-right",
+          pauseOnHover: false,
+          autoClose: 5000
+        });
+      })
+  }
 
-export default async function Home() {
-  const rows: GridRowsProp = await getData()
+  const ProductsColumns: GridColDef[] = [
+    {
+      field: 'action',
+      headerName: 'Ações',
+      width: 90,
+      headerAlign: 'center',
+      renderCell: ({ row } : {row: IProduct}) => (
+        <div
+          className={styles.actions_icons_container}
+        >
+          <div
+            onClick={() => handleDeleteProduct({ id: row.id })}
+          >
+            <GridDeleteIcon
+              className={styles.action_icon_delete}
+            />
+          </div>
+          <Link
+            href={`/editar-produto/${row.route}`}
+          >
+            <Edit
+              className={styles.action_icon_edit}
+            />
+          </Link>
+        </div>
+      )
+    },
+    { 
+      field: 'group',
+      headerName: 'Grupo',
+      width: 250,
+      disableColumnMenu: true,
+      sortable: false,
+    },
+    { 
+      field: 'image',
+      headerName: 'Image',
+      width: 100,
+      disableColumnMenu: true,
+      sortable: false,
+      headerAlign: 'center',
+      align: 'center',
+      renderCell: (params: GridRenderCellParams) => (
+        <Image
+          src={params.value}
+          alt=""
+          width={50}
+          height={50}
+          className={styles.cell_aling}
+        />
+      )
+    },
+    { 
+      field: 'name',
+      headerName: 'Nome',
+      width: 150,
+      disableColumnMenu: true,
+      sortable: false,
+      renderCell: (params: GridRenderCellParams) => (
+        <p className={styles.cell_aling}>
+          {params.value}
+        </p>
+      )
+    },
+    { 
+      field: 'summary',
+      headerName: 'Resumo',
+      width: 250,
+      disableColumnMenu: true,
+      sortable: false,
+      renderCell: (params: GridRenderCellParams) => (
+        <p className={styles.cell_aling}>
+          {params.value}
+        </p>
+      )
+    },
+    { 
+      field: 'description',
+      headerName: 'Descrição',
+      width: 250,
+      disableColumnMenu: true,
+      sortable: false,
+      renderCell: (params: GridRenderCellParams) => (
+        <p className={styles.cell_aling}>
+          {params.value}
+        </p>
+      )
+    },
+    { 
+      field: 'whatsapp',
+      headerName: 'Whatsapp',
+      width: 200,
+      disableColumnMenu: true,
+      sortable: false,
+      renderCell: (params: GridRenderCellParams) => (
+        <p className={styles.cell_aling}>
+          {params.value}
+        </p>
+      )
+    },
+    { 
+      field: 'route',
+      headerName: 'Rota',
+      width: 200,
+      disableColumnMenu: true,
+      sortable: false,
+      renderCell: (params: GridRenderCellParams) => (
+        <p className={styles.cell_aling}>
+          {params.value}
+        </p>
+      )
+    },
+    { 
+      field: 'link',
+      headerName: 'Link',
+      width: 250,
+      disableColumnMenu: true,
+      sortable: false,
+      renderCell: (params: GridRenderCellParams) => (
+        <p className={styles.cell_aling}>
+          {params.value}
+        </p>
+      )
+    }
+  ]
   
   return (
     <div>
@@ -73,7 +233,7 @@ export default async function Home() {
             </p>
           </Link>
           <Link
-            href={''}
+            href={'/cadastrar-produto'}
             className={`${styles.buttons} ${styles.button_blue}`}
             >
             <AddIcon
@@ -86,14 +246,16 @@ export default async function Home() {
         </div>
       </div>
 
-      <div
-        className={styles.table}
-      >
-        <TableComponent
-          columns={ProductsColumns}
-          rows={rows}
-        />
-      </div>
+      {rows && (
+        <div
+          className={styles.table}
+        >
+          <TableComponent
+            columns={ProductsColumns}
+            rows={rows}
+          />
+        </div>
+      )}
     </div>
   );
 }

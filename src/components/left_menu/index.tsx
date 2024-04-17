@@ -12,17 +12,20 @@ export default function LeftMenu() {
     {
       id: 0,
       title: 'Produtos',
-      routes: '/'
+      activePage: ['/', '/cadastrar-produto'],
+      route: '/'
     },
     {
       id: 1,
       title: 'Fornecedores',
-      routes: '/fornecedores'
+      activePage: ['/fornecedores'],
+      route: '/fornecedores'
     },
     {
       id: 2,
       title: 'Clientes',
-      routes: '/clientes'
+      activePage: ['/clientes'],
+      route: '/clientes'
     },
   ]
 
@@ -34,8 +37,8 @@ export default function LeftMenu() {
         {types.map((item) => (
           <Link
             key={item.id}
-            className={`${styles.link} ${route === item.routes && styles.link_active}`}
-            href={item.routes}
+            className={`${styles.link} ${item.activePage.find((e) => e === route)&& styles.link_active}`}
+            href={item.route}
           >
             {item.title}
           </Link>

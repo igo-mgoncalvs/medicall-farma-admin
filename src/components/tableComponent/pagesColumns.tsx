@@ -5,6 +5,16 @@ import { Edit } from "@mui/icons-material";
 
 import styles from './styles.module.css'
 import Image from "next/image";
+import { HandleDeleteProduct } from "./actions";
+
+interface IProduct {
+  id: string
+  image: string 
+  name: string
+  link: string
+  description: string
+  group: string
+}
 
 export const ProductsColumns: GridColDef[] = [
   {
@@ -12,16 +22,22 @@ export const ProductsColumns: GridColDef[] = [
     headerName: 'Ações',
     width: 90,
     headerAlign: 'center',
-    renderCell: () => (
+    renderCell: ({ row } : {row: IProduct}) => (
       <div
         className={styles.actions_icons_container}
       >
-        <GridDeleteIcon
-          className={styles.action_icon_delete}
-        />
-        <Edit
-          className={styles.action_icon_edit}
-        />
+        <div
+          onClick={() => HandleDeleteProduct({ id: row.id })}
+        >
+          <GridDeleteIcon
+            className={styles.action_icon_delete}
+          />
+        </div>
+        <div>
+          <Edit
+            className={styles.action_icon_edit}
+          />
+        </div>
       </div>
     )
   },
