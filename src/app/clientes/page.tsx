@@ -23,8 +23,6 @@ const getData = async () => {
 export default async function Clients () {
   const rows: GridRowsProp = await getData()
 
-  console.log(rows)
-
   return (
     <div>
       <div className={styles.function_bar}>
