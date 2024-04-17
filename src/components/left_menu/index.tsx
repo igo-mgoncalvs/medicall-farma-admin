@@ -30,7 +30,7 @@ export default function LeftMenu() {
     {
       id: 3,
       title: 'Clientes',
-      activePage: ['/clientes'],
+      activePage: ['/clientes', '/cadastrar-cliente'],
       route: '/clientes'
     },
   ]

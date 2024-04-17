@@ -9,3 +9,10 @@ export interface ISupplier {
   imageId: string
   name: string
 }
+
+export interface IClient {
+  id: string
+  image: string
+  imageId: string
+  name: string
+}

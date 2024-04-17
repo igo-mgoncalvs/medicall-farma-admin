@@ -1,28 +1,103 @@
+'use client'
+
 import Image from 'next/image'
 import Link from 'next/link'
-import { GridRowsProp } from '@mui/x-data-grid';
+import { GridColDef, GridRowsProp } from '@mui/x-data-grid';
+import { toast } from "react-toastify";
 
 import search_icon from '@/components/icons/search.svg'
 import AddIcon from '@/components/icons/add'
 import TableComponent from "@/components/tableComponent";
-import { SuppliersColumns } from '@/components/tableComponent/pagesColumns';
 import BASE_URL from '@/lib/axios';
 
 import styles from './styles.module.css'
+import { useEffect, useState } from 'react';
+import { IClient } from '@/utils/interfaces';
+import TableActions from '@/components/tableComponent/actions';
 
-interface ISuppliers {
-  image: string
-  name: string
-}
+export default function Clients () {
+  const [rows, setRows] = useState<IClient[]>([])
 
-const getData = async () => {
-  return await BASE_URL.get<ISuppliers[]>('/clients')
-  .then(({data}) => data)
-}
+  const getData = async () => {
+    return await BASE_URL.get<IClient[]>('/clients')
+    .then(({data}) => setRows(data))
+  }
 
-export default async function Clients () {
-  const rows: GridRowsProp = await getData()
+  useEffect(() => {
+    getData()
+  }, [])
 
+  const handleDeleteProduct = ({ id } : { id: string }) => {
+    toast.info('Aguarde um instante', {
+      position: "top-right",
+      pauseOnHover: false,
+      autoClose: false,
+    });
+  
+    BASE_URL.delete(`/remove-supplier/${id}`)
+      .then(() => {
+        toast.dismiss()
+        toast.success('Fornecedor excluido com sucesso!', {
+          position: "top-right",
+          pauseOnHover: false,
+          autoClose: 5000,
+        });
+        getData()
+      })
+      .catch(() => {
+        toast.dismiss()
+        toast.error('Erro ao excluir o fornecedor', {
+          position: "top-right",
+          pauseOnHover: false,
+          autoClose: 5000
+        });
+      })
+  }
+
+  const columns: GridColDef[] = [
+    {
+      field: 'action',
+      headerName: 'Ações',
+      width: 90,
+      headerAlign: 'center',
+      renderCell: ({ row } : {row: IClient}) => TableActions({
+        editRoute: `/editar-cliente/${row.id}`,
+        onDelete: () => handleDeleteProduct({ id: row.id })
+      })
+    },
+    { 
+      field: 'image',
+      headerName: 'Imagem',
+      flex: 1,
+      disableColumnMenu: true,
+      align: 'center',
+      headerAlign: 'center',
+      sortable: false,
+      renderCell: (params) => (
+        <Image
+          src={params.value}
+          alt=""
+          width={100}
+          height={100}
+          style={{
+            padding: 10
+          }}
+        />
+      )
+    },
+    { 
+      field: 'name',
+      headerName: 'Nome',
+      flex: 3,
+      disableColumnMenu: true,
+      sortable: false,
+      renderCell: (params) => (
+        <p className={styles.cell_aling}>
+          {params.value}
+        </p>
+      )
+    }
+  ]
   return (
     <div>
       <div className={styles.function_bar}>
@@ -36,14 +111,14 @@ export default async function Clients () {
           />
 
           <Link
-            href={''}
+            href={'/cadastrar-cliente'}
             className={`${styles.buttons} ${styles.button_blue}`}
             >
             <AddIcon
               className={styles.button_blue_icon}
             />
             <p>
-              Adicionar Forncecedor
+              Adicionar Cliente
             </p>
           </Link>
         </div>
@@ -53,7 +128,7 @@ export default async function Clients () {
         className={styles.table}
       >
         <TableComponent
-          columns={SuppliersColumns}
+          columns={columns}
           rows={rows}
         />
       </div>

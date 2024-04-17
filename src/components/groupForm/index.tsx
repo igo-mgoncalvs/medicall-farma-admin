@@ -96,7 +96,7 @@ export default function GroupForm ({ id }: { id: string }) {
           }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <TextField
-              label='Nome do grupo'
+              label='Nome do cliente'
               onChange={onChange}
               value={value}
               error={!!error}
