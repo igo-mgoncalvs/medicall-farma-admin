@@ -17,12 +17,18 @@ export default function LeftMenu() {
     },
     {
       id: 1,
+      title: 'Grupos',
+      activePage: ['/grupos', '/cadastrar-grupo'],
+      route: '/grupos'
+    },
+    {
+      id: 2,
       title: 'Fornecedores',
       activePage: ['/fornecedores'],
       route: '/fornecedores'
     },
     {
-      id: 2,
+      id: 3,
       title: 'Clientes',
       activePage: ['/clientes'],
       route: '/clientes'

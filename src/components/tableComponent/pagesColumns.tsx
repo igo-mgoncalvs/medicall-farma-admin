@@ -5,7 +5,6 @@ import { Edit } from "@mui/icons-material";
 
 import styles from './styles.module.css'
 import Image from "next/image";
-import { HandleDeleteProduct } from "./actions";
 
 interface IProduct {
   id: string

@@ -13,6 +13,7 @@ import TableComponent from "@/components/tableComponent";
 
 import styles from "./page.module.css";
 import { Edit } from '@mui/icons-material';
+import TableActions from '@/components/tableComponent/actions';
 
 interface IProduct {
   id: string
@@ -89,26 +90,10 @@ export default function Home() {
       headerName: 'Ações',
       width: 90,
       headerAlign: 'center',
-      renderCell: ({ row } : {row: IProduct}) => (
-        <div
-          className={styles.actions_icons_container}
-        >
-          <div
-            onClick={() => handleDeleteProduct({ id: row.id })}
-          >
-            <GridDeleteIcon
-              className={styles.action_icon_delete}
-            />
-          </div>
-          <Link
-            href={`/editar-produto/${row.route}`}
-          >
-            <Edit
-              className={styles.action_icon_edit}
-            />
-          </Link>
-        </div>
-      )
+      renderCell: ({ row } : {row: IProduct}) => TableActions({
+        editRoute: `/editar-produto/${row.route}`,
+        onDelete: () => handleDeleteProduct({ id: row.id })
+      })
     },
     { 
       field: 'group',
@@ -222,7 +207,7 @@ export default function Home() {
           />
 
           <Link
-            href={''}
+            href={'/cadastrar-grupo'}
             className={`${styles.buttons} ${styles.button_white}`}
           >
             <AddIcon
