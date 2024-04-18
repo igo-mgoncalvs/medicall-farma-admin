@@ -53,15 +53,15 @@ export default function LeftMenu() {
         },
         {
           id: 1,
-          title: 'Produtos',
-          activePage: ['/paginas/produtos'],
-          route: '/paginas/produtos'
-        },
-        {
-          id: 2,
           title: 'Sobre nós',
           activePage: ['/paginas/sobre-nos'],
           route: '/paginas/sobre-nos'
+        },
+        {
+          id: 2,
+          title: 'Produtos',
+          activePage: ['/paginas/produtos'],
+          route: '/paginas/produtos'
         },
         {
           id: 3,
