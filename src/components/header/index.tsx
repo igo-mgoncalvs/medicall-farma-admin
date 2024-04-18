@@ -14,15 +14,29 @@ function Header () {
   const routes = [
     {
       id: 0,
-      activePage: ['/', '/fornecedores', '/clientes', '/cadastrar-produto', '/cadastrar-grupo', '/cadastrar-fornecedor', '/cadastrar-cliente'],
+      activePage: [
+        '/',
+        '/fornecedores',
+        '/clientes',
+        '/cadastrar-produto',
+        '/cadastrar-grupo',
+        '/cadastrar-fornecedor',
+        '/cadastrar-cliente'
+      ],
       route: '/',
       title: 'Cadastros'
     },
     {
       id: 1,
-      activePage: ['/paginas'],
+      activePage: [
+        '/paginas',
+        '/paginas/produtos',
+        '/paginas/sobre-nos',
+        '/paginas/fornecedores'
+      ],
       route: '/paginas',
       title: 'Páginas'
+      
     },
     {
       id: 2,

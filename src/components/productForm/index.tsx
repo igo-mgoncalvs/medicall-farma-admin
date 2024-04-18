@@ -1,6 +1,6 @@
 'use client'
 
-import { useForm, Controller, set } from 'react-hook-form'
+import { useForm, Controller } from 'react-hook-form'
 import ImageIcon from '@mui/icons-material/Image';
 import styles from './styles.module.css'
 import LoadingButton from '@mui/lab/LoadingButton';
