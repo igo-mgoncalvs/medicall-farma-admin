@@ -5,12 +5,12 @@ import { Controller, useForm } from "react-hook-form"
 import { Checkbox, FormControlLabel, TextField } from "@mui/material"
 import { toast } from "react-toastify"
 import LoadingButton from '@mui/lab/LoadingButton';
+import { useRouter } from "next/navigation";
 
 import InputImage from "@/components/inputImage"
 import BASE_URL from "@/lib/axios"
 
 import styles from './styles.module.css'
-import { useRouter } from "next/navigation";
 
 interface IHomeMainForm {
   id: string
@@ -22,7 +22,7 @@ interface IHomeMainForm {
   imageId: string
 }
 
-export default function MainForm ({ id }: { id?: string }) {
+export default function MainForm () {
   const [loading, setLoading] = useState<boolean>(false)
   
   const { control, watch, handleSubmit, setValue, formState: { errors, isSubmitted } } = useForm<IHomeMainForm>({
@@ -73,7 +73,6 @@ export default function MainForm ({ id }: { id?: string }) {
 
   return (
     <form
-      className={styles.form_container}
       onSubmit={handleSubmit(onSubmit)}
     >
       <div className={styles.form}>
