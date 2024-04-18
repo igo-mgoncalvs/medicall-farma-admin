@@ -28,7 +28,7 @@ export default function Pages () {
         <Divider />
         
         <div>
-          <p className={styles.title}>Catalogo</p>
+          <p className={styles.title}>Catálogo</p>
           <CatalogForm />
         </div>
       </div>
