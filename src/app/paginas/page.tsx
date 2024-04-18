@@ -31,8 +31,6 @@ export default function Pages () {
           <p className={styles.title}>Catalogo</p>
           <CatalogForm />
         </div>
-
-        <Divider />
       </div>
     </div>
   )
