@@ -6,7 +6,7 @@ import AboutUsBanners from '@/components/pagesForm/aboutUs/banners'
 import AboutUsBannersSpace from '@/components/pagesForm/aboutUs/space/bannersSpace'
 import OurHistory from '@/components/pagesForm/aboutUs/ourHistory'
 import AboutUsSpace from '@/components/pagesForm/aboutUs/space'
-import AboutUsTeam from '@/components/pagesForm/aboutUs/products'
+import AboutUsTeam from '@/components/pagesForm/aboutUs/team'
 
 import styles from './styles.module.css'
 
