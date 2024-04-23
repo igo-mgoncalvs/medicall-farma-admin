@@ -6,10 +6,11 @@ import Link from "next/link";
 
 interface Params {
   onDelete: () => void
-  editRoute: string
+  editRoute?: string
+  onEdit?: () => void
 }
 
-export default function TableActions ({editRoute, onDelete}: Params) {
+export default function TableActions ({editRoute, onDelete, onEdit}: Params) {
   return (
     <div
       className={styles.actions_icons_container}
@@ -21,13 +22,25 @@ export default function TableActions ({editRoute, onDelete}: Params) {
           className={styles.action_icon_delete}
         />
       </div>
-      <Link
-        href={editRoute}
-      >
-        <Edit
-          className={styles.action_icon_edit}
-        />
-      </Link>
+      {editRoute && (
+        <Link
+          href={editRoute}
+        >
+          <Edit
+            className={styles.action_icon_edit}
+          />
+        </Link>
+      )}
+
+      {onEdit && (
+        <div
+          onClick={onEdit}
+        >
+          <Edit
+            className={styles.action_icon_edit}
+          />
+        </div>
+      )}
     </div>
   )
 }

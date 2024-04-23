@@ -19,6 +19,7 @@ interface IParams {
   imageUrl: string
   imageId: string
   setValue: ({link, file_name}: {link: string, file_name: string}) => void
+  id: string
 }
 
 interface IPostImage {
@@ -26,7 +27,7 @@ interface IPostImage {
   file_name: string
 }
 
-export default function InputImage({errors, isSubmitted, imageUrl, imageId, setValue}: IParams) {
+export default function InputImage({errors, isSubmitted, imageUrl, imageId, setValue, id}: IParams) {
   const errorMessageImage: undefined | boolean = !!errors && isSubmitted
 
   const handleInputFile = useCallback((event: ChangeEvent<HTMLInputElement>) => {
@@ -78,7 +79,7 @@ export default function InputImage({errors, isSubmitted, imageUrl, imageId, setV
       error={errorMessageImage}
     >
       <label
-        htmlFor="video"
+        htmlFor={id || 'video'}
         className={`${styles.imageLabel} ${errorMessageImage && styles.imageError}`}
       >
         {imageUrl ? (
@@ -103,7 +104,7 @@ export default function InputImage({errors, isSubmitted, imageUrl, imageId, setV
       
       <input
         type="file"
-        id='video'
+        id={id || 'video'}
         accept="image/*"
         className={styles.inputFile}
         onChange={handleInputFile}

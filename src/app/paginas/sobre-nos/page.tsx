@@ -9,6 +9,7 @@ import AboutUsSpace from '@/components/pagesForm/aboutUs/space'
 import AboutUsTeam from '@/components/pagesForm/aboutUs/team'
 
 import styles from './styles.module.css'
+import AboutUsValues from '@/components/pagesForm/aboutUs/values'
 
 export default function Pages () {
 
@@ -40,6 +41,13 @@ export default function Pages () {
           <p className={styles.title}>Nosso Espaço</p>
           <AboutUsSpace />
           <AboutUsBannersSpace />
+        </div>
+
+        <Divider />
+        
+        <div>
+          <p className={styles.title}>Valores</p>
+          <AboutUsValues />
         </div>
       </div>
     </div>

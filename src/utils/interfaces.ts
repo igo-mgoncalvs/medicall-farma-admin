@@ -50,3 +50,11 @@ export interface IAboutUs_Team {
   image: string
   imageId: string
 }
+
+export interface IAboutUs_Values {
+  id: string
+  image: string
+  imageId: string
+  title: string
+  text: string
+}
