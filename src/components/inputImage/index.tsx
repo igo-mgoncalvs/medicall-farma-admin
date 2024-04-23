@@ -28,7 +28,6 @@ interface IPostImage {
 
 export default function InputImage({errors, isSubmitted, imageUrl, imageId, setValue}: IParams) {
   const errorMessageImage: undefined | boolean = !!errors && isSubmitted
-  console.log(errors)
 
   const handleInputFile = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     const { files } = event.currentTarget

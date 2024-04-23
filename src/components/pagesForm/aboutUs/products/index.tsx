@@ -12,7 +12,7 @@ import BASE_URL from '@/lib/axios'
 import styles from './styles.module.css'
 import InputImage from '@/components/inputImage'
 
-export default function ProductsForm () {
+export default function AboutUsTeam () {
   const [loading, setLoading] = useState(false)
   const [addForm, setAddForm] = useState(false)
 
