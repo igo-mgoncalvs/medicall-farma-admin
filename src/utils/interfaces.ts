@@ -38,3 +38,8 @@ export interface IPostImage {
   link: string
   file_name: string
 }
+
+export interface IHistory {
+  title: string
+  text: string
+}

@@ -3,6 +3,8 @@
 import AboutUsBanners from '@/components/pagesForm/aboutUs/banners'
 
 import styles from './styles.module.css'
+import { Divider } from '@mui/material'
+import OurHistory from '@/components/pagesForm/aboutUs/ourHistory'
 
 export default function Pages () {
 
@@ -12,6 +14,13 @@ export default function Pages () {
         <div>
           <p className={styles.title}>Banners</p>
           <AboutUsBanners />
+        </div>
+
+        <Divider />
+        
+        <div>
+          <p className={styles.title}>História</p>
+          <OurHistory />
         </div>
       </div>
     </div>
