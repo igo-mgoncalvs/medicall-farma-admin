@@ -59,12 +59,6 @@ export default function LeftMenu() {
         },
         {
           id: 2,
-          title: 'Produtos',
-          activePage: ['/paginas/produtos'],
-          route: '/paginas/produtos'
-        },
-        {
-          id: 3,
           title: 'Fornecedores',
           activePage: ['/paginas/fornecedores'],
           route: '/paginas/fornecedores'
