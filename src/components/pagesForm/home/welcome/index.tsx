@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from "react";
-import { Controller, useForm } from "react-hook-form"
+import { useCallback, useState } from "react";
+import { Controller, FieldValues, useForm } from "react-hook-form"
 import { TextField } from "@mui/material"
 import LoadingButton from '@mui/lab/LoadingButton';
 import BASE_URL from "@/lib/axios";
@@ -23,12 +23,15 @@ interface IHomeWelcomeForm {
 }
 
 export default function HomeWelcomeForm () {
-  const { control, handleSubmit, setValue, watch, formState: { errors, isSubmitted } } = useForm<IHomeWelcomeForm>({
+  const [editForm, setEditForm] = useState<boolean>(true)
+
+  const { control, handleSubmit, setValue, watch, formState: { errors, isSubmitted } } = useForm<IHomeWelcomeForm | FieldValues>({
     defaultValues: async () => {
       return await BASE_URL.get<IHomeWelcomeForm>('/find-home-welcome')
       .then(({data}) => ({
         ...data, 
       }))
+      .catch(() => setEditForm(false))
     },
   })
 
@@ -39,33 +42,59 @@ export default function HomeWelcomeForm () {
 
   const navigation = useRouter()
 
-  const onSubmit = (data: IHomeWelcomeForm) => {
+  const onSubmit = useCallback((data: IHomeWelcomeForm | FieldValues) => {
     setLoading(true)
-
-    BASE_URL.put('/edit-home-welcome', {
-      ...data,
-    })
-      .then(() => {
-        toast.dismiss()
-        toast.success('Campo editado com sucesso!', {
-          position: "top-right",
-          pauseOnHover: false,
-          autoClose: 5000
-        });
-        navigation.refresh()
+    
+    if(editForm) {
+      BASE_URL.put('/edit-home-welcome', {
+        ...data,
       })
-      .catch(() => {
-        toast.dismiss()
-        toast.error('Erro ao editar o campo', {
-          position: "top-right",
-          pauseOnHover: false,
-          autoClose: 5000
-        });
+        .then(() => {
+          toast.dismiss()
+          toast.success('Campo editado com sucesso!', {
+            position: "top-right",
+            pauseOnHover: false,
+            autoClose: 5000
+          });
+          navigation.refresh()
+        })
+        .catch(() => {
+          toast.dismiss()
+          toast.error('Erro ao editar o campo', {
+            position: "top-right",
+            pauseOnHover: false,
+            autoClose: 5000
+          });
+        })
+        .finally(() => {
+          setLoading(false)
+        })
+    } else {
+      BASE_URL.post('/add-home-welcome', {
+        ...data,
       })
-      .finally(() => {
-        setLoading(false)
-      })
-  }
+        .then(() => {
+          toast.dismiss()
+          toast.success('Campo adicionado com sucesso!', {
+            position: "top-right",
+            pauseOnHover: false,
+            autoClose: 5000
+          });
+          navigation.refresh()
+        })
+        .catch(() => {
+          toast.dismiss()
+          toast.error('Erro ao criar o campo', {
+            position: "top-right",
+            pauseOnHover: false,
+            autoClose: 5000
+          });
+        })
+        .finally(() => {
+          setLoading(false)
+        })
+    }
+  }, [editForm])
 
   return (
     <form
@@ -159,9 +188,10 @@ export default function HomeWelcomeForm () {
         </div>
 
         <InputImage
-          errors={errors.image?.message}
+          errors={errors.image?.message?.toString()}
           imageId={imageId}
           imageUrl={image}
+          id="welcomeImageId"
           isSubmitted={isSubmitted}
           setValue={({link, file_name}) => {
             setValue('image', link)

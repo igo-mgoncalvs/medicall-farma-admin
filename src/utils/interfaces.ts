@@ -58,3 +58,12 @@ export interface IAboutUs_Values {
   title: string
   text: string
 }
+
+export interface ISuppliers_Screen {
+  id: string
+  image: string
+  imageId: string
+  title: string
+  text: string
+  secound_title: string
+}

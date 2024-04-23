@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from "react";
-import { Controller, useForm } from "react-hook-form"
+import { Controller, FieldValues, useForm } from "react-hook-form"
 import { Checkbox, FormControlLabel, TextField } from "@mui/material"
 import { toast } from "react-toastify"
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -24,13 +24,15 @@ interface IHomeMainForm {
 
 export default function MainForm () {
   const [loading, setLoading] = useState<boolean>(false)
+  const [editForm, setEditForm] = useState<boolean>(true)
   
-  const { control, watch, handleSubmit, setValue, formState: { errors, isSubmitted } } = useForm<IHomeMainForm>({
+  const { control, watch, handleSubmit, setValue, formState: { errors, isSubmitted } } = useForm<IHomeMainForm | FieldValues>({
     defaultValues: async () => {
       return await BASE_URL.get<IHomeMainForm>('/find-home-main')
       .then(({data}) => ({
         ...data, 
       }))
+      .catch(() => setEditForm(false))
       .finally(() => {
         toast.dismiss()
       })
@@ -43,32 +45,57 @@ export default function MainForm () {
   
   const navigation = useRouter()
 
-  const onSubmit = (data: IHomeMainForm) => {
+  const onSubmit = (data: IHomeMainForm | FieldValues) => {
     setLoading(true)
-
-    BASE_URL.put('/edit-home-main', {
-      ...data,
-    })
-      .then(() => {
-        toast.dismiss()
-        toast.success('Campo editado com sucesso!', {
-          position: "top-right",
-          pauseOnHover: false,
-          autoClose: 5000
-        });
-        navigation.refresh()
+    if(editForm) {
+      BASE_URL.put('/edit-home-main', {
+        ...data,
       })
-      .catch(() => {
-        toast.dismiss()
-        toast.error('Erro ao editar o campo', {
-          position: "top-right",
-          pauseOnHover: false,
-          autoClose: 5000
-        });
-      })
-      .finally(() => {
-        setLoading(false)
-      })
+        .then(() => {
+          toast.dismiss()
+          toast.success('Campo editado com sucesso!', {
+            position: "top-right",
+            pauseOnHover: false,
+            autoClose: 5000
+          });
+          navigation.refresh()
+        })
+        .catch(() => {
+          toast.dismiss()
+          toast.error('Erro ao editar o campo', {
+            position: "top-right",
+            pauseOnHover: false,
+            autoClose: 5000
+          });
+        })
+        .finally(() => {
+          setLoading(false)
+        })
+      } else {
+        BASE_URL.post('/add-home-main', {
+          ...data,
+        })
+          .then(() => {
+            toast.dismiss()
+            toast.success('Campo adicionado com sucesso!', {
+              position: "top-right",
+              pauseOnHover: false,
+              autoClose: 5000
+            });
+            navigation.refresh()
+          })
+          .catch(() => {
+            toast.dismiss()
+            toast.error('Erro ao adicionar o campo', {
+              position: "top-right",
+              pauseOnHover: false,
+              autoClose: 5000
+            });
+          })
+          .finally(() => {
+            setLoading(false)
+          })
+    }
   }
 
   return (
@@ -163,7 +190,7 @@ export default function MainForm () {
         </div>
 
         <InputImage
-          errors={errors.image?.message}
+          errors={errors.image?.message?.toString()}
           imageId={imageId}
           imageUrl={image}
           isSubmitted={isSubmitted}

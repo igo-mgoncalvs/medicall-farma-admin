@@ -19,7 +19,7 @@ interface IParams {
   imageUrl: string
   imageId: string
   setValue: ({link, file_name}: {link: string, file_name: string}) => void
-  id: string
+  id?: string
 }
 
 interface IPostImage {
