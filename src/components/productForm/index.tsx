@@ -144,7 +144,7 @@ export default function ProductForm ({ id }: { id: string }) {
     setLoading(true)
 
     if(!id) {
-      BASE_URL.post('/add-supplier', {
+      BASE_URL.post('/add-product', {
           ...data,
       })
         .then(() => {
@@ -308,6 +308,7 @@ export default function ProductForm ({ id }: { id: string }) {
                 onChange={(e) => {
                   onChange(e)
                   setValue("whatsapp", `Olá gostaria de informações sobre o produto ${e.target.value || ''}`)
+                  setValue("route", e.target.value.replace(' ', '-'))
                   clearErrors('whatsapp')
                 }}
               />
