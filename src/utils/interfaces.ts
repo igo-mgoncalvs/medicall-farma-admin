@@ -39,7 +39,14 @@ export interface IPostImage {
   file_name: string
 }
 
-export interface IHistory {
+export interface IAboutUs_History {
   title: string
   text: string
+}
+
+export interface IAboutUs_Team {
+  title: string
+  text: string
+  image: string
+  imageId: string
 }

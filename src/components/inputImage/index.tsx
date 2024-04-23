@@ -14,7 +14,7 @@ interface IImageForm {
 }
 
 interface IParams {
-  errors: string | undefined
+  errors?: string | undefined
   isSubmitted: boolean 
   imageUrl: string
   imageId: string
