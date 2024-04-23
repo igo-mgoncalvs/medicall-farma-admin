@@ -103,7 +103,7 @@ export default function AboutUsBanners () {
         });
       })
     
-    BASE_URL.post('/add-about-us-banners', [uploadImage])
+    BASE_URL.post('/add-about-us-banners', uploadImage)
       .then(async () => {
         getData()
 
