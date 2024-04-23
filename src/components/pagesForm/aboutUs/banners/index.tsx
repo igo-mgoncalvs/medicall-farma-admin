@@ -48,14 +48,17 @@ export default function AboutUsBanners () {
   const onDragEnd = useCallback((result: DropResult) => {
     if(!result.destination) {
       return
+    } else if (result.source.index === result.destination?.index) {
+      return
+    } else {
+      const items = reorder(list, result.source.index, result.destination.index)
+  
+      setList(items)
+      setOrderChange(false)
+      setDisabledAdd(true)
+      setDisabledRemove(true)
     }
 
-    const items = reorder(list, result.source.index, result.destination.index)
-
-    setList(items)
-    setOrderChange(false)
-    setDisabledAdd(true)
-    setDisabledRemove(true)
   }, [list])
 
   const handleDelete = useCallback(() => {
