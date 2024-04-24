@@ -67,3 +67,7 @@ export interface ISuppliers_Screen {
   text: string
   secound_title: string
 }
+
+export interface IContact {
+  link: string
+}

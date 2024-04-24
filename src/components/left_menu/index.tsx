@@ -43,7 +43,7 @@ export default function LeftMenu() {
     {
       page_name: 'Páginas',
       page: '/paginas',
-      activeMenu: ['/paginas', '/paginas/produtos', '/paginas/sobre-nos', '/paginas/fornecedores'], 
+      activeMenu: ['/paginas', '/paginas/produtos', '/paginas/sobre-nos', '/paginas/fornecedores', '/paginas/contato'], 
       menus: [
         {
           id: 0,
@@ -62,6 +62,12 @@ export default function LeftMenu() {
           title: 'Fornecedores',
           activePage: ['/paginas/fornecedores'],
           route: '/paginas/fornecedores'
+        },
+        {
+          id: 3,
+          title: 'Contato Whatsapp',
+          activePage: ['/paginas/contato'],
+          route: '/paginas/contato'
         },
       ]
     }

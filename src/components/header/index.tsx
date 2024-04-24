@@ -32,7 +32,8 @@ function Header () {
         '/paginas',
         '/paginas/produtos',
         '/paginas/sobre-nos',
-        '/paginas/fornecedores'
+        '/paginas/fornecedores',
+        '/paginas/contato'
       ],
       route: '/paginas',
       title: 'Páginas'
