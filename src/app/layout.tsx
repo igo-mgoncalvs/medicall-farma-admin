@@ -7,6 +7,9 @@ import LeftMenu from "@/components/left_menu";
 
 import 'react-toastify/dist/ReactToastify.css';
 import "./globals.css";
+import Constructor from "./constructor";
+import { AuthProvider } from "@/context/auth";
+import RequireAuth from "@/components/requireAuth";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,17 +22,18 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+
   return (
     <html lang="pt-br">
       <body className={inter.className}>
-        <Header />
-        <ToastContainer />
-        <div className='children_container'>
-          <LeftMenu /> 
-          <div className="children">
-            {children}
-          </div>
-        </div>
+        <AuthProvider>
+          <RequireAuth>
+            <Constructor>
+              {children}
+            </Constructor>
+          </RequireAuth>
+        </AuthProvider>
       </body>
     </html>
   );

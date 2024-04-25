@@ -1,0 +1,77 @@
+.container {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  background-image: url('../../components/icons/ImageFundo.png');
+  background-size: cover;
+}
+
+.login{
+  color: #343434;
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 40px 30px;
+}
+
+.iconContainer {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.logo {
+  width: 7vw;
+}
+
+.titleText {
+  font-size: 18px;
+  margin-top: 6px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 25vw;
+}
+
+.inputContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  color: #080808
+}
+
+.inputContainer div {
+  padding: 12px 16px;
+  background-color: #fff;
+  border-radius: 4px;
+  gap: 12px;
+  display: flex;
+  align-items: center;
+  border: 1px solid #343434;
+}
+
+.input {
+  background-color: #fff;
+  width: 100%;
+  outline: none;
+  border: none;
+  font-size: 14px;
+}
+
+.inputPassword:hover {
+  cursor: pointer;
+}
+
+.button {
+  height: 56px;
+  margin-top: 14px;
+  font-size: 16px;
+  text-transform: initial;
+}

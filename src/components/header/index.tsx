@@ -1,15 +1,19 @@
 'use client'
 
+import { useContext } from 'react'
 import Link from 'next/link'
-
-import logout from '@/components/icons/logout.svg'
-
-import styles from './styles.module.css'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 
+import logout from '@/components/icons/logout.svg'
+import AuthContext from '@/context/auth'
+
+import styles from './styles.module.css'
+
 function Header () {
   const pathname = usePathname()
+
+  const auth = useContext(AuthContext)
 
   const routes = [
     {
@@ -47,6 +51,10 @@ function Header () {
     }
   ]
 
+  const handleSingout = () => {
+    auth.signout()
+  }
+
   return (
     <div className={styles.header_container}>
       <img
@@ -71,6 +79,7 @@ function Header () {
 
       <div
         className={styles.logout}
+        onClick={handleSingout}
       >
         <Image
           src={logout}
