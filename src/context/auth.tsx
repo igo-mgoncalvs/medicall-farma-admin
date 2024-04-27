@@ -53,8 +53,9 @@ export function AuthProvider({ children }: { children: React.ReactNode}) {
       .then(async (auth: UserCredential) => {
         const authToken = await auth.user.getIdToken()
         setToken(authToken)
-        
+
         Cookies.set('token', authToken, { expires: 2 });
+        Cookies.set('userId', auth.user.uid, { expires: 2 });
 
         BASE_URL.defaults.headers.Authorization = `Bearer ${authToken}`;
         callback()

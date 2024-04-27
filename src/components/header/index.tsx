@@ -3,7 +3,7 @@
 import { useContext } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 
 import logout from '@/components/icons/logout.svg'
 import AuthContext from '@/context/auth'
@@ -12,7 +12,6 @@ import styles from './styles.module.css'
 
 function Header () {
   const pathname = usePathname()
-  const navigate = useRouter()
 
   const auth = useContext(AuthContext)
 
@@ -54,7 +53,6 @@ function Header () {
 
   const handleSingout = () => {
     auth.signout()
-    navigate.replace('/login')
   }
 
   return (

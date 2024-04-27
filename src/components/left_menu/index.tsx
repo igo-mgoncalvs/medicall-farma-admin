@@ -70,6 +70,19 @@ export default function LeftMenu() {
           route: '/paginas/contato'
         },
       ]
+    },
+    {
+      page_name: 'Usuário',
+      page: '/usuarios',
+      activeMenu: ['/usuarios'], 
+      menus: [
+        {
+          id: 0,
+          title: 'Usuários',
+          activePage: ['/usuarios'],
+          route: '/usuarios'
+        }
+      ]
     }
   ]
   

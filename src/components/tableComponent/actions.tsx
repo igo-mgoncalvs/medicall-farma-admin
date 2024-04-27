@@ -8,26 +8,28 @@ interface Params {
   onDelete: () => void
   editRoute?: string
   onEdit?: () => void
+  diabledDelete: boolean
+  diabledEdit: boolean
 }
 
-export default function TableActions ({editRoute, onDelete, onEdit}: Params) {
+export default function TableActions ({editRoute, onDelete, onEdit, diabledDelete, diabledEdit}: Params) {
   return (
     <div
       className={styles.actions_icons_container}
     >
       <div
-        onClick={onDelete}
+        onClick={diabledDelete ? () => null : onDelete}
       >
         <GridDeleteIcon
-          className={styles.action_icon_delete}
+          className={`${styles.action_icon_delete} ${diabledDelete ? styles.action_icon_delete_disable : ''}`}
         />
       </div>
       {editRoute && (
         <Link
-          href={editRoute}
+          href={diabledEdit ? '' : editRoute}
         >
           <Edit
-            className={styles.action_icon_edit}
+            className={`${styles.action_icon_edit} ${diabledEdit ? styles.action_icon_edit_disable : ''}`}
           />
         </Link>
       )}

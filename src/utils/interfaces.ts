@@ -71,3 +71,10 @@ export interface ISuppliers_Screen {
 export interface IContact {
   link: string
 }
+
+export interface IUsers {
+  id: string
+  email: string
+  userName: string
+  password: string
+}

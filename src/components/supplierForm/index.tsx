@@ -139,7 +139,7 @@ export default function SupplierForm ({ id }: { id: string }) {
             error={!!error}
             helperText={error?.message}
             defaultValue={id ? ' ': ''}
-            label='Link do catalogo'
+            label='Nome do fornecedor'
             onChange={onChange}
           />
         )}

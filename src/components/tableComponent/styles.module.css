@@ -38,3 +38,13 @@
   align-items: center;
   margin: auto;
 }
+
+.action_icon_delete_disable, .action_icon_edit_disable {
+  color: rgb(173, 173, 173);
+  cursor: default;
+}
+
+.action_icon_delete_disable:hover, .action_icon_edit_disable:hover {
+  border: none;
+  padding: 0;
+}

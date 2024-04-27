@@ -87,6 +87,7 @@ export default function Login () {
                   <input
                     type='email'
                     placeholder='Digite seu e-mail'
+                    autoComplete='email webauthn'
                     onChange={onChange}
                     className={styles.input}
                   />
@@ -114,6 +115,7 @@ export default function Login () {
                   <input
                     className={styles.input}
                     onChange={onChange}
+                    autoComplete='current-password webauthn'
                     placeholder='Digite sua senha'
                     type='password'
                     security=''

@@ -139,7 +139,7 @@ export default function ClientsForm ({ id }: { id: string }) {
             error={!!error}
             helperText={error?.message}
             defaultValue={id ? ' ': ''}
-            label='Link do catalogo'
+            label='Nome do cliente'
             onChange={onChange}
           />
         )}
