@@ -45,9 +45,11 @@ export default function Login () {
     }
   }, [navigate]);
 
-  const onSubmit = useCallback(() => {
-    useAuth.signin({ authToken: 'data.token' }, () => {
-      navigate.replace(from || '/');
+  const onSubmit = useCallback(({email, password}: ILogin) => {
+    useAuth.signin({ email, password }, () => {
+      const notReturnToLoginScreen = from === '/login' ? '/' : from
+
+      navigate.replace(notReturnToLoginScreen || '/');
     });
   }, [from])
 
@@ -72,7 +74,7 @@ export default function Login () {
           <Controller
             control={control}
             name='email'
-            render={({field: {value, onChange}, fieldState: {error}}) => (
+            render={({field: { onChange }, fieldState: {error}}) => (
               <div className={styles.inputContainer}>
                 <p>
                   Endereço de e-mail
@@ -83,7 +85,9 @@ export default function Login () {
                     alt='logo para sair'
                   />
                   <input
+                    type='email'
                     placeholder='Digite seu e-mail'
+                    onChange={onChange}
                     className={styles.input}
                   />
                 </div>
@@ -94,7 +98,7 @@ export default function Login () {
           <Controller
             control={control}
             name='password'
-            render={({field: {value, onChange}, fieldState: {error}}) => (
+            render={({field: { onChange }, fieldState: {error}}) => (
               <div className={styles.inputContainer}>
                 <p>
                 Sua senha
@@ -109,8 +113,9 @@ export default function Login () {
                   
                   <input
                     className={styles.input}
+                    onChange={onChange}
                     placeholder='Digite sua senha'
-                    type={showPassword ? 'text' : 'password'}
+                    type='password'
                     security=''
                   />
                 </div>

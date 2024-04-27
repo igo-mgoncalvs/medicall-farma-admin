@@ -3,10 +3,25 @@
 import React, { createContext, useMemo, useState } from 'react';
 import Cookies from 'js-cookie';
 import BASE_URL from '@/lib/axios';
+import { UserCredential, UserInfo, getAuth, signInWithEmailAndPassword } from 'firebase/auth'
+
+import { initializeApp } from 'firebase/app';
+
+const configFirebase = {
+  apiKey: "AIzaSyAaJsJcAooU49HPSSzgE5eUXtoxsXpOo70",
+  authDomain: "medicall-farma.firebaseapp.com",
+  databaseURL: "https://medicall-farma-default-rtdb.firebaseio.com",
+  projectId: "medicall-farma",
+  storageBucket: "medicall-farma.appspot.com",
+  messagingSenderId: "560615912268",
+  appId: "1:560615912268:web:1cf85af05418c3e91895e9"
+}
+
+export const app = initializeApp(configFirebase)
 
 interface IAuthContext {
   token: string | null
-  signin: ({ authToken }: { authToken: string }, callback: () => void) => void
+  signin: ({email, password}: { email: string, password: string }, callback: () => void) => void
   signout: () => void
   hasToken: ({ authToken }: { authToken: string }, callback: () => void) => void
 }
@@ -18,8 +33,8 @@ const config = {
   hasToken: () => null,
 }
 
-
 const AuthContext = createContext<IAuthContext>(config);
+const auth = getAuth(app)
 
 export function AuthProvider({ children }: { children: React.ReactNode}) {
   const [token, setToken] = useState<string | null>(null);
@@ -33,16 +48,17 @@ export function AuthProvider({ children }: { children: React.ReactNode}) {
     callback();
   };
 
-  const signin = ({ authToken }: { authToken: string }, callback: () => void) => {
-    setToken(authToken);
+  const signin = ({email, password}: { email: string, password: string }, callback: () => void) => {
+    signInWithEmailAndPassword(auth, email, password)
+      .then(async (auth: UserCredential) => {
+        const authToken = await auth.user.getIdToken()
+        setToken(authToken)
+        
+        Cookies.set('token', authToken, { expires: 2 });
 
-    setTimeout(() => {
-      callback();
-
-      Cookies.set('token', authToken, { expires: 2 });
-
-      BASE_URL.defaults.headers.Authorization = `Bearer ${authToken}`;
-    }, 100); // Fake async
+        BASE_URL.defaults.headers.Authorization = `Bearer ${authToken}`;
+        callback()
+      })
   };
 
   const signout = () => {
