@@ -8,8 +8,8 @@ interface Params {
   onDelete: () => void
   editRoute?: string
   onEdit?: () => void
-  diabledDelete: boolean
-  diabledEdit: boolean
+  diabledDelete?: boolean
+  diabledEdit?: boolean
 }
 
 export default function TableActions ({editRoute, onDelete, onEdit, diabledDelete, diabledEdit}: Params) {
@@ -37,6 +37,7 @@ export default function TableActions ({editRoute, onDelete, onEdit, diabledDelet
       {onEdit && (
         <div
           onClick={onEdit}
+          className={styles.button}
         >
           <Edit
             className={styles.action_icon_edit}

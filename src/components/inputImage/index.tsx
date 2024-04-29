@@ -80,13 +80,11 @@ export default function InputImage({errors, isSubmitted, imageUrl, imageId, setV
     >
       <label
         htmlFor={id || 'video'}
-        className={`${styles.imageLabel} ${errorMessageImage && styles.imageError}`}
+        className={`${styles.imageLabel} ${errorMessageImage && styles.imageError} ${imageUrl && styles.imageLabelActive}`}
       >
         {imageUrl ? (
-          <Image
-            priority
-            width={100}
-            height={100}
+          <img
+            className={styles.image}
             src={imageUrl}
             alt="Logo da Imgor branco"
           />

@@ -32,7 +32,7 @@ interface IGroups {
 }
 
 export default function Home() {
-  const [rows, setRows] = useState<GridRowsProp>()
+  const [rows, setRows] = useState<IProduct[]>([])
   
   const getData = async () => {
     return await BASE_URL.get<IGroups[]>('/products')
@@ -70,7 +70,7 @@ export default function Home() {
         toast.success('Produto excluido com sucesso!', {
           position: "top-right",
           pauseOnHover: false,
-          autoClose: false,
+          autoClose: 5000,
         });
         getData()
       })
@@ -126,11 +126,6 @@ export default function Home() {
       width: 150,
       disableColumnMenu: true,
       sortable: false,
-      renderCell: (params: GridRenderCellParams) => (
-        <p className={styles.cell_aling}>
-          {params.value}
-        </p>
-      )
     },
     { 
       field: 'summary',
@@ -138,11 +133,6 @@ export default function Home() {
       width: 250,
       disableColumnMenu: true,
       sortable: false,
-      renderCell: (params: GridRenderCellParams) => (
-        <p className={styles.cell_aling}>
-          {params.value}
-        </p>
-      )
     },
     { 
       field: 'description',
@@ -150,11 +140,6 @@ export default function Home() {
       width: 250,
       disableColumnMenu: true,
       sortable: false,
-      renderCell: (params: GridRenderCellParams) => (
-        <p className={styles.cell_aling}>
-          {params.value}
-        </p>
-      )
     },
     { 
       field: 'whatsapp',
@@ -162,11 +147,6 @@ export default function Home() {
       width: 200,
       disableColumnMenu: true,
       sortable: false,
-      renderCell: (params: GridRenderCellParams) => (
-        <p className={styles.cell_aling}>
-          {params.value}
-        </p>
-      )
     },
     { 
       field: 'route',
@@ -174,11 +154,6 @@ export default function Home() {
       width: 200,
       disableColumnMenu: true,
       sortable: false,
-      renderCell: (params: GridRenderCellParams) => (
-        <p className={styles.cell_aling}>
-          {params.value}
-        </p>
-      )
     },
     { 
       field: 'link',
@@ -186,11 +161,6 @@ export default function Home() {
       width: 250,
       disableColumnMenu: true,
       sortable: false,
-      renderCell: (params: GridRenderCellParams) => (
-        <p className={styles.cell_aling}>
-          {params.value}
-        </p>
-      )
     }
   ]
   

@@ -3,15 +3,18 @@
 import { useState, useEffect } from 'react'
 import { GridColDef, GridRowsProp } from '@mui/x-data-grid'
 import Cookies from 'js-cookie';
+import Link from 'next/link'
+import { toast } from 'react-toastify'
 
 import TableComponent from '@/components/tableComponent'
+import TableActions from '@/components/tableComponent/actions'
+import AddIcon from '@/components/icons/add'
+
+import { IUsers } from '@/utils/interfaces'
+import BASE_URL from '@/lib/axios'
 
 import styles from './styles.module.css'
-import { IUsers } from '@/utils/interfaces'
-import TableActions from '@/components/tableComponent/actions'
-import BASE_URL from '@/lib/axios'
-import Link from 'next/link'
-import AddIcon from '@/components/icons/add'
+import 'react-toastify/dist/ReactToastify.css';
 
 function Users () {
   const [rows, setRows] = useState<GridRowsProp[]>([])
@@ -30,7 +33,31 @@ function Users () {
   }, [])
 
   const handleDeleteProduct = ({ id }: { id: string }) => {
+    toast.info('Aguarde um instante', {
+      position: "top-right",
+      pauseOnHover: false,
+      autoClose: false,
+    });
 
+    BASE_URL.delete(`/delete-user/${id}`)
+      .then(() => {
+        toast.dismiss()
+        toast.success('Usuário excluido com sucesso!', {
+          position: "top-right",
+          pauseOnHover: false,
+          autoClose: false,
+        });
+
+        getUsers()
+      })
+      .catch(() => {
+        toast.dismiss()
+        toast.error('Erro ao excluir o usuário', {
+          position: "top-right",
+          pauseOnHover: false,
+          autoClose: 5000
+        });
+      })
   }
 
   const UsersColumns: GridColDef[] = [

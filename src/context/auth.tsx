@@ -2,10 +2,11 @@
 
 import React, { createContext, useMemo, useState } from 'react';
 import Cookies from 'js-cookie';
-import BASE_URL from '@/lib/axios';
-import { UserCredential, UserInfo, getAuth, signInWithEmailAndPassword } from 'firebase/auth'
-
+import { jwtDecode } from 'jwt-decode';
+import { UserCredential, getAuth, signInWithEmailAndPassword } from 'firebase/auth'
 import { initializeApp } from 'firebase/app';
+
+import BASE_URL from '@/lib/axios';
 
 const configFirebase = {
   apiKey: "AIzaSyAaJsJcAooU49HPSSzgE5eUXtoxsXpOo70",
@@ -52,10 +53,11 @@ export function AuthProvider({ children }: { children: React.ReactNode}) {
     signInWithEmailAndPassword(auth, email, password)
       .then(async (auth: UserCredential) => {
         const authToken = await auth.user.getIdToken()
+        const getExp = await jwtDecode(authToken)
         setToken(authToken)
 
-        Cookies.set('token', authToken, { expires: 2 });
-        Cookies.set('userId', auth.user.uid, { expires: 2 });
+        Cookies.set('token', authToken, { expires: getExp.exp });
+        Cookies.set('userId', auth.user.uid, { expires: getExp.exp });
 
         BASE_URL.defaults.headers.Authorization = `Bearer ${authToken}`;
         callback()

@@ -12,7 +12,11 @@ import BASE_URL from "@/lib/axios";
 
 import styles from './styles.module.css'
 
-export default function UsersForm ({ id }: { id: string | undefined }) {
+interface IProps {
+  id?: string,
+}
+
+export default function UsersForm ({ id }: IProps) {
   const [loading, setLoadig] = useState<boolean>(false)
 
   const { control, handleSubmit } = useForm<IUsers>({
@@ -85,12 +89,6 @@ export default function UsersForm ({ id }: { id: string | undefined }) {
       <Controller
         name='userName'
         control={control}
-        rules={{
-          required: {
-            value: true,
-            message: 'Esse campo é necessario'
-          }
-        }}
         render={({ field: { onChange, value }, fieldState: { error } }) => (
           <TextField
             label='Nome do usuário'
@@ -106,12 +104,6 @@ export default function UsersForm ({ id }: { id: string | undefined }) {
       <Controller
         name='email'
         control={control}
-        rules={{
-          required: {
-            value: true,
-            message: 'Esse campo é necessario'
-          }
-        }}
         render={({ field: { onChange, value }, fieldState: { error } }) => (
           <TextField
             label='E-mail'
@@ -127,12 +119,6 @@ export default function UsersForm ({ id }: { id: string | undefined }) {
       <Controller
         name='password'
         control={control}
-        rules={{
-          required: {
-            value: true,
-            message: 'Esse campo é necessario'
-          }
-        }}
         render={({ field: { onChange, value }, fieldState: { error } }) => (
           <TextField
             label={id ? 'Redefinir senha' : 'Senha'}

@@ -6,6 +6,10 @@
   gap: 10px
 }
 
+.actions_icons_container div, .actions_icons_container a  {
+  display: flex;
+}
+
 .action_icon_delete {
   color: #ff2626;
   height: 100%;

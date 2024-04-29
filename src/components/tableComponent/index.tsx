@@ -3,7 +3,7 @@
 import { DataGrid, GridRowsProp, GridColDef } from "@mui/x-data-grid";
 
 interface IProps {
-  rows: GridRowsProp,
+  rows: any,
   columns: GridColDef[]
   size?: number
 }
@@ -19,7 +19,8 @@ function TableComponent ({ rows, columns, size }:IProps) {
             paginationModel: { page: 0, pageSize: size || 6 },
           },
         }}
-        getRowHeight={() => 'auto'}
+        // getRowHeight={() => 'auto'}
+        rowHeight={80}
         localeText={{
           footerTotalVisibleRows: (visibleCount, totalCount) =>
           `${visibleCount.toLocaleString()} de ${totalCount.toLocaleString()}`,

@@ -64,7 +64,7 @@ export default function Fornecedores () {
     {
       field: 'action',
       headerName: 'Ações',
-      width: 90,
+      width: 100,
       headerAlign: 'center',
       renderCell: ({ row } : {row: ISuppliers}) => TableActions({
         editRoute: `/editar-fornecedor/${row.id}`,
@@ -74,7 +74,7 @@ export default function Fornecedores () {
     { 
       field: 'image',
       headerName: 'Imagem',
-      flex: 1,
+      width: 100,
       disableColumnMenu: true,
       align: 'center',
       headerAlign: 'center',
@@ -83,11 +83,9 @@ export default function Fornecedores () {
         <Image
           src={params.value}
           alt=""
-          width={100}
-          height={100}
-          style={{
-            padding: 10
-          }}
+          width={80}
+          height={50}
+          className={styles.cell_aling}
         />
       )
     },

@@ -7,35 +7,49 @@ import Link from 'next/link'
 
 export default function LeftMenu() {
   const route = usePathname()
+  const routeEdit = route.replace('/', '') || 'home'
 
   const types = [
     {
       page: '/',
-      activeMenu: ['/', '/grupos', '/fornecedores', '/clientes', '/cadastrar-produto', '/cadastrar-grupo', '/cadastrar-fornecedor', '/cadastrar-cliente'], 
+      activeMenu: [
+        'home',
+        'grupos',
+        'fornecedores',
+        'clientes',
+        'cadastrar-produto',
+        'cadastrar-grupo',
+        'cadastrar-fornecedor',
+        'cadastrar-cliente',
+        'editar-produto',
+        'editar-grupo',
+        'editar-fornecedor',
+        'editar-cliente'
+      ], 
       page_name: 'Cadastros',
       menus: [
         {
           id: 0,
           title: 'Produtos',
-          activePage: ['/', '/cadastrar-produto'],
+          activePage: ['home', 'cadastrar-produto', 'editar-produto'],
           route: '/'
         },
         {
           id: 1,
           title: 'Grupos',
-          activePage: ['/grupos', '/cadastrar-grupo'],
+          activePage: ['grupos', 'cadastrar-grupo', 'editar-grupo'],
           route: '/grupos'
         },
         {
           id: 2,
           title: 'Fornecedores',
-          activePage: ['/fornecedores', '/cadastrar-fornecedor'],
+          activePage: ['fornecedores', 'cadastrar-fornecedor', 'editar-fornecedor'],
           route: '/fornecedores'
         },
         {
           id: 3,
           title: 'Clientes',
-          activePage: ['/clientes', '/cadastrar-cliente'],
+          activePage: ['clientes', 'cadastrar-cliente', 'editar-cliente'],
           route: '/clientes'
         },
       ]
@@ -43,30 +57,30 @@ export default function LeftMenu() {
     {
       page_name: 'Páginas',
       page: '/paginas',
-      activeMenu: ['/paginas', '/paginas/produtos', '/paginas/sobre-nos', '/paginas/fornecedores', '/paginas/contato'], 
+      activeMenu: ['paginas', '/paginas/produtos', '/paginas/sobre-nos', '/paginas/fornecedores', '/paginas/contato'], 
       menus: [
         {
           id: 0,
           title: 'Home',
-          activePage: ['/paginas'],
-          route: '/paginas'
+          activePage: ['paginas/home'],
+          route: '/paginas/home'
         },
         {
           id: 1,
           title: 'Sobre nós',
-          activePage: ['/paginas/sobre-nos'],
+          activePage: ['paginas/sobre-nos'],
           route: '/paginas/sobre-nos'
         },
         {
           id: 2,
           title: 'Fornecedores',
-          activePage: ['/paginas/fornecedores'],
+          activePage: ['paginas/fornecedores'],
           route: '/paginas/fornecedores'
         },
         {
           id: 3,
           title: 'Contato Whatsapp',
-          activePage: ['/paginas/contato'],
+          activePage: ['paginas/contato'],
           route: '/paginas/contato'
         },
       ]
@@ -74,12 +88,12 @@ export default function LeftMenu() {
     {
       page_name: 'Usuário',
       page: '/usuarios',
-      activeMenu: ['/usuarios'], 
+      activeMenu: ['usuarios'], 
       menus: [
         {
           id: 0,
           title: 'Usuários',
-          activePage: ['/usuarios'],
+          activePage: ['usuarios', 'usuarios/novo-usuario'],
           route: '/usuarios'
         }
       ]
@@ -88,12 +102,12 @@ export default function LeftMenu() {
   
   return (
     <div className={styles.menu_container}>
-      <h2>{types.find(e => e.activeMenu.find(page => page === route))?.page_name}</h2>
+      <h2>{types.find(e => e.activeMenu.find((page) => routeEdit.startsWith(page)))?.page_name}</h2>
       <div className={styles.links_container}>
-        {types.find(e => e.activeMenu.find(page => page === route))?.menus.map((item) => (
+        {types.find(e => e.activeMenu.find((page) => routeEdit.startsWith(page)))?.menus.map((item) => (
           <Link
             key={item.id}
-            className={`${styles.link} ${item.activePage.find((e) => e === route)&& styles.link_active}`}
+            className={`${styles.link} ${item.activePage.find((page) => routeEdit.startsWith(page))&& styles.link_active}`}
             href={item.route}
           >
             {item.title}

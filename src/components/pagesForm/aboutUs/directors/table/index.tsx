@@ -90,8 +90,8 @@ export default function ValuesTable ({ enableForm, setEnableForm, setValueEdit, 
         <Image
           src={params.value}
           alt=""
-          width={100}
-          height={100}
+          width={80}
+          height={80}
           style={{
             padding: 10
           }}

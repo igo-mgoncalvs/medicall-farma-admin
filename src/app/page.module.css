@@ -49,3 +49,8 @@
 .favorite_icon {
   fill: rgb(167, 167, 167)
 }
+
+.cell_aling {
+  height: 100%;
+  width: 100%;
+}

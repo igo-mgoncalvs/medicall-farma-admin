@@ -12,6 +12,7 @@ import styles from './styles.module.css'
 
 function Header () {
   const pathname = usePathname()
+  const routeEdit = pathname.replace('/', '') || 'home'
 
   const auth = useContext(AuthContext)
 
@@ -19,13 +20,18 @@ function Header () {
     {
       id: 0,
       activePage: [
-        '/',
-        '/fornecedores',
-        '/clientes',
-        '/cadastrar-produto',
-        '/cadastrar-grupo',
-        '/cadastrar-fornecedor',
-        '/cadastrar-cliente'
+        'home',
+        'cadastrar-produto',
+        'cadastrar-grupo',
+        'cadastrar-fornecedor',
+        'cadastrar-cliente',
+        'editar-produto',
+        'editar-grupo',
+        'editar-fornecedor',
+        'editar-cliente',
+        'fornecedores',
+        'grupos',
+        'clientes'
       ],
       route: '/',
       title: 'Cadastros'
@@ -33,19 +39,15 @@ function Header () {
     {
       id: 1,
       activePage: [
-        '/paginas',
-        '/paginas/produtos',
-        '/paginas/sobre-nos',
-        '/paginas/fornecedores',
-        '/paginas/contato'
+        'paginas',
       ],
-      route: '/paginas',
+      route: '/paginas/home',
       title: 'Páginas'
       
     },
     {
       id: 2,
-      activePage: ['/usuarios'],
+      activePage: ['/usuarios', '/usuarios/novo-usuario', 'usuarios'],
       route: '/usuarios',
       title: 'Usuários'
     }
@@ -70,7 +72,7 @@ function Header () {
           <Link
             href={item.route}
             key={item.id}
-            className={`${pathname === `${item.activePage.find((e) => e === pathname)}` && styles.active}`}
+            className={`${item.activePage.find((e) => routeEdit.startsWith(e)) ? styles.active: ''}`}
           >
             {item.title}
           </Link>
