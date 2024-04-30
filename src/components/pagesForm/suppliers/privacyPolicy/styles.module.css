@@ -1,0 +1,19 @@
+.form_container {
+  display: flex;
+  flex-direction: column;
+}
+
+.form {
+  display: flex;
+  margin-top: 50px;
+  gap: 20px;
+  flex: 1;
+}
+
+.inputText {
+  flex: 1
+}
+
+.button {
+  align-self: flex-start;
+}

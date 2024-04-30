@@ -78,3 +78,16 @@ export interface IUsers {
   userName: string
   password: string
 }
+
+export interface IHomeProductsList {
+  id: string,
+  name: string
+}
+
+export interface IHomeProduct {
+  title: string
+  image: string
+  imageId: string
+  button_text: string
+  button_link: string
+}

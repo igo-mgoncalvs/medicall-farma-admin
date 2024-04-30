@@ -9,7 +9,7 @@ import { toast } from 'react-toastify'
 import TableComponent from "@/components/tableComponent";
 import TableActions from "@/components/tableComponent/actions";
 
-import { IAboutUs_Values } from "@/utils/interfaces";
+import { IAboutUs_Values, IHomeProductsList } from "@/utils/interfaces";
 
 import BASE_URL from "@/lib/axios";
 
@@ -18,9 +18,9 @@ import styles from './styles.module.css'
 interface IParams {
   enableForm: boolean
   setEnableForm: Dispatch<SetStateAction<boolean>>
-  setValueEdit: Dispatch<SetStateAction<IAboutUs_Values | undefined>>
+  setValueEdit: Dispatch<SetStateAction<IHomeProductsList | undefined>>
   getData: () => void
-  rows: IAboutUs_Values[]
+  rows: IHomeProductsList[]
 }
 
 export default function ValuesTable ({ enableForm, setEnableForm, setValueEdit, getData, rows }: IParams) {
@@ -28,19 +28,19 @@ export default function ValuesTable ({ enableForm, setEnableForm, setValueEdit, 
     setEnableForm(!enableForm)
   }, [enableForm])
 
-  const onEdit = (value: IAboutUs_Values) => {
+  const onEdit = (value: IHomeProductsList) => {
     setValueEdit(value)
     setEnableForm(true)
   }
 
-  const onDelete = useCallback((row: IAboutUs_Values) => {
+  const onDelete = useCallback((row: IHomeProductsList) => {
     toast.info('Deletando as inforções, aguarde', {
       position: "top-right",
       pauseOnHover: false,
       autoClose: false,
     });
 
-    BASE_URL.delete(`/about-us-delete-directors/${row.id}`)
+    BASE_URL.delete(`/about-us-delete-value/${row.id}`)
       .then(() =>{
         toast.dismiss()
         toast.success('Deletado com sucesso!', {
@@ -79,36 +79,9 @@ export default function ValuesTable ({ enableForm, setEnableForm, setValueEdit, 
       )
     },
     { 
-      field: 'image',
-      headerName: 'Imagem',
-      flex: 1,
-      disableColumnMenu: true,
-      align: 'center',
-      headerAlign: 'center',
-      sortable: false,
-      renderCell: (params) => (
-        <Image
-          src={params.value}
-          alt=""
-          width={80}
-          height={80}
-          style={{
-            padding: 10
-          }}
-        />
-      )
-    },
-    { 
-      field: 'title',
-      headerName: 'Titulo',
-      flex: 1,
-      disableColumnMenu: true,
-      sortable: false,
-    },
-    { 
-      field: 'text',
-      headerName: 'Descrição',
-      flex: 3,
+      field: 'name',
+      headerName: 'Nome',
+      flex: 5,
       disableColumnMenu: true,
       sortable: false,
     }
