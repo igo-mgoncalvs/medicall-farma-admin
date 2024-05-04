@@ -1,8 +1,6 @@
-import GroupForm from '@/components/groupForm'
+import ClientsForm from '@/components/clientsForm'
 
 import styles from './styles.module.css'
-import SupplierForm from '@/components/supplierForm'
-import ClientsForm from '@/components/clientsForm'
 
 export default function EditProduct ({ params }: { params: { route: string } }) {
   return (

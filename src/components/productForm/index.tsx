@@ -30,7 +30,7 @@ interface IPostImage {
   file_name: string
 }
 
-export default function ProductForm ({ id }: { id: string }) {
+export default function ProductForm ({ id }: { id?: string }) {
   const [groups, setGroups] = useState<IGroup[]>([])
   const [loading, setLoading] = useState<boolean>(false)
 

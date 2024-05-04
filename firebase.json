@@ -1,7 +1,7 @@
 {
   "hosting": {
+    "source": ".",
     "site": "admin-medicall-farma",
-    "public": "public",
     "ignore": [
       "firebase.json",
       "**/.*",

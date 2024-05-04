@@ -11,7 +11,7 @@ import BASE_URL from '@/lib/axios';
 
 import styles from './styles.module.css'
 
-export default function GroupForm ({ id }: { id: string }) {
+export default function GroupForm ({ id }: { id?: string }) {
   const [loading, setLoading] = useState<boolean>(false)
 
   const { control, handleSubmit } = useForm<IGroup>({

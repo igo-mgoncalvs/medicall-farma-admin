@@ -14,7 +14,7 @@ import InputImage from "../inputImage"
 
 import styles from './styles.module.css'
 
-export default function ClientsForm ({ id }: { id: string }) {
+export default function ClientsForm ({ id }: { id?: string }) {
   const [loading, setLoading] = useState<boolean>(false)
 
   const {
