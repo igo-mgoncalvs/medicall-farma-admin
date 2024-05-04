@@ -36,7 +36,9 @@ function RequireAuth({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (!token) {
-      localStorage.setItem('from', location)
+      if(localStorage) {
+        localStorage.setItem('from', location)
+      }
       navigate.replace('/login')
     } else {
       setAuth(true)

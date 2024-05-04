@@ -11,7 +11,7 @@ import password from '@/components/icons/password.svg'
 import passwordVisible from '@/components/icons/passwordVisible.svg'
 
 import styles from './styles.module.css'
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import AuthContext from '@/context/auth';
 
 interface ILogin {
@@ -22,15 +22,13 @@ interface ILogin {
 export default function Login () {
   const [loading, setLoading] = useState<boolean>(false)
   const [showPassword, setShowPassword] = useState<boolean>(false)
+  const [from, setFrom] = useState<string>('')
 
   const { control, handleSubmit } = useForm<ILogin>()
 
   const navigate = useRouter();
   const useAuth = useContext(AuthContext)
 
-  
-  const from = localStorage.getItem('from') || '/';
-  
   useEffect(() => {
     const token = Cookies.get('token');
     if (token) {
@@ -42,6 +40,10 @@ export default function Login () {
           navigate.replace(from);
         },
       );
+    }
+
+    if(localStorage) {
+      setFrom(localStorage.getItem('from') || '/')
     }
   }, [navigate]);
 

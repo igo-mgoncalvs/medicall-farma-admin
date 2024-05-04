@@ -67,7 +67,10 @@ export function AuthProvider({ children }: { children: React.ReactNode}) {
   const signout = () => {
     setToken(null);
     Cookies.remove('token');
-    localStorage.removeItem('from')
+
+    if(localStorage) {
+      localStorage.removeItem('from')
+    }
     delete BASE_URL.defaults.headers.Authorization;
   };
 
