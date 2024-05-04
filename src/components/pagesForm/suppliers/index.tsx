@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from 'react'
 import { Controller, FieldValues, useForm } from "react-hook-form"
-import { TextField } from "@mui/material"
+import { FormControlLabel, Switch, TextField } from "@mui/material"
 import { toast } from 'react-toastify'
 import { LoadingButton } from "@mui/lab"
 
@@ -94,6 +94,26 @@ export default function SuppliersForm () {
 
   return (
     <form className={styles.form_container} onSubmit={handleSubmit(onSubmit)}>
+      <div
+        className={styles.switch}
+      >
+        <Controller
+          control={control}
+          name="enable"
+          render={({field: { onChange, value }}) => (
+            <FormControlLabel
+              label={`${value ? 'Desabilitar' : 'Habilitar' } sessão`}
+              control={
+                <Switch
+                  checked={value}
+                  onChange={(e) => onChange(e.target.checked)}
+                />
+              } 
+            />
+          )}
+        />
+      </div>
+
       <div className={styles.form}>
         <div className={styles.form_row}>
           <Controller
@@ -128,7 +148,7 @@ export default function SuppliersForm () {
             }}
             render={({field: { onChange, value }, fieldState: { error }}) => (
               <TextField
-                label='Título da seção'
+                label='Título da segunda seção'
                 onChange={onChange}
                 value={value}
                 error={!!error}

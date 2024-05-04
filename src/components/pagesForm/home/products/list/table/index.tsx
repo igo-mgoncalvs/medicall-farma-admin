@@ -40,7 +40,7 @@ export default function ValuesTable ({ enableForm, setEnableForm, setValueEdit, 
       autoClose: false,
     });
 
-    BASE_URL.delete(`/about-us-delete-value/${row.id}`)
+    BASE_URL.delete(`/delete-home-products-list/${row.id}`)
       .then(() =>{
         toast.dismiss()
         toast.success('Deletado com sucesso!', {

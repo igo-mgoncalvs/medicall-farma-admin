@@ -26,6 +26,7 @@ export interface IAboutUs_History_Banners {
 export interface IAboutUs_History {
   title: string
   text: string
+  enable: boolean 
 }
 
 export interface IAboutUs_Banners {
@@ -49,6 +50,7 @@ export interface IAboutUs_Team {
   text: string
   image: string
   imageId: string
+  enable: boolean
 }
 
 export interface IAboutUs_Values {
@@ -72,6 +74,10 @@ export interface IContact {
   link: string
 }
 
+export interface IContactEmail {
+  email: string
+}
+
 export interface IUsers {
   id: string
   email: string
@@ -90,4 +96,9 @@ export interface IHomeProduct {
   imageId: string
   button_text: string
   button_link: string
+}
+
+export interface IPrivacyPolicy {
+  title: string
+  text: string
 }

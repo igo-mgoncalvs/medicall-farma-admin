@@ -34,6 +34,8 @@ export default function HomeProductsList () {
     } else {
       reset()
     }
+
+    getData()
   }, [valueEdit, reset])
 
   const onSubmit = useCallback((data: IHomeProductsList) => {

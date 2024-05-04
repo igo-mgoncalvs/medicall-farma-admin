@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Controller, FieldValues, useForm } from "react-hook-form"
-import { Checkbox, FormControlLabel, TextField } from "@mui/material"
+import { Checkbox, FormControlLabel, Switch, TextField } from "@mui/material"
 import { toast } from "react-toastify"
 import LoadingButton from '@mui/lab/LoadingButton';
 import { useRouter } from "next/navigation";
@@ -20,6 +20,7 @@ interface IHomeMainForm {
   button_link: string
   image: string
   imageId: string
+  enable: boolean
 }
 
 export default function MainForm () {
@@ -102,6 +103,25 @@ export default function MainForm () {
     <form
       onSubmit={handleSubmit(onSubmit)}
     >
+      <div
+        className={styles.switch}
+      >
+        <Controller
+          control={control}
+          name="enable"
+          render={({field: { onChange, value }}) => (
+            <FormControlLabel
+              label="Habilitar sessão"
+              control={
+                <Switch
+                  checked={value}
+                  onChange={(e) => onChange(e.target.checked)}
+                />
+              } 
+            />
+          )}
+        />
+      </div>
       <div className={styles.form}>
         <div
           className={styles.inputsText_container}

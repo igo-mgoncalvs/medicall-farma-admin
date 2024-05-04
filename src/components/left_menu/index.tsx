@@ -83,6 +83,12 @@ export default function LeftMenu() {
           activePage: ['paginas/contato'],
           route: '/paginas/contato'
         },
+        {
+          id: 4,
+          title: 'Contato Email',
+          activePage: ['paginas/email'],
+          route: '/paginas/email'
+        },
       ]
     },
     {

@@ -2,11 +2,11 @@
 
 import { useCallback, useState } from 'react'
 import { Controller, FieldValues, useForm } from "react-hook-form"
-import { TextField } from "@mui/material"
+import { FormControlLabel, Switch, TextField } from "@mui/material"
 import { toast } from 'react-toastify'
 import { LoadingButton } from "@mui/lab"
 
-import { IAboutUs_History } from "@/utils/interfaces"
+import { IPrivacyPolicy } from "@/utils/interfaces"
 import BASE_URL from '@/lib/axios'
 
 import styles from './styles.module.css'
@@ -15,12 +15,12 @@ export default function PrivacyPolicy () {
   const [loading, setLoading] = useState(false)
   const [addForm, setAddForm] = useState(false)
 
-  const { control, handleSubmit } = useForm<IAboutUs_History | FieldValues>({
+  const { control, handleSubmit } = useForm<IPrivacyPolicy | FieldValues>({
     defaultValues: async () => {
-      return await BASE_URL.get<IAboutUs_History>('/about-us-history')
-      .then(({data}) => ({
-        ...data, 
-      }))
+      return await BASE_URL.get<IPrivacyPolicy>('/privacy-policy')
+      .then(({data}) => {
+        return ({...data})
+      })
       .catch(() => setAddForm(true))
       .finally(() => {
         toast.dismiss()
@@ -28,7 +28,7 @@ export default function PrivacyPolicy () {
     },
   })
 
-  const onSubmit = useCallback((data: IAboutUs_History | FieldValues) => {
+  const onSubmit = useCallback((data: IPrivacyPolicy | FieldValues) => {
     setLoading(true)
 
     if(addForm) {
@@ -90,6 +90,26 @@ export default function PrivacyPolicy () {
 
   return (
     <form className={styles.form_container} onSubmit={handleSubmit(onSubmit)}>
+      <div
+        className={styles.switch}
+      >
+        <Controller
+          control={control}
+          name="enable"
+          render={({field: { onChange, value }}) => (
+            <FormControlLabel
+              label={`${value ? 'Desabilitar' : 'Habilitar' } sessão`}
+              control={
+                <Switch
+                  checked={value}
+                  onChange={(e) => onChange(e.target.checked)}
+                />
+              } 
+            />
+          )}
+        />
+      </div>
+
       <div className={styles.form}>
         <Controller
           name="title"

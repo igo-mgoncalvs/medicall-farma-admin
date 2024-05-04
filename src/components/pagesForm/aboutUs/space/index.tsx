@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from 'react'
 import { Controller, FieldValues, useForm } from "react-hook-form"
-import { TextField } from "@mui/material"
+import { FormControlLabel, Switch, TextField } from "@mui/material"
 import { toast } from 'react-toastify'
 import { LoadingButton } from "@mui/lab"
 
@@ -90,6 +90,25 @@ export default function AboutUsSpace () {
 
   return (
     <form className={styles.form_container} onSubmit={handleSubmit(onSubmit)}>
+      <div
+        className={styles.switch}
+      >
+        <Controller
+          control={control}
+          name="enable"
+          render={({field: { onChange, value }}) => (
+            <FormControlLabel
+              label={`${value ? 'Desabilitar' : 'Habilitar' } sessão`}
+              control={
+                <Switch
+                  checked={value}
+                  onChange={(e) => onChange(e.target.checked)}
+                />
+              } 
+            />
+          )}
+        />
+      </div>
       <div className={styles.form}>
         <Controller
           name="title"

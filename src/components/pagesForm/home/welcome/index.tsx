@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from "react";
 import { Controller, FieldValues, useForm } from "react-hook-form"
-import { TextField } from "@mui/material"
+import { FormControlLabel, Switch, TextField } from "@mui/material"
 import LoadingButton from '@mui/lab/LoadingButton';
 import BASE_URL from "@/lib/axios";
 import { toast } from "react-toastify"
@@ -20,6 +20,7 @@ interface IHomeWelcomeForm {
   button_link: string
   image: string
   imageId: string
+  enable: boolean
 }
 
 export default function HomeWelcomeForm () {
@@ -100,6 +101,25 @@ export default function HomeWelcomeForm () {
     <form
       onSubmit={handleSubmit(onSubmit)}
     >
+      <div
+        className={styles.switch}
+      >
+        <Controller
+          control={control}
+          name="enable"
+          render={({field: { onChange, value }}) => (
+            <FormControlLabel
+              label={`${value ? 'Desabilitar' : 'Habilitar' } sessão`}
+              control={
+                <Switch
+                  checked={value}
+                  onChange={(e) => onChange(e.target.checked)}
+                />
+              } 
+            />
+          )}
+        />
+      </div>
       <div className={styles.form}>
         <div className={styles.inputsText_container}>
           <Controller
