@@ -22,7 +22,7 @@ export const app = initializeApp(configFirebase)
 
 interface IAuthContext {
   token: string | null
-  signin: ({email, password}: { email: string, password: string }, callback: () => void) => void
+  signin: ({email, password}: { email: string, password: string }, callback: () => void, error: () => void) => void
   signout: () => void
   hasToken: ({ authToken }: { authToken: string }, callback: () => void) => void
 }
@@ -49,11 +49,11 @@ export function AuthProvider({ children }: { children: React.ReactNode}) {
     callback();
   };
 
-  const signin = ({email, password}: { email: string, password: string }, callback: () => void) => {
+  const signin = ({email, password}: { email: string, password: string }, callback: () => void, error: () => void) => {
     signInWithEmailAndPassword(auth, email, password)
       .then(async (auth: UserCredential) => {
         const authToken = await auth.user.getIdToken()
-        const getExp = await jwtDecode(authToken)
+        const getExp = jwtDecode(authToken)
         setToken(authToken)
 
         Cookies.set('token', authToken, { expires: getExp.exp });
@@ -62,15 +62,12 @@ export function AuthProvider({ children }: { children: React.ReactNode}) {
         BASE_URL.defaults.headers.Authorization = `Bearer ${authToken}`;
         callback()
       })
+      .catch(() => error())
   };
 
   const signout = () => {
     setToken(null);
     Cookies.remove('token');
-
-    if(localStorage) {
-      localStorage.removeItem('from')
-    }
     delete BASE_URL.defaults.headers.Authorization;
   };
 

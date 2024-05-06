@@ -11,7 +11,7 @@ import password from '@/components/icons/password.svg'
 import passwordVisible from '@/components/icons/passwordVisible.svg'
 
 import styles from './styles.module.css'
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import AuthContext from '@/context/auth';
 
 interface ILogin {
@@ -22,7 +22,6 @@ interface ILogin {
 export default function Login () {
   const [loading, setLoading] = useState<boolean>(false)
   const [showPassword, setShowPassword] = useState<boolean>(false)
-  const [from, setFrom] = useState<string>('')
 
   const { control, handleSubmit } = useForm<ILogin>()
 
@@ -37,23 +36,21 @@ export default function Login () {
           authToken: token,
         },
         () => {
-          navigate.replace(from);
+          navigate.replace('/');
         },
       );
-    }
-
-    if(localStorage) {
-      setFrom(localStorage.getItem('from') || '/')
     }
   }, [navigate]);
 
   const onSubmit = useCallback(({email, password}: ILogin) => {
+    setLoading(true)
     useAuth.signin({ email, password }, () => {
-      const notReturnToLoginScreen = from === '/login' ? '/' : from
-
-      navigate.replace(notReturnToLoginScreen || '/');
+      setLoading(false)
+      navigate.replace('/');
+    }, () => {
+      setLoading(false)
     });
-  }, [from])
+  }, [])
 
   return (
     <div className={styles.container}>

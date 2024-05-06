@@ -2,6 +2,7 @@
 
 import React, { useContext, useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
+import Cookies from 'js-cookie';
 
 import AuthContext from '@/context/auth';
 import BASE_URL from '@/lib/axios';
@@ -34,16 +35,17 @@ function RequireAuth({ children }: { children: React.ReactNode }) {
     return () => BASE_URL.interceptors.response.eject(interceptor);
   }, [navigate]);
 
+  const tokenCookie = Cookies.get('token')
+
   useEffect(() => {
-    if (!token) {
-      if(localStorage) {
-        localStorage.setItem('from', location)
-      }
+    if (!tokenCookie) {
       navigate.replace('/login')
     } else {
       setAuth(true)
     }
-  }, [token])
+
+    console.log(token)
+  }, [tokenCookie])
 
   return (auth || location === '/login') && children;
 }

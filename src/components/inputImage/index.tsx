@@ -1,8 +1,8 @@
 import { ChangeEvent, useCallback } from "react";
 import { FormControl, FormHelperText } from "@mui/material";
 import ImageIcon from '@mui/icons-material/Image';
-import Image from "next/image";
 import { toast } from "react-toastify";
+import Cookies from 'js-cookie';
 
 import BASE_URL from "@/lib/axios";
 
@@ -49,7 +49,13 @@ export default function InputImage({errors, isSubmitted, imageUrl, imageId, setV
 
     data.append('file', selectedFile)
 
-    BASE_URL.post<IPostImage>('/upload-image', data)
+    const token = Cookies.get('token')
+
+    BASE_URL.post<IPostImage>('/upload-image', data, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
       .then(({data: { link, file_name }}) => {
         toast.dismiss()
         toast.success('Imagem publicada com sucesso!', {
@@ -69,7 +75,11 @@ export default function InputImage({errors, isSubmitted, imageUrl, imageId, setV
       })
 
     if(imageUrl) {
-      BASE_URL.delete<IPostImage>(`/delete-image/${imageId}`)
+      BASE_URL.delete<IPostImage>(`/delete-image/${imageId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
     }
 
   }, [imageUrl, setValue])
