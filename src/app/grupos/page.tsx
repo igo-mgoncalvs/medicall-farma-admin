@@ -72,13 +72,14 @@ export default function Fornecedores () {
         TableActions({
           editRoute: `/editar-grupo/${row.id}`,
           onDelete: () => handleDeleteGroup({ id: row.id })
-        })
+        }),
+      sortable: false,
+      disableColumnMenu: true
     },
     { 
       field: 'group_name',
       headerName: 'Nome',
       flex: 3,
-      disableColumnMenu: true,
       sortable: false
     }
   ]
@@ -89,11 +90,6 @@ export default function Fornecedores () {
         <p className={styles.title}>Grupos</p>
 
         <div className={styles.functions_container}>
-          <Image
-            src={search_icon}
-            alt="icone de pesquisa"
-            className={styles.teste}
-          />
 
           <Link
             href={'/cadastrar-grupo'}

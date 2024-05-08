@@ -89,6 +89,18 @@ export default function LeftMenu() {
           activePage: ['paginas/email'],
           route: '/paginas/email'
         },
+        {
+          id: 5,
+          title: 'Logos do site',
+          activePage: ['paginas/logos'],
+          route: '/paginas/logos'
+        },
+        {
+          id: 6,
+          title: 'Catalogo',
+          activePage: ['paginas/catalogo'],
+          route: '/paginas/catalogo'
+        }
       ]
     },
     {

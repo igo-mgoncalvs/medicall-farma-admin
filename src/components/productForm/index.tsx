@@ -391,12 +391,6 @@ export default function ProductForm ({ id }: { id?: string }) {
         <Controller
           name='link'
           control={control}
-          rules={{
-            required: {
-              value: true,
-              message: 'Esse campo é necessario'
-            }
-          }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <TextField
               value={value}

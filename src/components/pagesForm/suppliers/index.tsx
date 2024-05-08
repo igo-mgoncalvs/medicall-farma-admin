@@ -6,7 +6,7 @@ import { FormControlLabel, Switch, TextField } from "@mui/material"
 import { toast } from 'react-toastify'
 import { LoadingButton } from "@mui/lab"
 
-import { IAboutUs_Team, ISuppliers_Screen } from "@/utils/interfaces"
+import { ISuppliers_Screen } from "@/utils/interfaces"
 import BASE_URL from '@/lib/axios'
 
 import styles from './styles.module.css'
@@ -16,7 +16,7 @@ export default function SuppliersForm () {
   const [loading, setLoading] = useState(false)
   const [addForm, setAddForm] = useState(false)
 
-  const { control, handleSubmit, watch, setValue, formState: { errors, isSubmitted } } = useForm<ISuppliers_Screen | FieldValues>({
+  const { control, handleSubmit, watch, setValue, formState: { isSubmitted } } = useForm<ISuppliers_Screen | FieldValues>({
     defaultValues: async () => {
       return await BASE_URL.get<ISuppliers_Screen>('/suppliers-screen')
       .then(({data}) => ({

@@ -102,3 +102,15 @@ export interface IPrivacyPolicy {
   title: string
   text: string
 }
+
+export interface ILogos {
+  logoColorId: string
+  logoColor: string
+  logoWhiteId: string
+  logoWhite: string
+}
+
+export interface ICatalog {
+  link: string
+  fileName: string
+}

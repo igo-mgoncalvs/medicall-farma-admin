@@ -93,20 +93,20 @@ export default function Home() {
       renderCell: ({ row } : {row: IProduct}) => TableActions({
         editRoute: `/editar-produto/${row.route}`,
         onDelete: () => handleDeleteProduct({ id: row.id })
-      })
+      }),
+      sortable: false,
+      disableColumnMenu: true
     },
     { 
       field: 'group',
       headerName: 'Grupo',
       width: 250,
-      disableColumnMenu: true,
       sortable: false,
     },
     { 
       field: 'image',
       headerName: 'Image',
       width: 100,
-      disableColumnMenu: true,
       sortable: false,
       headerAlign: 'center',
       align: 'center',
@@ -124,42 +124,36 @@ export default function Home() {
       field: 'name',
       headerName: 'Nome',
       width: 150,
-      disableColumnMenu: true,
       sortable: false,
     },
     { 
       field: 'summary',
       headerName: 'Resumo',
       width: 250,
-      disableColumnMenu: true,
       sortable: false,
     },
     { 
       field: 'description',
       headerName: 'Descrição',
       width: 250,
-      disableColumnMenu: true,
       sortable: false,
     },
     { 
       field: 'whatsapp',
       headerName: 'Whatsapp',
       width: 200,
-      disableColumnMenu: true,
       sortable: false,
     },
     { 
       field: 'route',
       headerName: 'Rota',
       width: 200,
-      disableColumnMenu: true,
       sortable: false,
     },
     { 
       field: 'link',
       headerName: 'Link',
       width: 250,
-      disableColumnMenu: true,
       sortable: false,
     }
   ]
@@ -170,12 +164,6 @@ export default function Home() {
         <p className={styles.title}>Produtos</p>
 
         <div className={styles.functions_container}>
-          <Image
-            src={search_icon}
-            alt="icone de pesquisa"
-            className={styles.teste}
-          />
-
           <Link
             href={'/cadastrar-grupo'}
             className={`${styles.buttons} ${styles.button_white}`}

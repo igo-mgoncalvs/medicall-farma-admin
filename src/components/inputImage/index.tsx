@@ -20,6 +20,7 @@ interface IParams {
   imageId: string
   setValue: ({link, file_name}: {link: string, file_name: string}) => void
   id?: string
+  backgroundColor?: string
 }
 
 interface IPostImage {
@@ -27,7 +28,7 @@ interface IPostImage {
   file_name: string
 }
 
-export default function InputImage({errors, isSubmitted, imageUrl, imageId, setValue, id}: IParams) {
+export default function InputImage({errors, isSubmitted, imageUrl, imageId, setValue, id, backgroundColor}: IParams) {
   const errorMessageImage: undefined | boolean = !!errors && isSubmitted
 
   const handleInputFile = useCallback((event: ChangeEvent<HTMLInputElement>) => {
@@ -91,21 +92,24 @@ export default function InputImage({errors, isSubmitted, imageUrl, imageId, setV
       <label
         htmlFor={id || 'video'}
         className={`${styles.imageLabel} ${errorMessageImage && styles.imageError} ${imageUrl && styles.imageLabelActive}`}
+        style={{
+          backgroundColor,
+        }}
       >
         {imageUrl ? (
           <img
             className={styles.image}
             src={imageUrl}
-            alt="Logo da Imgor branco"
+            alt=""
           />
         ): (
           <div
-            className={`${styles.icon_container} ${errorMessageImage && styles.icon_container_error}`}
+            className={`${styles.icon_container} ${errorMessageImage && styles.icon_container_error} ${backgroundColor && styles.labelWhite}`}
           >
             <ImageIcon
-              className={`${styles.icon} ${errorMessageImage && styles.icon_error}`}
+              className={`${styles.icon} ${errorMessageImage && styles.icon_error} ${backgroundColor && styles.iconWhite}`}
             />
-            Selecione a imagem do produto
+            Selecione a imagem
           </div>
         )}
       </label>

@@ -69,7 +69,9 @@ export default function Fornecedores () {
       renderCell: ({ row } : {row: ISuppliers}) => TableActions({
         editRoute: `/editar-fornecedor/${row.id}`,
         onDelete: () => handleDeleteProduct({ id: row.id })
-      })
+      }),
+      sortable: false,
+      disableColumnMenu: true,
     },
     { 
       field: 'image',
@@ -93,7 +95,6 @@ export default function Fornecedores () {
       field: 'name',
       headerName: 'Nome',
       flex: 3,
-      disableColumnMenu: true,
       sortable: false,
     }
   ]
@@ -104,12 +105,6 @@ export default function Fornecedores () {
         <p className={styles.title}>Fonecedores</p>
 
         <div className={styles.functions_container}>
-          <Image
-            src={search_icon}
-            alt="icone de pesquisa"
-            className={styles.teste}
-          />
-
           <Link
             href={'/cadastrar-fornecedor'}
             className={`${styles.buttons} ${styles.button_blue}`}

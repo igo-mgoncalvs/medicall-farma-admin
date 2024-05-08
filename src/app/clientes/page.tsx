@@ -63,7 +63,9 @@ export default function Clients () {
       renderCell: ({ row } : {row: IClient}) => TableActions({
         editRoute: `/editar-cliente/${row.id}`,
         onDelete: () => handleDeleteProduct({ id: row.id })
-      })
+      }),
+      sortable: false,
+      disableColumnMenu: true
     },
     { 
       field: 'image',
@@ -89,7 +91,6 @@ export default function Clients () {
       field: 'name',
       headerName: 'Nome',
       flex: 3,
-      disableColumnMenu: true,
       sortable: false,
       renderCell: (params) => (
         <p className={styles.cell_aling}>
@@ -104,12 +105,6 @@ export default function Clients () {
         <p className={styles.title}>Clientes</p>
 
         <div className={styles.functions_container}>
-          <Image
-            src={search_icon}
-            alt="icone de pesquisa"
-            className={styles.teste}
-          />
-
           <Link
             href={'/cadastrar-cliente'}
             className={`${styles.buttons} ${styles.button_blue}`}
