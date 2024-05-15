@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react"
 import { Controller, useForm } from "react-hook-form"
-import { TextField } from "@mui/material"
+import { FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material"
 import LoadingButton from '@mui/lab/LoadingButton';
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
@@ -16,6 +16,7 @@ import styles from './styles.module.css'
 
 export default function SupplierForm ({ id }: { id?: string }) {
   const [loading, setLoading] = useState<boolean>(false)
+  const [index, setIndex] = useState<number[]>([])
 
   const {
     control,
@@ -45,6 +46,23 @@ export default function SupplierForm ({ id }: { id?: string }) {
   const navigation = useRouter()
 
   useEffect(() => {
+    const getData = () => {
+      BASE_URL.get<ISupplier[]>('/suppliers')
+        .then(({data}) => {
+          const list: number[] = []
+  
+          data.forEach((item) => {
+            list.push(item.index)
+          })
+  
+          setIndex(list)
+        })
+    }
+  
+    getData()
+  }, [])
+
+  useEffect(() => {
     if(!imageUrl) {
       setError('image', {
         message: 'Esse campo é necessario'
@@ -60,6 +78,7 @@ export default function SupplierForm ({ id }: { id?: string }) {
     if(!id) {
       BASE_URL.post('/add-suppliers', {
           ...data,
+          index: index.length
       })
         .then(() => {
           toast.dismiss()
@@ -84,6 +103,7 @@ export default function SupplierForm ({ id }: { id?: string }) {
     } else {
       BASE_URL.put(`/edit-suppliers/${id}`, {
           ...data,
+          index: Number(data.index)
       })
         .then(() => {
           toast.dismiss()
@@ -106,7 +126,7 @@ export default function SupplierForm ({ id }: { id?: string }) {
           setLoading(false)
         })
     }
-  }, [id])
+  }, [id, index])
 
   return (
     <form
@@ -144,6 +164,37 @@ export default function SupplierForm ({ id }: { id?: string }) {
           />
         )}
       />
+
+      {(index.length > 0 && id) && (
+        <Controller
+          name="index"
+          control={control}
+          rules={{
+            required: {
+              value: true,
+              message: 'Esse campo é necessario'
+            }
+          }}
+          render={({field: { onChange, value }, fieldState: { error }}) => (
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Posição</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={`${value || 0}`}
+                defaultValue=' '
+                label="Posição"
+                onChange={onChange}
+              >
+                {index.map(item => (
+                  <MenuItem value={`${item}`}>{item + 1}º</MenuItem> 
+                ))}
+              </Select>
+            </FormControl>
+          )}
+        />
+      )}
+
 
       <LoadingButton
         variant='contained'

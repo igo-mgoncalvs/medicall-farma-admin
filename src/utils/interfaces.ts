@@ -7,7 +7,8 @@ export interface ISupplier {
   id: string
   image: string
   imageId: string
-  name: string
+  name: string,
+  index: number
 }
 
 export interface IClient {
@@ -15,6 +16,7 @@ export interface IClient {
   image: string
   imageId: string
   name: string
+  index: number
 }
 
 export interface IAboutUs_History_Banners {
