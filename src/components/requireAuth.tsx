@@ -43,8 +43,6 @@ function RequireAuth({ children }: { children: React.ReactNode }) {
     } else {
       setAuth(true)
     }
-
-    console.log(token)
   }, [tokenCookie])
 
   return (auth || location === '/login') && children;

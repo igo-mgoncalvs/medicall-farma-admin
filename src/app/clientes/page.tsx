@@ -82,7 +82,9 @@ export default function Clients () {
           width={100}
           height={100}
           style={{
-            padding: 10
+            width: '100%',
+            height: '100%',
+            objectFit: "contain"
           }}
         />
       )

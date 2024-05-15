@@ -76,17 +76,19 @@ export default function Fornecedores () {
     { 
       field: 'image',
       headerName: 'Imagem',
-      width: 100,
+      width: 120,
       disableColumnMenu: true,
       align: 'center',
       headerAlign: 'center',
       sortable: false,
       renderCell: (params) => (
-        <Image
-          src={params.value}
-          alt=""
-          width={80}
-          height={50}
+        <div
+          style={{
+            backgroundImage: `url(${params.value})`,
+            backgroundSize: 'contain',
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center',
+          }}
           className={styles.cell_aling}
         />
       )
