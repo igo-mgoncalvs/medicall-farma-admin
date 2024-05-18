@@ -14,6 +14,7 @@ import TableComponent from "@/components/tableComponent";
 import styles from "./page.module.css";
 import { Edit } from '@mui/icons-material';
 import TableActions from '@/components/tableComponent/actions';
+import { Switch } from '@mui/material';
 
 interface IProduct {
   id: string
@@ -23,6 +24,7 @@ interface IProduct {
   description: string
   group: string
   route: string
+  active: boolean
 }
 
 interface IGroups {
@@ -84,6 +86,34 @@ export default function Home() {
       })
   }
 
+  const handleChangeStatus = (row: IProduct) => {
+    toast.info('Aguarde um instante', {
+      position: "top-right",
+      pauseOnHover: false,
+      autoClose: false,
+    });
+    console.log(row.id)
+
+    BASE_URL.put(`/change-product-status/${row.id}`)
+      .then(() => {
+        toast.dismiss()
+        toast.success('Status do produto alterado com sucesso!', {
+          position: "top-right",
+          pauseOnHover: false,
+          autoClose: 5000,
+        });
+        getData()
+      })
+      .catch(() => {
+        toast.dismiss()
+        toast.error('Erro ao alterar o status do produto', {
+          position: "top-right",
+          pauseOnHover: false,
+          autoClose: 5000
+        });
+      })
+  }
+
   const ProductsColumns: GridColDef[] = [
     {
       field: 'action',
@@ -94,6 +124,20 @@ export default function Home() {
         editRoute: `/editar-produto/${row.route}`,
         onDelete: () => handleDeleteProduct({ id: row.id })
       }),
+      sortable: false,
+      disableColumnMenu: true
+    },
+    {
+      field: 'active',
+      headerName: 'Status',
+      width: 90,
+      headerAlign: 'center',
+      renderCell: ({ row } : {row: IProduct}) => (
+        <Switch
+          checked={row.active}
+          onChange={() => handleChangeStatus(row)}
+        />
+      ),
       sortable: false,
       disableColumnMenu: true
     },
