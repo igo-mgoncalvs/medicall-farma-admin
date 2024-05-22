@@ -11,7 +11,7 @@ import BASE_URL from '@/lib/axios';
 
 import styles from './styles.module.css'
 import TableActions from '@/components/tableComponent/actions';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { toast } from "react-toastify";
 
 interface ISuppliers {
@@ -23,6 +23,8 @@ interface ISuppliers {
 
 export default function Fornecedores () {
   const [rows, setRows]= useState<ISuppliers[]>([])
+  const [searchRows, setSearchRows] = useState<ISuppliers[]>([])
+
 
   const getData = async () => {
     return await BASE_URL.get<ISuppliers[]>('/suppliers')
@@ -59,6 +61,14 @@ export default function Fornecedores () {
         });
       })
   }
+
+  const handleSearch = useCallback((value: string) => {
+    const regex = new RegExp(value, 'i');
+
+    if(rows) {
+      setSearchRows(rows.filter((item) => regex.test(item.name)))
+    }
+  }, [rows])
 
   const columns: GridColDef[] = [
     {
@@ -106,6 +116,14 @@ export default function Fornecedores () {
       <div className={styles.function_bar}>
         <p className={styles.title}>Fonecedores</p>
 
+        <div className={styles.search_bar}>
+          <input
+            placeholder='Pesquise pelo nome do fornecedor'
+            className={styles.search_bar_input}
+            onChange={(e) => handleSearch(e.target.value)}
+          />
+        </div>
+
         <div className={styles.functions_container}>
           <Link
             href={'/cadastrar-fornecedor'}
@@ -126,7 +144,7 @@ export default function Fornecedores () {
       >
         <TableComponent
           columns={columns}
-          rows={rows}
+          rows={searchRows}
         />
       </div>
     </div>

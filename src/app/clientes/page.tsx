@@ -11,16 +11,20 @@ import TableComponent from "@/components/tableComponent";
 import BASE_URL from '@/lib/axios';
 
 import styles from './styles.module.css'
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { IClient } from '@/utils/interfaces';
 import TableActions from '@/components/tableComponent/actions';
 
 export default function Clients () {
   const [rows, setRows] = useState<IClient[]>([])
+  const [searchRows, setSearchRows] = useState<IClient[]>([])
 
   const getData = async () => {
     return await BASE_URL.get<IClient[]>('/clients')
-    .then(({data}) => setRows(data))
+    .then(({data}) => {
+      setRows(data)
+      setSearchRows(data)
+    })
   }
 
   useEffect(() => {
@@ -53,6 +57,14 @@ export default function Clients () {
         });
       })
   }
+
+  const handleSearch = useCallback((value: string) => {
+    const regex = new RegExp(value, 'i');
+
+    if(rows) {
+      setSearchRows(rows.filter((item) => regex.test(item.name)))
+    }
+  }, [rows])
 
   const columns: GridColDef[] = [
     {
@@ -106,6 +118,14 @@ export default function Clients () {
       <div className={styles.function_bar}>
         <p className={styles.title}>Clientes</p>
 
+        <div className={styles.search_bar}>
+          <input
+            placeholder='Pesquise pelo nome do fornecedor'
+            className={styles.search_bar_input}
+            onChange={(e) => handleSearch(e.target.value)}
+          />
+        </div>
+
         <div className={styles.functions_container}>
           <Link
             href={'/cadastrar-cliente'}
@@ -126,7 +146,7 @@ export default function Clients () {
       >
         <TableComponent
           columns={columns}
-          rows={rows}
+          rows={searchRows}
         />
       </div>
     </div>

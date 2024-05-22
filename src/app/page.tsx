@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import Image from "next/image";
 import Link from "next/link";
 import { GridColDef, GridDeleteIcon, GridRenderCellParams, GridRowsProp } from "@mui/x-data-grid";
@@ -14,7 +14,7 @@ import TableComponent from "@/components/tableComponent";
 import styles from "./page.module.css";
 import { Edit } from '@mui/icons-material';
 import TableActions from '@/components/tableComponent/actions';
-import { Switch } from '@mui/material';
+import { MenuItem, Select, Switch } from '@mui/material';
 
 interface IProduct {
   id: string
@@ -22,9 +22,11 @@ interface IProduct {
   name: string
   link: string
   description: string
+  summary: string
   group: string
   route: string
   active: boolean
+  whatsapp: string
 }
 
 interface IGroups {
@@ -35,6 +37,8 @@ interface IGroups {
 
 export default function Home() {
   const [rows, setRows] = useState<IProduct[]>([])
+  const [searchRows, setSearchRows] = useState<IProduct[]>([])
+  const [searchBase, setSearchBase] = useState('name')
   
   const getData = async () => {
     return await BASE_URL.get<IGroups[]>('/products')
@@ -52,6 +56,7 @@ export default function Home() {
       })
   
       setRows(list)
+      setSearchRows(list)
     })
   }
 
@@ -92,7 +97,6 @@ export default function Home() {
       pauseOnHover: false,
       autoClose: false,
     });
-    console.log(row.id)
 
     BASE_URL.put(`/change-product-status/${row.id}`)
       .then(() => {
@@ -113,6 +117,57 @@ export default function Home() {
         });
       })
   }
+
+  const handleSearch = useCallback((value: string) => {
+    const regex = new RegExp(value, 'i');
+
+    switch (searchBase) {
+      case 'group':
+        setSearchRows(rows.filter((item) =>  regex.test(item.group)))
+
+        break;
+
+      case 'image':
+        setSearchRows(rows.filter((item) =>  regex.test(item.image)))  
+
+        break;
+
+      case 'name':
+        setSearchRows(rows.filter((item) =>  regex.test(item.name)))     
+        
+        break;
+        
+      case 'summary':
+        setSearchRows(rows.filter((item) =>  regex.test(item.summary)))     
+        
+        break;
+
+      case 'description':
+        setSearchRows(rows.filter((item) =>  regex.test(item.description)))   
+
+        break;
+
+      case 'whatsapp':
+        setSearchRows(rows.filter((item) =>  regex.test(item.whatsapp)))   
+
+        break;
+
+      case 'route':
+        setSearchRows(rows.filter((item) =>  regex.test(item.route)))   
+
+        break;
+
+      case 'link':
+        setSearchRows(rows.filter((item) =>  regex.test(item.link))) 
+
+        break;
+    
+      default:
+        setSearchRows(rows)
+        break;
+    }
+
+  }, [rows, searchBase])
 
   const ProductsColumns: GridColDef[] = [
     {
@@ -149,7 +204,7 @@ export default function Home() {
     },
     { 
       field: 'image',
-      headerName: 'Image',
+      headerName: 'Imagem',
       width: 100,
       sortable: false,
       headerAlign: 'center',
@@ -202,10 +257,78 @@ export default function Home() {
     }
   ]
   
+  const searchTranslate = [
+    {
+      field: 'group',
+      headerName: 'pelo grupo',
+    },
+    {
+      field: 'image',
+      headerName: 'pela imagem',
+    },
+    {
+      field: 'name',
+      headerName: 'pelo nome',
+    },
+    {
+      field: 'summary',
+      headerName: 'pelo resumo',
+    },
+    {
+      field: 'description',
+      headerName: 'pela descrição',
+    },
+    {
+      field: 'whatsapp',
+      headerName: 'pelo whatsapp',
+    },
+    {
+      field: 'route',
+      headerName: 'pela rota',
+    },
+    {
+      field: 'link',
+      headerName: 'pelo link',
+    }
+  ]
+
   return (
     <div>
       <div className={styles.function_bar}>
         <p className={styles.title}>Produtos</p>
+
+        <div className={styles.search_bar}>
+          <Select
+            defaultValue='name'
+            displayEmpty
+            sx={{
+              '.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.MuiSelect-select': {
+                padding: 0,
+                paddingLeft: 2,
+                paddingRight: 5,
+                fontSize: 15,
+                border: 'none'
+              },
+            }}
+            inputProps={{ 'aria-label': 'Without label' }}
+            onChange={(e) => setSearchBase(e.target.value || '')}
+          >
+            {ProductsColumns.map((item, index) => index > 1 && (
+              <MenuItem
+                key={item.field}
+                value={item.field}
+              >
+                {item.headerName}
+              </MenuItem>
+            ))}
+          </Select>
+
+          <input
+            placeholder={`Pesquise ${searchTranslate.find(e => e.field === searchBase)?.headerName?.toLowerCase()} do produto`}
+            className={styles.search_bar_input}
+            onChange={(e) => handleSearch(e.target.value)}
+          />
+        </div>
 
         <div className={styles.functions_container}>
           <Link
@@ -239,7 +362,7 @@ export default function Home() {
         >
           <TableComponent
             columns={ProductsColumns}
-            rows={rows}
+            rows={searchRows}
           />
         </div>
       )}

@@ -1,33 +1,29 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import Image from 'next/image'
+import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
-import { GridColDef, GridDeleteIcon, GridRowsProp } from '@mui/x-data-grid';
+import { GridColDef } from '@mui/x-data-grid';
 import BASE_URL from '@/lib/axios';
 import { toast } from 'react-toastify'
 
-import search_icon from '@/components/icons/search.svg'
 import AddIcon from '@/components/icons/add'
 import TableComponent from "@/components/tableComponent";
 
 import styles from './styles.module.css'
 import { IGroup } from '@/utils/interfaces';
-import { Edit } from '@mui/icons-material';
 import TableActions from '@/components/tableComponent/actions';
-
-interface ISuppliers {
-  image: string
-  name: string
-}
 
 
 export default function Fornecedores () {
   const [rows, setRows] = useState<IGroup[]>() 
+  const [searchRows, setSearchRows] = useState<IGroup[]>([])
 
   const getData = async () => {
     return await BASE_URL.get<IGroup[]>('/groups')
-      .then(({data}) => setRows(data))
+      .then(({data}) => {
+        setRows(data)
+        setSearchRows(data)
+      })
   }
 
   useEffect(() => {
@@ -84,13 +80,28 @@ export default function Fornecedores () {
     }
   ]
 
+  const handleSearch = useCallback((value: string) => {
+    const regex = new RegExp(value, 'i');
+
+    if(rows) {
+      setSearchRows(rows.filter((item) => regex.test(item.group_name)))
+    }
+  }, [rows])
+
   return (
     <div>
       <div className={styles.function_bar}>
         <p className={styles.title}>Grupos</p>
 
-        <div className={styles.functions_container}>
+        <div className={styles.search_bar}>
+          <input
+            placeholder='Pesquise pelo nome do grupo'
+            className={styles.search_bar_input}
+            onChange={(e) => handleSearch(e.target.value)}
+          />
+        </div>
 
+        <div className={styles.functions_container}>
           <Link
             href={'/cadastrar-grupo'}
             className={`${styles.buttons} ${styles.button_blue}`}
@@ -111,7 +122,7 @@ export default function Fornecedores () {
         {rows && (
           <TableComponent
             columns={columns}
-            rows={rows}
+            rows={searchRows}
           />
         )}
       </div>
