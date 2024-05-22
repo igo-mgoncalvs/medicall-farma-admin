@@ -1,16 +1,18 @@
 'use client'
 
 import { useForm, Controller } from 'react-hook-form'
+import { encode } from 'base-64';
 import ImageIcon from '@mui/icons-material/Image';
-import styles from './styles.module.css'
 import LoadingButton from '@mui/lab/LoadingButton';
+import { toast } from "react-toastify";
 import { FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField } from '@mui/material'
 import { ChangeEvent, useCallback, useEffect, useState } from 'react'
 import BASE_URL from '@/lib/axios'
 import { IGroup } from '@/utils/interfaces'
 import Image from 'next/image'
-import { toast } from "react-toastify";
 import { useRouter } from 'next/navigation';
+
+import styles from './styles.module.css'
 
 interface IProductForm {
   id: string 
@@ -146,6 +148,7 @@ export default function ProductForm ({ id }: { id?: string }) {
     if(!id) {
       BASE_URL.post('/add-product', {
           ...data,
+          route: encode(data.route)
       })
         .then(() => {
           toast.dismiss()
@@ -170,7 +173,7 @@ export default function ProductForm ({ id }: { id?: string }) {
     } else {
       BASE_URL.put(`/edit-product/${idEdit}`, {
           ...data,
-          route: `${data.name.replace(' ', '-')}`,
+          route: encode(data.route),
           whatsapp: `${whatsappUrl}${encodeURI(data.whatsapp)}`
       })
         .then(() => {
