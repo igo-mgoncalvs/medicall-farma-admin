@@ -25,10 +25,12 @@ export default function Fornecedores () {
   const [rows, setRows]= useState<ISuppliers[]>([])
   const [searchRows, setSearchRows] = useState<ISuppliers[]>([])
 
-
   const getData = async () => {
     return await BASE_URL.get<ISuppliers[]>('/suppliers')
-      .then(({data}) => setRows(data))
+      .then(({data}) => {
+        setRows(data)
+        setSearchRows(data)
+      })
   }
 
   useEffect(() => {

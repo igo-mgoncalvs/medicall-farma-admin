@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 import { FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField } from '@mui/material'
 import { ChangeEvent, useCallback, useEffect, useState } from 'react'
 import BASE_URL from '@/lib/axios'
-import { IGroup } from '@/utils/interfaces'
+import { IGroup, IInterfaceProducts } from '@/utils/interfaces'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation';
 
@@ -24,7 +24,8 @@ interface IProductForm {
   description: string 
   whatsapp: string 
   route: string 
-  link: string 
+  link: string
+  index: number
 }
 
 interface IPostImage {
@@ -35,6 +36,7 @@ interface IPostImage {
 export default function ProductForm ({ id }: { id?: string }) {
   const [groups, setGroups] = useState<IGroup[]>([])
   const [loading, setLoading] = useState<boolean>(false)
+  const [index, setIndex] = useState<number[]>([])
 
   const whatsappUrl = 'https://api.whatsapp.com/send/?phone=+5511930209934&text='
 
@@ -64,6 +66,7 @@ export default function ProductForm ({ id }: { id?: string }) {
   const imageUrl = watch('image')
   const imageId = watch('imageId')
   const idEdit = watch('id')
+  const productsGroupsId = watch('productsGroupsId')
 
   const errorMessageImage = errors.image && isSubmitted
 
@@ -74,8 +77,25 @@ export default function ProductForm ({ id }: { id?: string }) {
       .then(({ data }) => {
         setGroups(data)
       })
-
   }, [])
+
+  useEffect(() => {
+    BASE_URL.get<IInterfaceProducts[]>('/products')
+      .then(({ data }) => {
+        const list: number[] = []
+
+        const findGroup = data.find((item) => item.id === productsGroupsId)
+
+        if(findGroup) {
+          findGroup.products_list.forEach((item) => {
+            list.push(item.index)
+          })
+  
+          setIndex(list)
+        }
+      })
+  }, [productsGroupsId])
+
 
   useEffect(() => {
     if(id) {
@@ -148,7 +168,9 @@ export default function ProductForm ({ id }: { id?: string }) {
     if(!id) {
       BASE_URL.post('/add-product', {
           ...data,
-          route: encode(data.route)
+          route: encode(data.route).replaceAll('/', ''),
+          whatsapp: `${whatsappUrl}${encodeURI(data.whatsapp)}`,
+          index: index.length
       })
         .then(() => {
           toast.dismiss()
@@ -173,8 +195,9 @@ export default function ProductForm ({ id }: { id?: string }) {
     } else {
       BASE_URL.put(`/edit-product/${idEdit}`, {
           ...data,
-          route: encode(data.route),
-          whatsapp: `${whatsappUrl}${encodeURI(data.whatsapp)}`
+          route: encode(data.route).replaceAll('/', ''),
+          whatsapp: `${whatsappUrl}${encodeURI(data.whatsapp)}`,
+          index: Number(data.index)
       })
         .then(() => {
           toast.dismiss()
@@ -197,7 +220,7 @@ export default function ProductForm ({ id }: { id?: string }) {
           setLoading(false)
         })
     }
-  }, [idEdit, id])
+  }, [idEdit, id, index])
 
   return (
     <form
@@ -405,6 +428,36 @@ export default function ProductForm ({ id }: { id?: string }) {
             />
           )}
         />
+        
+        {(index.length > 0 && id) && (
+          <Controller
+            name="index"
+            control={control}
+            rules={{
+              required: {
+                value: true,
+                message: 'Esse campo é necessario'
+              }
+            }}
+            render={({field: { onChange, value }, fieldState: { error }}) => (
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Posição</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={`${value || 0}`}
+                  defaultValue=' '
+                  label="Posição"
+                  onChange={onChange}
+                >
+                  {index.map(item => (
+                    <MenuItem value={`${item}`}>{item + 1}º</MenuItem> 
+                  ))}
+                </Select>
+              </FormControl>
+            )}
+          />
+        )}
 
         <LoadingButton
           variant='contained'

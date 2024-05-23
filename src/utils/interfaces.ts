@@ -1,6 +1,28 @@
 export interface IGroup {
   id: string
   group_name: string
+  active: boolean
+  index: number
+}
+
+interface IProduct {
+  id: string 
+  productsGroupsId: string 
+  image: string 
+  imageId: string 
+  name: string 
+  summary: string 
+  description: string 
+  whatsapp: string 
+  route: string 
+  link: string
+  index: number
+}
+
+export interface IInterfaceProducts {
+  id: string
+  group_name: string
+  products_list: IProduct[]
 }
 
 export interface ISupplier {

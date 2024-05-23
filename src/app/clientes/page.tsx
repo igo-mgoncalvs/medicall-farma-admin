@@ -38,7 +38,7 @@ export default function Clients () {
       autoClose: false,
     });
   
-    BASE_URL.delete(`/remove-supplier/${id}`)
+    BASE_URL.delete(`/remove-client/${id}`)
       .then(() => {
         toast.dismiss()
         toast.success('Fornecedor excluido com sucesso!', {

@@ -12,6 +12,7 @@ import TableComponent from "@/components/tableComponent";
 import styles from './styles.module.css'
 import { IGroup } from '@/utils/interfaces';
 import TableActions from '@/components/tableComponent/actions';
+import { Switch } from '@mui/material';
 
 
 export default function Fornecedores () {
@@ -57,6 +58,32 @@ export default function Fornecedores () {
       })
   }
 
+  const handleChangeStatus = (row: IGroup) => {
+    toast.info('Aguarde um instante', {
+      position: "top-right",
+      pauseOnHover: false,
+      autoClose: false,
+    });
+
+    BASE_URL.put(`/change-group-status/${row.id}`)
+      .then(() => {
+        toast.dismiss()
+        toast.success('Status do grupo alterado com sucesso!', {
+          position: "top-right",
+          pauseOnHover: false,
+          autoClose: 5000,
+        });
+        getData()
+      })
+      .catch(() => {
+        toast.dismiss()
+        toast.error('Erro ao alterar o status do grupo', {
+          position: "top-right",
+          pauseOnHover: false,
+          autoClose: 5000
+        });
+      })
+  }
   
   const columns: GridColDef[] = [
     { 
@@ -69,6 +96,20 @@ export default function Fornecedores () {
           editRoute: `/editar-grupo/${row.id}`,
           onDelete: () => handleDeleteGroup({ id: row.id })
         }),
+      sortable: false,
+      disableColumnMenu: true
+    },
+    {
+      field: 'active',
+      headerName: 'Status',
+      width: 90,
+      headerAlign: 'center',
+      renderCell: ({ row } : {row: IGroup}) => (
+        <Switch
+          checked={row.active}
+          onChange={() => handleChangeStatus(row)}
+        />
+      ),
       sortable: false,
       disableColumnMenu: true
     },

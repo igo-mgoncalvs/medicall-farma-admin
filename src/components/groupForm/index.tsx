@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { IGroup } from "@/utils/interfaces"
-import { TextField } from '@mui/material'
+import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material'
 import LoadingButton from '@mui/lab/LoadingButton';
 import { Controller, useForm } from "react-hook-form"
 import { toast } from "react-toastify";
@@ -13,6 +13,8 @@ import styles from './styles.module.css'
 
 export default function GroupForm ({ id }: { id?: string }) {
   const [loading, setLoading] = useState<boolean>(false)
+  const [index, setIndex] = useState<number[]>([])
+
 
   const { control, handleSubmit } = useForm<IGroup>({
     defaultValues: async () => {
@@ -28,11 +30,27 @@ export default function GroupForm ({ id }: { id?: string }) {
 
   const navigation = useRouter()
 
+  useEffect(() => {
+    BASE_URL.get<IGroup[]>('/groups')
+      .then(({ data }) => {
+        const list: number[] = []
+
+        data.forEach((item) => {
+          list.push(item.index)
+        })
+  
+        setIndex(list)
+      })
+  }, [])
+
   const onSubmit = useCallback((data: IGroup) => {
     setLoading(true)
 
     if(!id) {
-      BASE_URL.post('/add-group', data)
+      BASE_URL.post('/add-group', {
+        ...data,
+        index: index.length
+      })
         .then(() => {
           toast.dismiss()
           toast.success('Imagem publicada com sucesso!', {
@@ -54,7 +72,10 @@ export default function GroupForm ({ id }: { id?: string }) {
         setLoading(false)
       })
     } else {
-      BASE_URL.put(`/edit-group/${id}`, data)
+      BASE_URL.put(`/edit-group/${id}`, {
+        ...data,
+        index: Number(data.index)
+      })
         .then(() => {
           toast.dismiss()
           toast.success('Grupo editado com sucesso!', {
@@ -77,7 +98,7 @@ export default function GroupForm ({ id }: { id?: string }) {
       })
 
     }
-  }, [id])
+  }, [id, index])
 
   return (
     <div>
@@ -105,6 +126,36 @@ export default function GroupForm ({ id }: { id?: string }) {
             />
           )}
         />
+
+        {(index.length > 0 && id) && (
+          <Controller
+            name="index"
+            control={control}
+            rules={{
+              required: {
+                value: true,
+                message: 'Esse campo é necessario'
+              }
+            }}
+            render={({field: { onChange, value }, fieldState: { error }}) => (
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Posição</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={`${value || 0}`}
+                  defaultValue=' '
+                  label="Posição"
+                  onChange={onChange}
+                >
+                  {index.map(item => (
+                    <MenuItem value={`${item}`}>{item + 1}º</MenuItem> 
+                  ))}
+                </Select>
+              </FormControl>
+            )}
+          />
+        )}
 
         <LoadingButton
           variant='contained'
