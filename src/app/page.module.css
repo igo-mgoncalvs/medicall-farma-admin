@@ -1,6 +1,7 @@
 .function_bar {
   display: flex;
   justify-content: space-between;
+  margin-bottom: 30px;
 }
 
 .title {
@@ -57,8 +58,21 @@
   fill: #fff;
 }
 
+.groups {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.list_item {
+  border: 1px solid rgb(167, 167, 167);
+  border-radius: 10px;
+}
+
 .table {
-  padding-top: 70px;
+  padding-top: 10px;
+  transition: all ease-in-out 5s;
+  padding: 15px;
 }
 
 .favorite_icon {

@@ -12,9 +12,10 @@ import AddIcon from '@/components/icons/add'
 import TableComponent from "@/components/tableComponent";
 
 import styles from "./page.module.css";
-import { Edit } from '@mui/icons-material';
+import { Edit, ExpandLess, ExpandMore, StarBorder } from '@mui/icons-material';
 import TableActions from '@/components/tableComponent/actions';
-import { MenuItem, Select, Switch } from '@mui/material';
+import { Collapse, List, ListItemButton, ListItemIcon, ListItemText, MenuItem, Select, Switch } from '@mui/material';
+import TableReorderingComponent from '@/components/tableOrderingComponent';
 
 interface IProduct {
   id: string
@@ -30,15 +31,17 @@ interface IProduct {
 }
 
 interface IGroups {
-  id: number,
+  id: string,
   group_name: string,
   products_list: IProduct[]
 }
 
 export default function Home() {
-  const [rows, setRows] = useState<IProduct[]>([])
-  const [searchRows, setSearchRows] = useState<IProduct[]>([])
+  const [rows, setRows] = useState<IGroups[]>([])
+  const [searchRows, setSearchRows] = useState<IGroups[]>([])
+  const [openGroup, setOpenGroup] = useState<String>('');
   const [searchBase, setSearchBase] = useState('name')
+
   
   const getData = async () => {
     return await BASE_URL.get<IGroups[]>('/products')
@@ -55,8 +58,8 @@ export default function Home() {
   
       })
   
-      setRows(list)
-      setSearchRows(list)
+      setRows(data)
+      setSearchRows(data)
     })
   }
 
@@ -121,44 +124,131 @@ export default function Home() {
   const handleSearch = useCallback((value: string) => {
     const regex = new RegExp(value, 'i');
 
+
     switch (searchBase) {
-      case 'group':
-        setSearchRows(rows.filter((item) =>  regex.test(item.group)))
-
-        break;
-
       case 'image':
-        setSearchRows(rows.filter((item) =>  regex.test(item.image)))  
+        const listimage: IGroups[] = []
+
+        rows.forEach(({group_name, id, products_list}) => {
+
+          const search = products_list.filter((item) => regex.test(item.image))
+
+          listimage.push({
+            id,
+            group_name,
+            products_list: search
+          })
+        })
+
+        setSearchRows(listimage)
 
         break;
 
       case 'name':
-        setSearchRows(rows.filter((item) =>  regex.test(item.name)))     
+        const listname: IGroups[] = []
+
+        rows.forEach(({group_name, id, products_list}) => {
+
+          const search = products_list.filter((item) => regex.test(item.name))
+
+          listname.push({
+            id,
+            group_name,
+            products_list: search
+          })
+        })
+
+        setSearchRows(listname)
         
         break;
         
       case 'summary':
-        setSearchRows(rows.filter((item) =>  regex.test(item.summary)))     
+        const listsummary: IGroups[] = []
+
+        rows.forEach(({group_name, id, products_list}) => {
+
+          const search = products_list.filter((item) => regex.test(item.summary))
+
+          listsummary.push({
+            id,
+            group_name,
+            products_list: search
+          })
+        })
+
+        setSearchRows(listsummary)   
         
         break;
 
       case 'description':
-        setSearchRows(rows.filter((item) =>  regex.test(item.description)))   
+        const listdescription: IGroups[] = []
+
+        rows.forEach(({group_name, id, products_list}) => {
+
+          const search = products_list.filter((item) => regex.test(item.description))
+
+          listdescription.push({
+            id,
+            group_name,
+            products_list: search
+          })
+        })
+
+        setSearchRows(listdescription)
 
         break;
 
       case 'whatsapp':
-        setSearchRows(rows.filter((item) =>  regex.test(item.whatsapp)))   
+        const listwhatsapp: IGroups[] = []
+
+        rows.forEach(({group_name, id, products_list}) => {
+
+          const search = products_list.filter((item) => regex.test(item.whatsapp))
+
+          listwhatsapp.push({
+            id,
+            group_name,
+            products_list: search
+          })
+        })
+
+        setSearchRows(listwhatsapp)
 
         break;
 
       case 'route':
-        setSearchRows(rows.filter((item) =>  regex.test(item.route)))   
+        const listroute: IGroups[] = []
+
+        rows.forEach(({group_name, id, products_list}) => {
+
+          const search = products_list.filter((item) => regex.test(item.route))
+
+          listroute.push({
+            id,
+            group_name,
+            products_list: search
+          })
+        })
+
+        setSearchRows(listroute)  
 
         break;
 
       case 'link':
-        setSearchRows(rows.filter((item) =>  regex.test(item.link))) 
+        const listlink: IGroups[] = []
+
+        rows.forEach(({group_name, id, products_list}) => {
+
+          const search = products_list.filter((item) => regex.test(item.link))
+
+          listlink.push({
+            id,
+            group_name,
+            products_list: search
+          })
+        })
+
+        setSearchRows(listlink)
 
         break;
     
@@ -197,17 +287,12 @@ export default function Home() {
       disableColumnMenu: true
     },
     { 
-      field: 'group',
-      headerName: 'Grupo',
-      width: 250,
-      sortable: false,
-    },
-    { 
       field: 'image',
       headerName: 'Imagem',
       width: 100,
       sortable: false,
       headerAlign: 'center',
+      disableColumnMenu: true,
       align: 'center',
       renderCell: (params: GridRenderCellParams) => (
         <Image
@@ -224,36 +309,42 @@ export default function Home() {
       headerName: 'Nome',
       width: 150,
       sortable: false,
+      disableColumnMenu: true
     },
     { 
       field: 'summary',
       headerName: 'Resumo',
       width: 250,
       sortable: false,
+      disableColumnMenu: true
     },
     { 
       field: 'description',
       headerName: 'Descrição',
       width: 250,
       sortable: false,
+      disableColumnMenu: true
     },
     { 
       field: 'whatsapp',
       headerName: 'Whatsapp',
       width: 200,
       sortable: false,
+      disableColumnMenu: true
     },
     { 
       field: 'route',
       headerName: 'Rota',
       width: 200,
       sortable: false,
+      disableColumnMenu: true
     },
     { 
       field: 'link',
       headerName: 'Link',
       width: 250,
       sortable: false,
+      disableColumnMenu: true
     }
   ]
   
@@ -291,6 +382,14 @@ export default function Home() {
       headerName: 'pelo link',
     }
   ]
+
+  const handleClick = useCallback((id: string) => {
+    if(openGroup) {
+      setOpenGroup('');
+    } else {
+      setOpenGroup(id);
+    }
+  }, [openGroup])
 
   return (
     <div>
@@ -356,16 +455,31 @@ export default function Home() {
         </div>
       </div>
 
-      {rows && (
-        <div
-          className={styles.table}
-        >
-          <TableComponent
-            columns={ProductsColumns}
-            rows={searchRows}
-          />
-        </div>
-      )}
+      <List
+        className={styles.groups}
+      >
+        {searchRows?.map((group) => group.products_list.length > 0 && (
+          <div
+            className={styles.list_item}
+          >
+            <ListItemButton onClick={() => handleClick(group.id)}>
+              <ListItemText primary={group.group_name} />
+              {openGroup ? <ExpandLess /> : <ExpandMore />}
+            </ListItemButton>
+
+            <Collapse in={openGroup === group.id} timeout="auto" unmountOnExit>
+              <div
+                className={styles.table}
+              >
+                <TableReorderingComponent
+                  columns={ProductsColumns}
+                  rows={group.products_list}
+                />
+              </div>
+            </Collapse>
+          </div>
+        ))}
+      </List>
     </div>
   );
 }
