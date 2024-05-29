@@ -3,19 +3,18 @@
 import { useCallback, useEffect, useState } from 'react'
 import Image from "next/image";
 import Link from "next/link";
-import { GridColDef, GridDeleteIcon, GridRenderCellParams, GridRowsProp } from "@mui/x-data-grid";
+import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import BASE_URL from "@/lib/axios";
 import { toast } from "react-toastify";
 
-import search_icon from '@/components/icons/search.svg'
 import AddIcon from '@/components/icons/add'
-import TableComponent from "@/components/tableComponent";
 
 import styles from "./page.module.css";
-import { Edit, ExpandLess, ExpandMore, StarBorder } from '@mui/icons-material';
+import { ExpandLess, ExpandMore} from '@mui/icons-material';
 import TableActions from '@/components/tableComponent/actions';
-import { Collapse, List, ListItemButton, ListItemIcon, ListItemText, MenuItem, Select, Switch } from '@mui/material';
+import { Collapse, List, ListItemButton, ListItemText, MenuItem, Select, Switch } from '@mui/material';
 import TableReorderingComponent from '@/components/tableOrderingComponent';
+import { GridRowOrderChangeParams } from '@mui/x-data-grid-pro';
 
 interface IProduct {
   id: string
@@ -28,6 +27,9 @@ interface IProduct {
   route: string
   active: boolean
   whatsapp: string
+  index: number
+  productsGroupsId: string 
+  imageId: string 
 }
 
 interface IGroups {
@@ -41,7 +43,6 @@ export default function Home() {
   const [searchRows, setSearchRows] = useState<IGroups[]>([])
   const [openGroup, setOpenGroup] = useState<String>('');
   const [searchBase, setSearchBase] = useState('name')
-
   
   const getData = async () => {
     return await BASE_URL.get<IGroups[]>('/products')
@@ -124,13 +125,11 @@ export default function Home() {
   const handleSearch = useCallback((value: string) => {
     const regex = new RegExp(value, 'i');
 
-
     switch (searchBase) {
       case 'image':
         const listimage: IGroups[] = []
 
         rows.forEach(({group_name, id, products_list}) => {
-
           const search = products_list.filter((item) => regex.test(item.image))
 
           listimage.push({
@@ -148,9 +147,7 @@ export default function Home() {
         const listname: IGroups[] = []
 
         rows.forEach(({group_name, id, products_list}) => {
-
           const search = products_list.filter((item) => regex.test(item.name))
-
           listname.push({
             id,
             group_name,
@@ -166,7 +163,6 @@ export default function Home() {
         const listsummary: IGroups[] = []
 
         rows.forEach(({group_name, id, products_list}) => {
-
           const search = products_list.filter((item) => regex.test(item.summary))
 
           listsummary.push({
@@ -184,7 +180,6 @@ export default function Home() {
         const listdescription: IGroups[] = []
 
         rows.forEach(({group_name, id, products_list}) => {
-
           const search = products_list.filter((item) => regex.test(item.description))
 
           listdescription.push({
@@ -202,7 +197,6 @@ export default function Home() {
         const listwhatsapp: IGroups[] = []
 
         rows.forEach(({group_name, id, products_list}) => {
-
           const search = products_list.filter((item) => regex.test(item.whatsapp))
 
           listwhatsapp.push({
@@ -220,7 +214,6 @@ export default function Home() {
         const listroute: IGroups[] = []
 
         rows.forEach(({group_name, id, products_list}) => {
-
           const search = products_list.filter((item) => regex.test(item.route))
 
           listroute.push({
@@ -238,7 +231,6 @@ export default function Home() {
         const listlink: IGroups[] = []
 
         rows.forEach(({group_name, id, products_list}) => {
-
           const search = products_list.filter((item) => regex.test(item.link))
 
           listlink.push({
@@ -257,7 +249,7 @@ export default function Home() {
         break;
     }
 
-  }, [rows, searchBase])
+  }, [rows, searchBase, searchRows])
 
   const ProductsColumns: GridColDef[] = [
     {
@@ -304,6 +296,7 @@ export default function Home() {
         />
       )
     },
+    
     { 
       field: 'name',
       headerName: 'Nome',
@@ -384,7 +377,7 @@ export default function Home() {
   ]
 
   const handleClick = useCallback((id: string) => {
-    if(openGroup) {
+    if(openGroup && openGroup === id) {
       setOpenGroup('');
     } else {
       setOpenGroup(id);
@@ -466,7 +459,6 @@ export default function Home() {
               <ListItemText primary={group.group_name} />
               {openGroup ? <ExpandLess /> : <ExpandMore />}
             </ListItemButton>
-
             <Collapse in={openGroup === group.id} timeout="auto" unmountOnExit>
               <div
                 className={styles.table}
@@ -474,6 +466,7 @@ export default function Home() {
                 <TableReorderingComponent
                   columns={ProductsColumns}
                   rows={group.products_list}
+                  getData={getData}
                 />
               </div>
             </Collapse>

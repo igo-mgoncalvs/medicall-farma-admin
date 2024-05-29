@@ -67,7 +67,6 @@ function Users () {
       flex: 1,
       headerAlign: 'center',
       renderCell: ({ row } : {row: IUsers}) =>{
-        console.log(row)
         return TableActions({
         editRoute: `/usuarios/${row.id}`,
         onDelete: () => handleDeleteProduct({ id: row.id }),

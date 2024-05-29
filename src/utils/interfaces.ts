@@ -5,7 +5,7 @@ export interface IGroup {
   index: number
 }
 
-interface IProduct {
+export interface IProduct {
   id: string 
   productsGroupsId: string 
   image: string 

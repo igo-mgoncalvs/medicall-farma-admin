@@ -197,7 +197,6 @@ export default function ProductForm ({ id }: { id?: string }) {
           ...data,
           route: encode(data.route).replaceAll('/', ''),
           whatsapp: `${whatsappUrl}${encodeURI(data.whatsapp)}`,
-          index: Number(data.index)
       })
         .then(() => {
           toast.dismiss()
@@ -429,36 +428,6 @@ export default function ProductForm ({ id }: { id?: string }) {
           )}
         />
         
-        {(index.length > 0 && id) && (
-          <Controller
-            name="index"
-            control={control}
-            rules={{
-              required: {
-                value: true,
-                message: 'Esse campo é necessario'
-              }
-            }}
-            render={({field: { onChange, value }, fieldState: { error }}) => (
-              <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Posição</InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={`${value || 0}`}
-                  defaultValue=' '
-                  label="Posição"
-                  onChange={onChange}
-                >
-                  {index.map(item => (
-                    <MenuItem value={`${item}`}>{item + 1}º</MenuItem> 
-                  ))}
-                </Select>
-              </FormControl>
-            )}
-          />
-        )}
-
         <LoadingButton
           variant='contained'
           className={styles.button}

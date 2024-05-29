@@ -185,7 +185,6 @@ export default function AboutUsValues () {
                 isSubmitted={isSubmitted}
                 id='valueImage'
                 setValue={({link, file_name}) => {
-                  console.log(link)
                   setValue('image', link)
                   setValue('imageId', file_name)
                 }}    

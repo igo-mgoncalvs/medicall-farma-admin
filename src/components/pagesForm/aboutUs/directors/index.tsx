@@ -185,7 +185,6 @@ export default function AboutUsDirectors () {
                 isSubmitted={isSubmitted}
                 id='directorsImage'
                 setValue={({link, file_name}) => {
-                  console.log(link)
                   setValue('image', link)
                   setValue('imageId', file_name)
                 }}    
