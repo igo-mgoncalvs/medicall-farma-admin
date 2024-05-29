@@ -37,6 +37,7 @@ export default function ProductForm ({ id }: { id?: string }) {
   const [groups, setGroups] = useState<IGroup[]>([])
   const [loading, setLoading] = useState<boolean>(false)
   const [index, setIndex] = useState<number[]>([])
+  const [groupIdOld, setGoupIdOld] = useState<string>('')
 
   const whatsappUrl = 'https://api.whatsapp.com/send/?phone=+5511930209934&text='
 
@@ -53,10 +54,13 @@ export default function ProductForm ({ id }: { id?: string }) {
     }} = useForm<IProductForm>({
     defaultValues: async () => {
       return await BASE_URL.get<IProductForm>(`/find-product/${id}`)
-        .then(({data}) => ({
+        .then(({data}) => {
+          setGoupIdOld(data.productsGroupsId)
+          
+          return ({
           ...data, 
           whatsapp: decodeURI(data?.whatsapp.replace(whatsappUrl, '')),
-        }))
+        })})
         .finally(() => {
           toast.dismiss()
         })
@@ -193,10 +197,13 @@ export default function ProductForm ({ id }: { id?: string }) {
           setLoading(false)
         })
     } else {
+      const changeIndex = groupIdOld !== data.productsGroupsId ? index.length : data.index
+
       BASE_URL.put(`/edit-product/${idEdit}`, {
           ...data,
           route: encode(data.route).replaceAll('/', ''),
           whatsapp: `${whatsappUrl}${encodeURI(data.whatsapp)}`,
+          index: changeIndex
       })
         .then(() => {
           toast.dismiss()
@@ -219,7 +226,7 @@ export default function ProductForm ({ id }: { id?: string }) {
           setLoading(false)
         })
     }
-  }, [idEdit, id, index])
+  }, [idEdit, id, index, groupIdOld])
 
   return (
     <form
