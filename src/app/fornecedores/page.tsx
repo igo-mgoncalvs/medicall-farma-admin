@@ -13,6 +13,7 @@ import styles from './styles.module.css'
 import TableActions from '@/components/tableComponent/actions';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from "react-toastify";
+import TableReorderingComponent from '@/components/tableOrderingComponent';
 
 interface ISuppliers {
   id: string
@@ -141,14 +142,18 @@ export default function Fornecedores () {
         </div>
       </div>
 
-      <div
-        className={styles.table}
-      >
-        <TableComponent
-          columns={columns}
-          rows={searchRows}
-        />
-      </div>
+      {searchRows.length > 0 && (
+        <div
+          className={styles.table}
+        >
+          <TableReorderingComponent
+            columns={columns}
+            rows={searchRows}
+            getData={getData}
+            editRoute='/reorder-suppliers'
+          />
+        </div>
+      )}
     </div>
   )
 }

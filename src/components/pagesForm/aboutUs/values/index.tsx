@@ -199,7 +199,7 @@ export default function AboutUsValues () {
               type='submit'
               className={styles.button}
             >
-              Enviar
+              Salvar
             </LoadingButton>
             <LoadingButton
               variant='contained'

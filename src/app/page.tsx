@@ -258,7 +258,7 @@ export default function Home() {
       width: 90,
       headerAlign: 'center',
       renderCell: ({ row } : {row: IProduct}) => TableActions({
-        editRoute: `/editar-produto/${row.route}`,
+        editRoute: `/editar-produto/${row.id}`,
         onDelete: () => handleDeleteProduct({ id: row.id })
       }),
       sortable: false,
@@ -326,7 +326,7 @@ export default function Home() {
       disableColumnMenu: true
     },
     { 
-      field: 'route',
+      field: 'id',
       headerName: 'Rota',
       width: 200,
       sortable: false,
@@ -448,31 +448,34 @@ export default function Home() {
         </div>
       </div>
 
-      <List
-        className={styles.groups}
-      >
-        {searchRows?.map((group) => group.products_list.length > 0 && (
-          <div
-            className={styles.list_item}
-          >
-            <ListItemButton onClick={() => handleClick(group.id)}>
-              <ListItemText primary={group.group_name} />
-              {openGroup ? <ExpandLess /> : <ExpandMore />}
-            </ListItemButton>
-            <Collapse in={openGroup === group.id} timeout="auto" unmountOnExit>
-              <div
-                className={styles.table}
-              >
-                <TableReorderingComponent
-                  columns={ProductsColumns}
-                  rows={group.products_list}
-                  getData={getData}
-                />
-              </div>
-            </Collapse>
-          </div>
-        ))}
-      </List>
+      {searchRows.length > 0 && (
+        <List
+          className={styles.groups}
+        >
+          {searchRows?.map((group) => group.products_list.length > 0 && (
+            <div
+              className={styles.list_item}
+            >
+              <ListItemButton onClick={() => handleClick(group.id)}>
+                <ListItemText primary={group.group_name} />
+                {openGroup ? <ExpandLess /> : <ExpandMore />}
+              </ListItemButton>
+              <Collapse in={openGroup === group.id} timeout="auto" unmountOnExit>
+                <div
+                  className={styles.table}
+                >
+                  <TableReorderingComponent
+                    columns={ProductsColumns}
+                    rows={group.products_list}
+                    getData={getData}
+                    editRoute='/reorder-products'
+                  />
+                </div>
+              </Collapse>
+            </div>
+          ))}
+        </List>
+      )}
     </div>
   );
 }

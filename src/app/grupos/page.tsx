@@ -13,6 +13,7 @@ import styles from './styles.module.css'
 import { IGroup } from '@/utils/interfaces';
 import TableActions from '@/components/tableComponent/actions';
 import { Switch } from '@mui/material';
+import TableReorderingComponent from '@/components/tableOrderingComponent';
 
 
 export default function Fornecedores () {
@@ -160,10 +161,12 @@ export default function Fornecedores () {
       <div
         className={styles.table}
       >
-        {rows && (
-          <TableComponent
+        {searchRows.length > 0 && (
+          <TableReorderingComponent
             columns={columns}
             rows={searchRows}
+            getData={getData}
+            editRoute={'/reorder-groups'}
           />
         )}
       </div>

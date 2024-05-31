@@ -157,7 +157,7 @@ export default function OurHistory () {
         type='submit'
         className={styles.button}
       >
-        Enviar
+        Salvar
       </LoadingButton>
     </form>
   )

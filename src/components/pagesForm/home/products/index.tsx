@@ -201,7 +201,7 @@ export default function HomeProductsForm () {
         loading={loading}
         type='submit'
       >
-        Enviar
+        Salvar
       </LoadingButton>
     </form>
   )

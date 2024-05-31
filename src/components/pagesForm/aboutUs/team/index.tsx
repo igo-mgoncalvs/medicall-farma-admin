@@ -176,7 +176,7 @@ export default function AboutUsTeam () {
         type='submit'
         className={styles.button}
       >
-        Enviar
+        Salvar
       </LoadingButton>
     </form>
   )

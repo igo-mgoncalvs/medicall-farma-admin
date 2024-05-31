@@ -199,7 +199,7 @@ export default function AboutUsDirectors () {
               type='submit'
               className={styles.button}
             >
-              Enviar
+              Salvar
             </LoadingButton>
             <LoadingButton
               variant='contained'

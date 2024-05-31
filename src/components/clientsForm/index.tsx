@@ -201,7 +201,7 @@ export default function ClientsForm ({ id }: { id?: string }) {
         loading={loading}
         type='submit'
       >
-        Enviar
+        Salvar
       </LoadingButton>
     </form>
   )

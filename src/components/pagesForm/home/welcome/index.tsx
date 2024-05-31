@@ -225,7 +225,7 @@ export default function HomeWelcomeForm () {
         loading={loading}
         type='submit'
       >
-        Enviar
+        Salvar
       </LoadingButton>
     </form>
   )

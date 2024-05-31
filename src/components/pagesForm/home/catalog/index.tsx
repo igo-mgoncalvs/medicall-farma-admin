@@ -227,7 +227,7 @@ export default function CatalogForm () {
         loading={loading}
         type='submit'
       >
-        Enviar
+        Salvar
       </LoadingButton>
     </form>
   )

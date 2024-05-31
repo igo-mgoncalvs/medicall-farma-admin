@@ -202,7 +202,7 @@ export default function SupplierForm ({ id }: { id?: string }) {
         loading={loading}
         type='submit'
       >
-        Enviar
+        Salvar
       </LoadingButton>
     </form>
   )

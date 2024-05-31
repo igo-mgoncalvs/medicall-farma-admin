@@ -158,7 +158,7 @@ export default function PrivacyPolicy () {
         type='submit'
         className={styles.button}
       >
-        Enviar
+        Salvar
       </LoadingButton>
     </form>
   )

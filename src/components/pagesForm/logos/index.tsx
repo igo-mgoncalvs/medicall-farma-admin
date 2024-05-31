@@ -125,7 +125,7 @@ export default function LogosForm () {
         loading={loading}
         type='submit'
       >
-        Enviar
+        Salvar
       </LoadingButton>
     </form>
   )

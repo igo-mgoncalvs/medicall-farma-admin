@@ -14,6 +14,7 @@ import styles from './styles.module.css'
 import { useCallback, useEffect, useState } from 'react';
 import { IClient } from '@/utils/interfaces';
 import TableActions from '@/components/tableComponent/actions';
+import TableReorderingComponent from '@/components/tableOrderingComponent';
 
 export default function Clients () {
   const [rows, setRows] = useState<IClient[]>([])
@@ -141,14 +142,19 @@ export default function Clients () {
         </div>
       </div>
 
-      <div
-        className={styles.table}
-      >
-        <TableComponent
-          columns={columns}
-          rows={searchRows}
-        />
-      </div>
+
+      {searchRows.length > 0 && (
+        <div
+          className={styles.table}
+        >
+          <TableReorderingComponent
+            columns={columns}
+            rows={searchRows}
+            getData={getData}
+            editRoute='/reorder-clients'
+          />
+        </div>
+      )}
     </div>
   )
 }

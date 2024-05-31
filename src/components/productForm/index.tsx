@@ -20,7 +20,8 @@ interface IProductForm {
   image: string 
   imageId: string 
   name: string 
-  summary: string 
+  summary: string
+  subTitle: string
   description: string 
   whatsapp: string 
   route: string 
@@ -348,6 +349,21 @@ export default function ProductForm ({ id }: { id?: string }) {
         />
 
         <Controller
+          name='subTitle'
+          control={control}
+          render={({ field: { onChange, value }}) => (
+              <TextField
+                label='Subtítulo'
+                value={value}
+                defaultValue={id ? ' ': ''}
+                onChange={(e) => {
+                  onChange(e)
+                }}
+              />
+          )}
+        />
+
+        <Controller
           name='summary'
           control={control}
           rules={{
@@ -441,7 +457,7 @@ export default function ProductForm ({ id }: { id?: string }) {
           loading={loading}
           type='submit'
         >
-          Enviar
+          Salvar
         </LoadingButton>
       </div>
     </form>

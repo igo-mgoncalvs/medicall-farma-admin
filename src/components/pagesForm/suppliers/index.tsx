@@ -197,7 +197,7 @@ export default function SuppliersForm () {
         type='submit'
         className={styles.button}
       >
-        Enviar
+        Salvar
       </LoadingButton>
     </form>
   )

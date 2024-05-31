@@ -6,7 +6,6 @@ import { GridColDef } from "@mui/x-data-grid";
 import {
   DataGridPro, GridRowOrderChangeParams
 } from '@mui/x-data-grid-pro';
-import { LicenseInfo } from '@mui/x-license';
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -14,20 +13,17 @@ import styles from './styles.module.css'
 import BASE_URL from "@/lib/axios";
 
 interface IProps {
-  rows: IProduct[],
+  rows: any[],
   columns: GridColDef[]
   size?: number
+  editRoute: string
   getData: () => void
 }
 
-function TableReorderingComponent ({ rows, columns, size, getData }:IProps) {
+function TableReorderingComponent ({ rows, columns, size, editRoute, getData }:IProps) {
   const [rowsOrder, setOrder] = useState<any>(rows)
   const [loading, setLoading] = useState<boolean>(false)
   const [buttonDisable, setButtonDisable]  = useState<boolean>(true)
-
-  LicenseInfo.setLicenseKey(
-    'x0jTPl0USVkVZV0SsMjM1kDNyADM5cjM2ETPZJVSQhVRsIDN0YTM6IVREJ1T0b9586ef25c9853decfa7709eee27a1e',
-  );
   
   useEffect(() => {
     setOrder(rows)
@@ -53,7 +49,7 @@ function TableReorderingComponent ({ rows, columns, size, getData }:IProps) {
   const handleReordering = useCallback(() => {
     setLoading(true)
     
-    BASE_URL.put('/reorder-products', rowsOrder)
+    BASE_URL.put(editRoute, rowsOrder)
       .then(() => {
         toast.dismiss()
         toast.success('Lista editada com sucesso!', {
@@ -107,7 +103,7 @@ function TableReorderingComponent ({ rows, columns, size, getData }:IProps) {
           className={styles.button}
           onClick={handleReordering}
         >
-          Enviar
+          Salvar
         </LoadingButton>
       )}
 

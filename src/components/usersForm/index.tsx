@@ -136,7 +136,7 @@ export default function UsersForm ({ id }: IProps) {
         type="submit"
         loading={loading}
       >
-        Enviar
+        Salvar
       </LoadingButton>
     </form>
   )

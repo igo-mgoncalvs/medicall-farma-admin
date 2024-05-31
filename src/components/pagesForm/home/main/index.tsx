@@ -226,7 +226,7 @@ export default function MainForm () {
         loading={loading}
         type='submit'
       >
-        Enviar
+        Salvar
       </LoadingButton>
     </form>
   )
