@@ -175,7 +175,8 @@ export default function ProductForm ({ id }: { id?: string }) {
           ...data,
           route: encode(data.route).replaceAll('/', ''),
           whatsapp: `${whatsappUrl}${encodeURI(data.whatsapp)}`,
-          index: index.length
+          index: index.length,
+          subTitle: data.subTitle || ''
       })
         .then(() => {
           toast.dismiss()
@@ -204,7 +205,8 @@ export default function ProductForm ({ id }: { id?: string }) {
           ...data,
           route: encode(data.route).replaceAll('/', ''),
           whatsapp: `${whatsappUrl}${encodeURI(data.whatsapp)}`,
-          index: changeIndex
+          index: changeIndex,
+          subTitle: data.subTitle || ''
       })
         .then(() => {
           toast.dismiss()
