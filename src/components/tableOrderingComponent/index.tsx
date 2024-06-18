@@ -16,11 +16,12 @@ interface IProps {
   rows: any[],
   columns: GridColDef[]
   size?: number
-  editRoute: string
+  editRoute?: string
   getData: () => void
+  isEditing?: (status: boolean) => void 
 }
 
-function TableReorderingComponent ({ rows, columns, size, editRoute, getData }:IProps) {
+function TableReorderingComponent ({ rows, columns, size, editRoute, isEditing = () => null, getData }:IProps) {
   const [rowsOrder, setOrder] = useState<any>(rows)
   const [loading, setLoading] = useState<boolean>(false)
   const [buttonDisable, setButtonDisable]  = useState<boolean>(true)
@@ -28,6 +29,10 @@ function TableReorderingComponent ({ rows, columns, size, editRoute, getData }:I
   useEffect(() => {
     setOrder(rows)
   }, [rows])
+  
+  useEffect(() => {
+    isEditing(!buttonDisable)
+  }, [buttonDisable])
 
   const handleChange = useCallback((e: GridRowOrderChangeParams) => {
     const list: IProduct[] = Array.from(rowsOrder)
@@ -48,40 +53,43 @@ function TableReorderingComponent ({ rows, columns, size, editRoute, getData }:I
 
   const handleReordering = useCallback(() => {
     setLoading(true)
+
+    if(editRoute) {
+      BASE_URL.put(editRoute, rowsOrder)
+        .then(() => {
+          toast.dismiss()
+          toast.success('Lista editada com sucesso!', {
+            position: "top-right",
+            pauseOnHover: false,
+            autoClose: 5000,
+          });
+        })
+        .catch(() => {
+          toast.dismiss()
+          toast.error('Erro ao editar a lista', {
+            position: "top-right",
+            pauseOnHover: false,
+            autoClose: 5000
+          });
+        })
+        .finally(() => {
+          setLoading(false)
+          getData()
+          setButtonDisable(true)
+        })      
+
+    }
     
-    BASE_URL.put(editRoute, rowsOrder)
-      .then(() => {
-        toast.dismiss()
-        toast.success('Lista editada com sucesso!', {
-          position: "top-right",
-          pauseOnHover: false,
-          autoClose: 5000,
-        });
-      })
-      .catch(() => {
-        toast.dismiss()
-        toast.error('Erro ao editar a lista', {
-          position: "top-right",
-          pauseOnHover: false,
-          autoClose: 5000
-        });
-      })
-      .finally(() => {
-        setLoading(false)
-        getData()
-        setButtonDisable(true)
-      })      
   }, [rowsOrder, getData])
 
   useEffect(() => {
     const removeLicenseKeyDiv = () => {
+      console.log('teste')
       const invalidLicenseDiv = document.querySelectorAll("[style*='pointer-events: none']")[0]; // Substitua com o seletor correto
       if (invalidLicenseDiv) {
-        invalidLicenseDiv.remove();
+        invalidLicenseDiv.textContent = ''
       }
     };
-
-    removeLicenseKeyDiv();
 
     // Adicione um observador para remover caso a div seja adicionada dinamicamente
     const observer = new MutationObserver(removeLicenseKeyDiv);
@@ -89,6 +97,7 @@ function TableReorderingComponent ({ rows, columns, size, editRoute, getData }:I
 
     return () => observer.disconnect();
   }, []);
+
 
   return (
     <div

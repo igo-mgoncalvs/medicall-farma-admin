@@ -14,6 +14,7 @@ import { IAboutUs_Values, IHomeProductsList } from "@/utils/interfaces";
 import BASE_URL from "@/lib/axios";
 
 import styles from './styles.module.css'
+import TableReorderingComponent from "@/components/tableOrderingComponent";
 
 interface IParams {
   enableForm: boolean
@@ -24,6 +25,8 @@ interface IParams {
 }
 
 export default function ValuesTable ({ enableForm, setEnableForm, setValueEdit, getData, rows }: IParams) {
+  const [showButton, setShowButton] = useState(true)
+  
   const handleButtonAction = useCallback(() => {
     setEnableForm(!enableForm)
   }, [enableForm])
@@ -89,18 +92,23 @@ export default function ValuesTable ({ enableForm, setEnableForm, setValueEdit, 
 
   return (
     <div className={styles.container}>
-      <Button
-        variant="contained"
-        className={styles.button}
-        disabled={enableForm}
-        onClick={handleButtonAction}
-      >
-        Adiconar
-      </Button>
-      <TableComponent
+      {!showButton && (
+        <Button
+          variant="contained"
+          className={styles.button}
+          disabled={enableForm}
+          onClick={handleButtonAction}
+        >
+          Adiconar
+        </Button>
+      )}
+      <TableReorderingComponent
         columns={columns}
         rows={rows}
         size={3}
+        getData={getData}
+        isEditing={(status) => setShowButton(status)}
+        editRoute='/reorder-products-home'
       />
     </div>
   )
