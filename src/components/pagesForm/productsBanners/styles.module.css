@@ -1,0 +1,16 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.label {
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.bannerGroup {
+  display: flex;
+  gap: 28px
+}

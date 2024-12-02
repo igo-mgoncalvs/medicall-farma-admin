@@ -73,30 +73,42 @@ export default function LeftMenu() {
         },
         {
           id: 2,
+          title: 'Produtos',
+          activePage: ['paginas/produtos'],
+          route: '/paginas/produtos'
+        },
+        {
+          id: 3,
           title: 'Fornecedores',
           activePage: ['paginas/fornecedores'],
           route: '/paginas/fornecedores'
         },
         {
-          id: 3,
+          id: 4,
           title: 'Contato Whatsapp',
           activePage: ['paginas/contato'],
           route: '/paginas/contato'
         },
         {
-          id: 4,
+          id: 5,
           title: 'Contato Email',
           activePage: ['paginas/email'],
           route: '/paginas/email'
         },
         {
-          id: 5,
+          id: 6,
+          title: 'Endereço',
+          activePage: ['paginas/endereco'],
+          route: '/paginas/endereco'
+        },
+        {
+          id: 7,
           title: 'Logos do site',
           activePage: ['paginas/logos'],
           route: '/paginas/logos'
         },
         {
-          id: 6,
+          id: 8,
           title: 'Catalogo',
           activePage: ['paginas/catalogo'],
           route: '/paginas/catalogo'

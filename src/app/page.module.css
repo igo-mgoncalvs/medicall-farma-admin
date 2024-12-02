@@ -82,3 +82,19 @@
   height: 100%;
   width: 100%;
 }
+
+.star_container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  cursor: pointer;
+}
+
+.star_icon {
+  color: rgb(90, 90, 90)
+}
+
+.star_icon_active {
+  color: rgb(255, 187, 0)
+}

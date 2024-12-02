@@ -3,7 +3,7 @@
 import MainForm from '@/components/pagesForm/home/main'
 
 import styles from './styles.module.css'
-import { Divider, FormControlLabel, Switch } from '@mui/material'
+import { Divider } from '@mui/material'
 import HomeWelcomeForm from '@/components/pagesForm/home/welcome'
 import CatalogForm from '@/components/pagesForm/home/catalog'
 import HomeProductsForm from '@/components/pagesForm/home/products'

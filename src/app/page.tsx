@@ -10,42 +10,20 @@ import { toast } from "react-toastify";
 import AddIcon from '@/components/icons/add'
 
 import styles from "./page.module.css";
-import { ExpandLess, ExpandMore} from '@mui/icons-material';
+import { ExpandLess, ExpandMore, Star, StarBorder, StarBorderOutlined} from '@mui/icons-material';
 import TableActions from '@/components/tableComponent/actions';
 import { Collapse, List, ListItemButton, ListItemText, MenuItem, Select, Switch } from '@mui/material';
 import TableReorderingComponent from '@/components/tableOrderingComponent';
-import { GridRowOrderChangeParams } from '@mui/x-data-grid-pro';
-
-interface IProduct {
-  id: string
-  image: string 
-  name: string
-  link: string
-  description: string
-  summary: string
-  group: string
-  route: string
-  active: boolean
-  whatsapp: string
-  index: number
-  productsGroupsId: string 
-  imageId: string 
-}
-
-interface IGroups {
-  id: string,
-  group_name: string,
-  products_list: IProduct[]
-}
+import { IInterfaceProducts, IProduct } from '@/utils/interfaces';
 
 export default function Home() {
-  const [rows, setRows] = useState<IGroups[]>([])
-  const [searchRows, setSearchRows] = useState<IGroups[]>([])
+  const [rows, setRows] = useState<IInterfaceProducts[]>([])
+  const [searchRows, setSearchRows] = useState<IInterfaceProducts[]>([])
   const [openGroup, setOpenGroup] = useState<String>('');
   const [searchBase, setSearchBase] = useState('name')
   
   const getData = async () => {
-    return await BASE_URL.get<IGroups[]>('/products')
+    return await BASE_URL.get<IInterfaceProducts[]>('/products')
     .then(({data}) => {
       const list: IProduct[] = []
   
@@ -127,7 +105,7 @@ export default function Home() {
 
     switch (searchBase) {
       case 'image':
-        const listimage: IGroups[] = []
+        const listimage: IInterfaceProducts[] = []
 
         rows.forEach(({group_name, id, products_list}) => {
           const search = products_list.filter((item) => regex.test(item.image))
@@ -144,7 +122,7 @@ export default function Home() {
         break;
 
       case 'name':
-        const listname: IGroups[] = []
+        const listname: IInterfaceProducts[] = []
 
         rows.forEach(({group_name, id, products_list}) => {
           const search = products_list.filter((item) => regex.test(item.name))
@@ -160,7 +138,7 @@ export default function Home() {
         break;
         
       case 'summary':
-        const listsummary: IGroups[] = []
+        const listsummary: IInterfaceProducts[] = []
 
         rows.forEach(({group_name, id, products_list}) => {
           const search = products_list.filter((item) => regex.test(item.summary))
@@ -177,7 +155,7 @@ export default function Home() {
         break;
 
       case 'description':
-        const listdescription: IGroups[] = []
+        const listdescription: IInterfaceProducts[] = []
 
         rows.forEach(({group_name, id, products_list}) => {
           const search = products_list.filter((item) => regex.test(item.description))
@@ -194,7 +172,7 @@ export default function Home() {
         break;
 
       case 'whatsapp':
-        const listwhatsapp: IGroups[] = []
+        const listwhatsapp: IInterfaceProducts[] = []
 
         rows.forEach(({group_name, id, products_list}) => {
           const search = products_list.filter((item) => regex.test(item.whatsapp))
@@ -211,7 +189,7 @@ export default function Home() {
         break;
 
       case 'route':
-        const listroute: IGroups[] = []
+        const listroute: IInterfaceProducts[] = []
 
         rows.forEach(({group_name, id, products_list}) => {
           const search = products_list.filter((item) => regex.test(item.route))
@@ -228,7 +206,7 @@ export default function Home() {
         break;
 
       case 'link':
-        const listlink: IGroups[] = []
+        const listlink: IInterfaceProducts[] = []
 
         rows.forEach(({group_name, id, products_list}) => {
           const search = products_list.filter((item) => regex.test(item.link))
@@ -251,7 +229,40 @@ export default function Home() {
 
   }, [rows, searchBase, searchRows])
 
+  const handleFavorit = (row: IProduct) => {
+    BASE_URL.put(`/favorite-product/${row.id}`)
+      .then(() => {
+        getData()
+      })
+  }
+
   const ProductsColumns: GridColDef[] = [
+    {
+      field: 'favorit',
+      headerName: 'Destaques',
+      width: 90,
+      headerAlign: 'center',
+      align: 'center',
+      renderCell: ({ row } : {row: IProduct}) => (
+        <div
+          className={styles.star_container}
+        >
+          {row.favorit ? (
+            <Star
+              className={styles.star_icon_active}
+              onClick={() => handleFavorit(row)}
+              />
+          ) : (
+            <StarBorder
+              onClick={() => handleFavorit(row)}
+              className={styles.star_icon}
+            />
+          )}
+        </div>
+      ),
+      sortable: false,
+      disableColumnMenu: true
+    },
     {
       field: 'action',
       headerName: 'Ações',
@@ -296,13 +307,24 @@ export default function Home() {
         />
       )
     },
-    
     { 
       field: 'name',
       headerName: 'Nome',
       width: 150,
       sortable: false,
       disableColumnMenu: true
+    },
+    { 
+      field: 'category',
+      headerName: 'Categoria',
+      width: 250,
+      sortable: false,
+      disableColumnMenu: true,
+      renderCell: ({row}: {row: IProduct}) => (
+        <p>
+          {row.category?.name}
+        </p>
+      )
     },
     { 
       field: 'summary',

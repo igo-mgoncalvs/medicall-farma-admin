@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react'
 import { Controller, FieldValues, useForm } from 'react-hook-form'
-import { IContact } from '@/utils/interfaces'
+import { IAddress } from '@/utils/interfaces'
 import { TextField } from '@mui/material'
 import { LoadingButton } from '@mui/lab'
 import { toast } from 'react-toastify'
@@ -10,20 +10,15 @@ import { toast } from 'react-toastify'
 import BASE_URL from '@/lib/axios'
 
 import styles from './styles.module.css'
-import { PhoneMask } from '@/utils/phoneMask'
 
-export default function ContactForm () {
+export default function AddressForm () {
   const [loading, setLoading] = useState<boolean>(false)
   const [addForm, setAddForm] = useState<boolean>(false)
 
-  const whatsBaseLink = 'https://api.whatsapp.com/send/?phone=+55'
-
-  const { control, handleSubmit } = useForm<IContact | FieldValues>({
+  const { control, handleSubmit } = useForm<IAddress | FieldValues>({
     defaultValues: async () => {
-      return await BASE_URL.get<IContact>('/contact-link')
-      .then(({data}) => ({
-        link: PhoneMask(data.link.replace(whatsBaseLink, '')), 
-      }))
+      return await BASE_URL.get<IAddress>('/address')
+      .then(({data}) => data)
       .catch(() => setAddForm(true))
       .finally(() => {
         toast.dismiss()
@@ -31,10 +26,8 @@ export default function ContactForm () {
     },
   })
 
-  const onSubmit = useCallback((data: IContact | FieldValues) => {
+  const onSubmit = useCallback((data: IAddress | FieldValues) => {
     setLoading(true)
-
-    const clearLink = data.link.replace(/[^0-9]/g, '')
 
     toast.info('Adicionando inforções, aguarde', {
       position: "top-right",
@@ -42,9 +35,7 @@ export default function ContactForm () {
       autoClose: false,
     });
     if(addForm) {
-      BASE_URL.post('/add-contact-link', {
-        link: `${whatsBaseLink}${clearLink}`
-      })
+      BASE_URL.post('/add-address', data)
         .then(() => {
           toast.dismiss()
           toast.success('Adicionado com sucesso!', {
@@ -66,9 +57,7 @@ export default function ContactForm () {
           setLoading(false)
         })
       } else {
-        BASE_URL.put('/edit-contact-link', {
-          link: `${whatsBaseLink}${clearLink}`
-        })
+        BASE_URL.put('/edit-address', data)
           .then(() => {
             toast.dismiss()
             toast.success('Editado com sucesso!', {
@@ -94,6 +83,28 @@ export default function ContactForm () {
   return (
     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
       <Controller
+        name="address"
+        control={control}
+        rules={{
+          required: {
+            value: true,
+            message: 'Esse campo é necessario'
+          }
+        }}
+        render={({field: { onChange, value }, fieldState: { error }}) => (
+          <TextField
+            label='Endereço'
+            onChange={onChange}
+            value={value}
+            error={!!error}
+            className={styles.inputText}
+            helperText={error?.message}
+            defaultValue={' '}
+          />
+        )}
+      />
+
+      <Controller
         name="link"
         control={control}
         rules={{
@@ -104,8 +115,8 @@ export default function ContactForm () {
         }}
         render={({field: { onChange, value }, fieldState: { error }}) => (
           <TextField
-            label='Número do whatsapp'
-            onChange={(e) => onChange(PhoneMask(e.target.value.slice(0, 15)))}
+            label='Link do google maps'
+            onChange={onChange}
             value={value}
             error={!!error}
             className={styles.inputText}

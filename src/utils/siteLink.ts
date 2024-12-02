@@ -1,0 +1,1 @@
+export const siteLink = 'https://medicall-farma.web.app' 

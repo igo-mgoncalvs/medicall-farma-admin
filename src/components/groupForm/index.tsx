@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useCallback, useEffect } from 'react'
-import { IGroup } from "@/utils/interfaces"
-import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material'
+import { IGroups } from "@/utils/interfaces"
+import { TextField } from '@mui/material'
 import LoadingButton from '@mui/lab/LoadingButton';
 import { Controller, useForm } from "react-hook-form"
 import { toast } from "react-toastify";
@@ -16,9 +16,9 @@ export default function GroupForm ({ id }: { id?: string }) {
   const [index, setIndex] = useState<number[]>([])
 
 
-  const { control, handleSubmit } = useForm<IGroup>({
+  const { control, handleSubmit } = useForm<IGroups>({
     defaultValues: async () => {
-      return await BASE_URL.get<IGroup>(`/find-group/${id}`)
+      return await BASE_URL.get<IGroups>(`/find-group/${id}`)
         .then(({data}) => ({
           ...data, 
         }))
@@ -31,7 +31,7 @@ export default function GroupForm ({ id }: { id?: string }) {
   const navigation = useRouter()
 
   useEffect(() => {
-    BASE_URL.get<IGroup[]>('/groups')
+    BASE_URL.get<IGroups[]>('/groups')
       .then(({ data }) => {
         const list: number[] = []
 
@@ -43,7 +43,7 @@ export default function GroupForm ({ id }: { id?: string }) {
       })
   }, [])
 
-  const onSubmit = useCallback((data: IGroup) => {
+  const onSubmit = useCallback((data: IGroups) => {
     setLoading(true)
 
     if(!id) {

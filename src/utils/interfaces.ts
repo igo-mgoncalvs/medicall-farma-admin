@@ -1,22 +1,37 @@
-export interface IGroup {
+export interface ICategory {
+  id: string
+  name: string
+  productsGroupsId: string
+  index: number
+  active: boolean
+}
+
+export interface IGroups {
   id: string
   group_name: string
-  active: boolean
-  index: number
+  active: boolean,
+  index: number,
+  categories: ICategory[]
 }
 
 export interface IProduct {
-  id: string 
-  productsGroupsId: string 
-  image: string 
-  imageId: string 
-  name: string 
-  summary: string 
-  description: string 
-  whatsapp: string 
-  route: string 
+  id: string
+  index: number,
+  image: string
+  imageId: string
+  route: string
+  name: string
+  favorit: boolean
+  subTitle: string
   link: string
-  index: number
+  summary: string
+  whatsapp: string
+  description: string
+  active: boolean,
+  productsGroupsId: string
+  categoryId: string
+  category: ICategory
+  group: string
 }
 
 export interface IInterfaceProducts {
@@ -132,9 +147,30 @@ export interface ILogos {
   logoColor: string
   logoWhiteId: string
   logoWhite: string
+
+}
+export interface IProductsBanners {
+  faviritFirst: string
+  faviritFirstId: string
+  faviritSecound: string
+  faviritSecoundId: string
+  faviritFirstMobile: string
+  faviritFirstMobileId: string
+  faviritSecoundMobile: string
+  faviritSecoundMobileId: string
+  detailsFirst: string
+  detailsFirstId: string
+  detailsSecound: string
+  detailsSecoundId: string
 }
 
 export interface ICatalog {
   link: string
   fileName: string
+}
+
+
+export interface IAddress {
+  link: string
+  address: string
 }

@@ -8,26 +8,11 @@ import { toast } from "react-toastify";
 import { FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField } from '@mui/material'
 import { ChangeEvent, useCallback, useEffect, useState } from 'react'
 import BASE_URL from '@/lib/axios'
-import { IGroup, IInterfaceProducts } from '@/utils/interfaces'
+import { ICategory, IGroups, IInterfaceProducts, IProduct } from '@/utils/interfaces'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation';
 
 import styles from './styles.module.css'
-
-interface IProductForm {
-  id: string 
-  productsGroupsId: string 
-  image: string 
-  imageId: string 
-  name: string 
-  summary: string
-  subTitle: string
-  description: string 
-  whatsapp: string 
-  route: string 
-  link: string
-  index: number
-}
 
 interface IPostImage {
   link: string
@@ -35,7 +20,8 @@ interface IPostImage {
 }
 
 export default function ProductForm ({ id }: { id?: string }) {
-  const [groups, setGroups] = useState<IGroup[]>([])
+  const [groups, setGroups] = useState<IGroups[]>([])
+  const [categories, setCategories] = useState<ICategory[]>([])
   const [loading, setLoading] = useState<boolean>(false)
   const [index, setIndex] = useState<number[]>([])
   const [groupIdOld, setGoupIdOld] = useState<string>('')
@@ -52,9 +38,9 @@ export default function ProductForm ({ id }: { id?: string }) {
     formState: { 
       errors,
       isSubmitted
-    }} = useForm<IProductForm>({
+    }} = useForm<IProduct>({
     defaultValues: async () => {
-      return await BASE_URL.get<IProductForm>(`/find-product/${id}`)
+      return await BASE_URL.get<IProduct>(`/find-product/${id}`)
         .then(({data}) => {
           setGoupIdOld(data.productsGroupsId)
           
@@ -78,7 +64,7 @@ export default function ProductForm ({ id }: { id?: string }) {
   const navigation = useRouter()
 
   useEffect(() => {
-    BASE_URL.get<IGroup[]>('/groups')
+    BASE_URL.get<IGroups[]>('/groups')
       .then(({ data }) => {
         setGroups(data)
       })
@@ -99,6 +85,13 @@ export default function ProductForm ({ id }: { id?: string }) {
           setIndex(list)
         }
       })
+
+      BASE_URL.post<ICategory[]>('/categories', {
+        productsGroupsId
+      })
+        .then(({ data }) => {
+          setCategories(data)
+        })
   }, [productsGroupsId])
 
 
@@ -138,6 +131,7 @@ export default function ProductForm ({ id }: { id?: string }) {
     const selectedFile = files[0]
 
     const data = new FormData()
+    console.log(files)
 
     data.append('file', selectedFile)
 
@@ -167,7 +161,7 @@ export default function ProductForm ({ id }: { id?: string }) {
 
   }, [imageUrl, setValue])
 
-  const onSubmit = useCallback((data: IProductForm) => {
+  const onSubmit = useCallback((data: IProduct) => {
     setLoading(true)
 
     if(!id) {
@@ -176,7 +170,8 @@ export default function ProductForm ({ id }: { id?: string }) {
           route: encode(data.route).replaceAll('/', ''),
           whatsapp: `${whatsappUrl}${encodeURI(data.whatsapp)}`,
           index: index.length,
-          subTitle: data.subTitle || ''
+          subTitle: data.subTitle || '',
+          favorit: false,
       })
         .then(() => {
           toast.dismiss()
@@ -324,6 +319,44 @@ export default function ProductForm ({ id }: { id?: string }) {
         />
 
         <Controller
+          name='categoryId'
+          control={control}
+          render={({ field: { onChange, value }, fieldState: { error } }) => (
+            <FormControl
+              error={!!error}
+            >
+              <InputLabel id="demo-simple-select-helper-label">Selecione a categoria</InputLabel>
+              <Select
+                labelId="demo-simple-select-helper-label"
+                id="demo-simple-select-helper"
+                label="Selecione a categoria"
+                onChange={onChange}
+                value={categories?.length > 0 ? value : ''}
+              >
+                <MenuItem
+                  value={''}
+                >
+                  Selecione a categoria
+                </MenuItem>
+                {categories?.map((item) => (
+                  <MenuItem
+                    key={item.id}
+                    value={item.id}
+                  >
+                    {item.name}
+                  </MenuItem>
+                ))}
+              </Select>
+              {error && (
+                <FormHelperText>
+                  {error?.message}
+                </FormHelperText>
+              )}
+            </FormControl>
+          )}
+        />
+
+        <Controller
           name='name'
           control={control}
           rules={{
@@ -364,7 +397,11 @@ export default function ProductForm ({ id }: { id?: string }) {
               />
           )}
         />
+      </div>
 
+      <div
+        className={styles.forms_collumns}
+      >
         <Controller
           name='summary'
           control={control}
@@ -387,11 +424,7 @@ export default function ProductForm ({ id }: { id?: string }) {
             />
           )}
         />
-      </div>
 
-      <div
-        className={styles.forms_collumns}
-      >
         <Controller
           name='description'
           control={control}

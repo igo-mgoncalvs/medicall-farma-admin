@@ -84,7 +84,6 @@ function TableReorderingComponent ({ rows, columns, size, editRoute, isEditing =
 
   useEffect(() => {
     const removeLicenseKeyDiv = () => {
-      console.log('teste')
       const invalidLicenseDiv = document.querySelectorAll("[style*='pointer-events: none']")[0]; // Substitua com o seletor correto
       if (invalidLicenseDiv) {
         invalidLicenseDiv.textContent = ''
