@@ -15,7 +15,6 @@ import TableActions from '@/components/tableComponent/actions';
 import { Collapse, List, ListItemButton, ListItemText, MenuItem, Select, Switch } from '@mui/material';
 import TableReorderingComponent from '@/components/tableOrderingComponent';
 import { GridRowOrderChangeParams } from '@mui/x-data-grid-pro';
-import { IGroup } from '@/utils/interfacesNew';
 import BASE_URL_V2 from '@/lib/axios_v2';
 
 interface IProduct {
@@ -44,15 +43,25 @@ export default function Home() {
   const [rows, setRows] = useState<IGroups[]>([])
   const [searchRows, setSearchRows] = useState<IGroups[]>([])
   const [openGroup, setOpenGroup] = useState<String>('');
-  const [openCategory, setOpenCategory] = useState<String>('');
   const [searchBase, setSearchBase] = useState('name')
-
-  const [productList, setProductList] = useState<IGroup[]>([])
   
   const getData = async () => {
-    return await BASE_URL_V2.get<IGroup[]>('/list-all-products')
+    return await BASE_URL_V2.get<IGroups[]>('/list-all-products')
     .then(({data}) => {
-      setProductList(data)
+      const list: IProduct[] = []
+  
+      data.forEach((groups) => {
+        groups.products_list.map((product) => {
+          list.push({
+            ...product,
+            group: groups.group_name
+          })
+        })
+  
+      })
+  
+      setRows(data)
+      setSearchRows(data)
     })
   }
 
@@ -301,7 +310,7 @@ export default function Home() {
       align: 'center',
       renderCell: (params: GridRenderCellParams) => (
         <Image
-          src={params.row.sizes[0].src}
+          src={params.value}
           alt=""
           width={50}
           height={50}
@@ -318,7 +327,7 @@ export default function Home() {
       disableColumnMenu: true
     },
     { 
-      field: 'shortDescription',
+      field: 'summary',
       headerName: 'Resumo',
       width: 250,
       sortable: false,
@@ -332,16 +341,23 @@ export default function Home() {
       disableColumnMenu: true
     },
     { 
-      field: 'contactLink',
+      field: 'whatsapp',
       headerName: 'Whatsapp',
       width: 200,
       sortable: false,
       disableColumnMenu: true
     },
     { 
-      field: 'link',
+      field: 'id',
       headerName: 'Rota',
       width: 200,
+      sortable: false,
+      disableColumnMenu: true
+    },
+    { 
+      field: 'link',
+      headerName: 'Link',
+      width: 250,
       sortable: false,
       disableColumnMenu: true
     }
@@ -390,20 +406,56 @@ export default function Home() {
     }
   }, [openGroup])
 
-  const handleClickCategory = useCallback((id: string) => {
-    if(openCategory && openCategory === id) {
-      setOpenCategory('');
-    } else {
-      setOpenCategory(id);
-    }
-  }, [openCategory])
-
   return (
     <div>
       <div className={styles.function_bar}>
         <p className={styles.title}>Produtos</p>
 
+        <div className={styles.search_bar}>
+          <Select
+            defaultValue='name'
+            displayEmpty
+            sx={{
+              '.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.MuiSelect-select': {
+                padding: 0,
+                paddingLeft: 2,
+                paddingRight: 5,
+                fontSize: 15,
+                border: 'none'
+              },
+            }}
+            inputProps={{ 'aria-label': 'Without label' }}
+            onChange={(e) => setSearchBase(e.target.value || '')}
+          >
+            {ProductsColumns.map((item, index) => index > 1 && (
+              <MenuItem
+                key={item.field}
+                value={item.field}
+              >
+                {item.headerName}
+              </MenuItem>
+            ))}
+          </Select>
+
+          <input
+            placeholder={`Pesquise ${searchTranslate.find(e => e.field === searchBase)?.headerName?.toLowerCase()} do produto`}
+            className={styles.search_bar_input}
+            onChange={(e) => handleSearch(e.target.value)}
+          />
+        </div>
+
         <div className={styles.functions_container}>
+          <Link
+            href={'/cadastrar-grupo'}
+            className={`${styles.buttons} ${styles.button_white}`}
+          >
+            <AddIcon
+              className={styles.button_white_icon}
+            />
+            <p>
+              Adicionar Grupo
+            </p>
+          </Link>
           <Link
             href={'/cadastrar-produto'}
             className={`${styles.buttons} ${styles.button_blue}`}
@@ -417,42 +469,30 @@ export default function Home() {
           </Link>
         </div>
       </div>
-      
-      {productList.length > 0 && (
+
+      {searchRows.length > 0 && (
         <List
           className={styles.groups}
         >
-          {productList?.map((group) => group.categories.length > 0 && (
+          {searchRows?.map((group) => group.products_list.length > 0 && (
             <div
               className={styles.list_item}
             >
               <ListItemButton onClick={() => handleClick(group.id)}>
-                <ListItemText primary={group.groupName} />
+                <ListItemText primary={group.group_name} />
                 {openGroup ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
               <Collapse in={openGroup === group.id} timeout="auto" unmountOnExit>
-                {group?.categories.map((category) => (
-                  <div
-                    className={styles.list_item}
-                  >
-                    <ListItemButton onClick={() => handleClickCategory(category.id)}>
-                      <ListItemText primary={category.categoryName} />
-                      {openCategory ? <ExpandLess /> : <ExpandMore />}
-                    </ListItemButton>
-                    <Collapse in={openCategory === category.id} timeout="auto" unmountOnExit>
-                      <div
-                        className={styles.table}
-                      >
-                        <TableReorderingComponent
-                          columns={ProductsColumns}
-                          rows={category.products}
-                          getData={getData}
-                          editRoute='/reorder-products'
-                        />
-                      </div>
-                    </Collapse>
-                  </div>
-                ))}
+                <div
+                  className={styles.table}
+                >
+                  <TableReorderingComponent
+                    columns={ProductsColumns}
+                    rows={group.products_list}
+                    getData={getData}
+                    editRoute='/reorder-products'
+                  />
+                </div>
               </Collapse>
             </div>
           ))}
