@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useCallback, useEffect } from 'react'
-import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material'
+import { FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField } from '@mui/material'
 import LoadingButton from '@mui/lab/LoadingButton';
 import { Controller, useForm } from "react-hook-form"
 import { toast } from "react-toastify";
@@ -9,15 +9,16 @@ import { useRouter } from 'next/navigation';
 import BASE_URL from '@/lib/axios';
 
 import styles from './styles.module.css'
-import { IGroup } from '@/utils/interfacesNew';
+import { ICategories, IGroup } from '@/utils/interfacesNew';
 import BASE_URL_V2 from '@/lib/axios_v2';
 
-export default function GroupForm ({ id }: { id?: string }) {
+export default function CategoryForm ({ id }: { id?: string }) {
   const [loading, setLoading] = useState<boolean>(false)
+  const [groups, setGroups] = useState<IGroup[]>([])
 
-  const { control, handleSubmit } = useForm<IGroup>({
+  const { control, handleSubmit } = useForm<ICategories>({
     defaultValues: async () => {
-      return await BASE_URL_V2.get<IGroup>(`/find-group/${id}`)
+      return await BASE_URL_V2.get<ICategories>(`/find-category/${id}`)
         .then(({data}) => ({
           ...data, 
         }))
@@ -29,13 +30,24 @@ export default function GroupForm ({ id }: { id?: string }) {
 
   const navigation = useRouter()
 
-  const onSubmit = useCallback((data: IGroup) => {
+  useEffect(() => {
+    const getGroups = () => {
+      BASE_URL_V2.get('/list-groups')
+        .then(({data}) => {
+          setGroups(data)
+        })
+    }
+
+    getGroups()
+  }, [])
+
+  const onSubmit = useCallback((data: ICategories) => {
     setLoading(true)
 
     if(!id) {
-      BASE_URL_V2.post('/register-group', {
+      BASE_URL_V2.post('/register-category', {
         ...data,
-        groupLink: data.groupName.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9]/g, '').toLowerCase(),
+        categoryLink: data.categoryName.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9]/g, '').toLowerCase(),
         isTop: false
       })
         .then(() => {
@@ -59,9 +71,9 @@ export default function GroupForm ({ id }: { id?: string }) {
         setLoading(false)
       })
     } else {
-      BASE_URL_V2.put(`/edit-group/${id}`, {
+      BASE_URL_V2.put(`/edit-category/${id}`, {
         ...data,
-        groupLink: data.groupName.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9]/g, '').toLowerCase(),
+        categoryLink: data.categoryLink.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9]/g, '').toLowerCase(),
       })
         .then(() => {
           toast.dismiss()
@@ -94,8 +106,54 @@ export default function GroupForm ({ id }: { id?: string }) {
         className={styles.form}
       >
         <Controller
+          name='gruopId'
           control={control}
-          name="groupName"
+          rules={{
+            required: {
+              value: true,
+              message: 'Esse campo é necessario'
+            }
+          }}
+          render={({ field: { onChange, value }, fieldState: { error } }) => (
+            <FormControl
+              error={!!error}
+            >
+              <InputLabel id="demo-simple-select-helper-label">Selecione o grupo</InputLabel>
+              <Select
+                labelId="demo-simple-select-helper-label"
+                id="demo-simple-select-helper"
+                label="Selecione o grupo"
+                onChange={(event) => {
+                  onChange(event)
+                }}
+                value={groups?.length > 0 ? value : ''}
+              >
+                <MenuItem
+                  value={''}
+                >
+                  Selecione o grupo
+                </MenuItem>
+                {groups?.map((item) => (
+                  <MenuItem
+                    key={item.id}
+                    value={item.id}
+                  >
+                    {item.groupName}
+                  </MenuItem>
+                ))}
+              </Select>
+              {error && (
+                <FormHelperText>
+                  {error?.message}
+                </FormHelperText>
+              )}
+            </FormControl>
+          )}
+        />
+
+        <Controller
+          control={control}
+          name="categoryName"
           rules={{
             required: {
               value: true,
@@ -104,7 +162,7 @@ export default function GroupForm ({ id }: { id?: string }) {
           }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <TextField
-              label='Nome do grupo'
+              label='Nome da categoria'
               onChange={onChange}
               value={value}
               error={!!error}

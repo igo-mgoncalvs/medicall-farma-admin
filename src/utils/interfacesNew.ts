@@ -3,6 +3,8 @@ export interface ICategories {
   categoryName: string
   categoryLink: string
   products: IProduct[]
+  gruopId: string
+  active: boolean
   Gruop: IGroup
 }
 
@@ -10,12 +12,13 @@ export interface IGroup {
   id: string
   groupName: string
   groupLink: string
+  active: boolean
   isTop: boolean
   categories: ICategories[]
 }
 
 export interface IProduct {
-  id: number
+  id: string
   name: string
   description: string
   link: string
@@ -23,6 +26,7 @@ export interface IProduct {
   contactLink: string
   groupName: string
   isTop: boolean
+  active: boolean
   sizes: {
     id: number
     src: string

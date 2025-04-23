@@ -15,24 +15,10 @@ import TableActions from '@/components/tableComponent/actions';
 import { Collapse, List, ListItemButton, ListItemText, MenuItem, Select, Switch } from '@mui/material';
 import TableReorderingComponent from '@/components/tableOrderingComponent';
 import { GridRowOrderChangeParams } from '@mui/x-data-grid-pro';
-import { IGroup } from '@/utils/interfacesNew';
+import { IGroup, IProduct } from '@/utils/interfacesNew';
 import BASE_URL_V2 from '@/lib/axios_v2';
 
-interface IProduct {
-  id: string
-  image: string 
-  name: string
-  link: string
-  description: string
-  summary: string
-  group: string
-  route: string
-  active: boolean
-  whatsapp: string
-  index: number
-  productsGroupsId: string 
-  imageId: string 
-}
+
 
 interface IGroups {
   id: string,
@@ -56,29 +42,8 @@ export default function Home() {
     })
   }
 
-  const getDataOld = async () => {
-    return await BASE_URL.get<IGroups[]>('/products')
-    .then(({data}) => {
-      const list: IProduct[] = []
-  
-      data.forEach((groups) => {
-        groups.products_list.map((product) => {
-          list.push({
-            ...product,
-            group: groups.group_name
-          })
-        })
-  
-      })
-  
-      setRows(data)
-      setSearchRows(data)
-    })
-  }
-
   useEffect(() => {
     getData()
-    getDataOld()
   }, [])
 
   const handleDeleteProduct = ({ id } : { id: string }) => {
@@ -115,7 +80,7 @@ export default function Home() {
       autoClose: false,
     });
 
-    BASE_URL.put(`/change-product-status/${row.id}`)
+    BASE_URL_V2.put(`/change-product-status/${row.id}`)
       .then(() => {
         toast.dismiss()
         toast.success('Status do produto alterado com sucesso!', {
@@ -134,135 +99,6 @@ export default function Home() {
         });
       })
   }
-
-  const handleSearch = useCallback((value: string) => {
-    const regex = new RegExp(value, 'i');
-
-    switch (searchBase) {
-      case 'image':
-        const listimage: IGroups[] = []
-
-        rows.forEach(({group_name, id, products_list}) => {
-          const search = products_list.filter((item) => regex.test(item.image))
-
-          listimage.push({
-            id,
-            group_name,
-            products_list: search
-          })
-        })
-
-        setSearchRows(listimage)
-
-        break;
-
-      case 'name':
-        const listname: IGroups[] = []
-
-        rows.forEach(({group_name, id, products_list}) => {
-          const search = products_list.filter((item) => regex.test(item.name))
-          listname.push({
-            id,
-            group_name,
-            products_list: search
-          })
-        })
-
-        setSearchRows(listname)
-        
-        break;
-        
-      case 'summary':
-        const listsummary: IGroups[] = []
-
-        rows.forEach(({group_name, id, products_list}) => {
-          const search = products_list.filter((item) => regex.test(item.summary))
-
-          listsummary.push({
-            id,
-            group_name,
-            products_list: search
-          })
-        })
-
-        setSearchRows(listsummary)   
-        
-        break;
-
-      case 'description':
-        const listdescription: IGroups[] = []
-
-        rows.forEach(({group_name, id, products_list}) => {
-          const search = products_list.filter((item) => regex.test(item.description))
-
-          listdescription.push({
-            id,
-            group_name,
-            products_list: search
-          })
-        })
-
-        setSearchRows(listdescription)
-
-        break;
-
-      case 'whatsapp':
-        const listwhatsapp: IGroups[] = []
-
-        rows.forEach(({group_name, id, products_list}) => {
-          const search = products_list.filter((item) => regex.test(item.whatsapp))
-
-          listwhatsapp.push({
-            id,
-            group_name,
-            products_list: search
-          })
-        })
-
-        setSearchRows(listwhatsapp)
-
-        break;
-
-      case 'route':
-        const listroute: IGroups[] = []
-
-        rows.forEach(({group_name, id, products_list}) => {
-          const search = products_list.filter((item) => regex.test(item.route))
-
-          listroute.push({
-            id,
-            group_name,
-            products_list: search
-          })
-        })
-
-        setSearchRows(listroute)  
-
-        break;
-
-      case 'link':
-        const listlink: IGroups[] = []
-
-        rows.forEach(({group_name, id, products_list}) => {
-          const search = products_list.filter((item) => regex.test(item.link))
-
-          listlink.push({
-            id,
-            group_name,
-            products_list: search
-          })
-        })
-
-        setSearchRows(listlink)
-
-        break;
-    
-      default:
-        setSearchRows(rows)
-        break;
-    }
-
-  }, [rows, searchBase, searchRows])
 
   const ProductsColumns: GridColDef[] = [
     {
