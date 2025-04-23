@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useCallback, useEffect } from 'react'
-import { IGroup } from "@/utils/interfaces"
 import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material'
 import LoadingButton from '@mui/lab/LoadingButton';
 import { Controller, useForm } from "react-hook-form"
@@ -10,15 +9,15 @@ import { useRouter } from 'next/navigation';
 import BASE_URL from '@/lib/axios';
 
 import styles from './styles.module.css'
+import { IGroup } from '@/utils/interfacesNew';
+import BASE_URL_V2 from '@/lib/axios_v2';
 
 export default function GroupForm ({ id }: { id?: string }) {
   const [loading, setLoading] = useState<boolean>(false)
-  const [index, setIndex] = useState<number[]>([])
-
 
   const { control, handleSubmit } = useForm<IGroup>({
     defaultValues: async () => {
-      return await BASE_URL.get<IGroup>(`/find-group/${id}`)
+      return await BASE_URL_V2.get<IGroup>(`/find-group/${id}`)
         .then(({data}) => ({
           ...data, 
         }))
@@ -30,26 +29,14 @@ export default function GroupForm ({ id }: { id?: string }) {
 
   const navigation = useRouter()
 
-  useEffect(() => {
-    BASE_URL.get<IGroup[]>('/groups')
-      .then(({ data }) => {
-        const list: number[] = []
-
-        data.forEach((item) => {
-          list.push(item.index)
-        })
-  
-        setIndex(list)
-      })
-  }, [])
-
   const onSubmit = useCallback((data: IGroup) => {
     setLoading(true)
 
     if(!id) {
-      BASE_URL.post('/add-group', {
+      BASE_URL_V2.post('/register-group', {
         ...data,
-        index: index.length
+        groupLink: data.groupName.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9]/g, '').toLowerCase(),
+        isTop: false
       })
         .then(() => {
           toast.dismiss()
@@ -72,8 +59,9 @@ export default function GroupForm ({ id }: { id?: string }) {
         setLoading(false)
       })
     } else {
-      BASE_URL.put(`/edit-group/${id}`, {
+      BASE_URL_V2.put(`/edit-group/${id}`, {
         ...data,
+        groupLink: data.groupName.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9]/g, '').toLowerCase(),
       })
         .then(() => {
           toast.dismiss()
@@ -97,7 +85,7 @@ export default function GroupForm ({ id }: { id?: string }) {
       })
 
     }
-  }, [id, index])
+  }, [id])
 
   return (
     <div>
@@ -107,7 +95,7 @@ export default function GroupForm ({ id }: { id?: string }) {
       >
         <Controller
           control={control}
-          name="group_name"
+          name="groupName"
           rules={{
             required: {
               value: true,

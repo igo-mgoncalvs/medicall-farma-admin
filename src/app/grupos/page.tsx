@@ -7,13 +7,13 @@ import BASE_URL from '@/lib/axios';
 import { toast } from 'react-toastify'
 
 import AddIcon from '@/components/icons/add'
-import TableComponent from "@/components/tableComponent";
 
 import styles from './styles.module.css'
-import { IGroup } from '@/utils/interfaces';
 import TableActions from '@/components/tableComponent/actions';
 import { Switch } from '@mui/material';
 import TableReorderingComponent from '@/components/tableOrderingComponent';
+import BASE_URL_V2 from '@/lib/axios_v2';
+import { IGroup } from '@/utils/interfacesNew';
 
 
 export default function Fornecedores () {
@@ -21,7 +21,7 @@ export default function Fornecedores () {
   const [searchRows, setSearchRows] = useState<IGroup[]>([])
 
   const getData = async () => {
-    return await BASE_URL.get<IGroup[]>('/groups')
+    return await BASE_URL_V2.get<IGroup[]>('/list-groups')
       .then(({data}) => {
         setRows(data)
         setSearchRows(data)
@@ -39,7 +39,7 @@ export default function Fornecedores () {
       autoClose: false,
     });
   
-    BASE_URL.delete(`/remove-group/${id}`)
+    BASE_URL_V2.delete(`/remove-group/${id}`)
       .then(() => {
         toast.dismiss()
         toast.success('Produto excluido com sucesso!', {
@@ -115,7 +115,7 @@ export default function Fornecedores () {
       disableColumnMenu: true
     },
     { 
-      field: 'group_name',
+      field: 'groupName',
       headerName: 'Nome',
       flex: 3,
       sortable: false
@@ -126,7 +126,7 @@ export default function Fornecedores () {
     const regex = new RegExp(value, 'i');
 
     if(rows) {
-      setSearchRows(rows.filter((item) => regex.test(item.group_name)))
+      setSearchRows(rows.filter((item) => regex.test(item.groupName)))
     }
   }, [rows])
 
