@@ -42,12 +42,13 @@ export default function CategoryForm ({ id }: { id?: string }) {
   }, [])
 
   const onSubmit = useCallback((data: ICategories) => {
+    console.log(data)
     setLoading(true)
 
     if(!id) {
       BASE_URL_V2.post('/register-category', {
         ...data,
-        categoryLink: data.categoryName.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9]/g, '').toLowerCase(),
+        categoryLink:`/${groups.find((item) => item.id === data.gruopId)?.groupName}/${data.categoryName.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9]/g, '').toLowerCase()}`,
         isTop: false
       })
         .then(() => {
@@ -73,7 +74,7 @@ export default function CategoryForm ({ id }: { id?: string }) {
     } else {
       BASE_URL_V2.put(`/edit-category/${id}`, {
         ...data,
-        categoryLink: data.categoryLink.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9]/g, '').toLowerCase(),
+        categoryLink:`/${groups.find((item) => item.id === data.gruopId)?.groupLink}/${data.categoryName.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9]/g, '').toLowerCase()}`,
       })
         .then(() => {
           toast.dismiss()
@@ -95,9 +96,8 @@ export default function CategoryForm ({ id }: { id?: string }) {
       .finally(() => {
         setLoading(false)
       })
-
     }
-  }, [id])
+  }, [id, groups])
 
   return (
     <div>

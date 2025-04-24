@@ -115,6 +115,17 @@ export default function Fornecedores () {
       disableColumnMenu: true
     },
     { 
+      field: 'categoryLink',
+      headerName: 'rota',
+      flex: 1,
+      sortable: false,
+      renderCell: (({ row } : {row: ICategories}) => (
+        <p>
+          {row.categoryLink}
+        </p>
+      ))
+    },
+    { 
       field: 'groupName',
       headerName: 'Grupo',
       flex: 1,

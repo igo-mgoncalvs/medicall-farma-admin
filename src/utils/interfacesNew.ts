@@ -26,6 +26,7 @@ export interface IProduct {
   contactLink: string
   groupName: string
   isTop: boolean
+  featured: boolean
   active: boolean
   sizes: {
     id: number

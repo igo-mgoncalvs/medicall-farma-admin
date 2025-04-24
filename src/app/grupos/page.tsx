@@ -85,6 +85,33 @@ export default function Fornecedores () {
         });
       })
   }
+
+  const handleChangeTopStatus = (row: IGroup) => {
+    toast.info('Aguarde um instante', {
+      position: "top-right",
+      pauseOnHover: false,
+      autoClose: false,
+    });
+
+    BASE_URL_V2.put(`/change-top-group-status/${row.id}`)
+      .then(() => {
+        toast.dismiss()
+        toast.success('Status do grupo alterado com sucesso!', {
+          position: "top-right",
+          pauseOnHover: false,
+          autoClose: 5000,
+        });
+        getData()
+      })
+      .catch(() => {
+        toast.dismiss()
+        toast.error('Erro ao alterar o status do grupo', {
+          position: "top-right",
+          pauseOnHover: false,
+          autoClose: 5000
+        });
+      })
+  }
   
   const columns: GridColDef[] = [
     { 
@@ -111,6 +138,21 @@ export default function Fornecedores () {
           onChange={() => handleChangeStatus(row)}
         />
       ),
+      sortable: false,
+      disableColumnMenu: true
+    },
+    {
+      field: 'isTop',
+      headerName: 'Exibir na Home',
+      width: 150,
+      headerAlign: 'center',
+      renderCell: ({ row } : {row: IGroup}) => (
+        <Switch
+          checked={row.isTop}
+          onChange={() => handleChangeTopStatus(row)}
+        />
+      ),
+      align: "center",
       sortable: false,
       disableColumnMenu: true
     },

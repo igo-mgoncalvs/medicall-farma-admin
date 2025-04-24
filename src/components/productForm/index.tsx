@@ -1,22 +1,17 @@
 'use client'
 
 import { useForm, Controller } from 'react-hook-form'
-import { encode } from 'base-64';
 import ImageIcon from '@mui/icons-material/Image';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { toast } from "react-toastify";
-import { Checkbox, FormControl, FormControlLabel, FormGroup, FormHelperText, InputLabel, MenuItem, Select, TextField } from '@mui/material'
+import { FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField } from '@mui/material'
 import { ChangeEvent, useCallback, useEffect, useState } from 'react'
-import BASE_URL from '@/lib/axios'
-import { IInterfaceProducts } from '@/utils/interfaces'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation';
 
 import styles from './styles.module.css'
-import { ICategories, IGroup } from '@/utils/interfacesNew';
+import { ICategories } from '@/utils/interfacesNew';
 import BASE_URL_V2 from '@/lib/axios_v2';
-import { CheckBox } from '@mui/icons-material';
-import { error } from 'console';
 
 interface IProductFormOld {
   id: string 
@@ -34,6 +29,7 @@ interface IProductFormOld {
 }
 
 interface ISizes {
+  key: number
   src: string | ArrayBuffer | null
   alt: string
   isMain: boolean
@@ -50,6 +46,7 @@ interface IProductForm {
   description: string
   contactLink: string
   groupName: string
+  keyWords: string[]
   sizes: ISizes[]
 }
 
@@ -62,7 +59,6 @@ export default function ProductForm ({ id }: { id?: string }) {
   const [categories, setCategories] = useState<ICategories[]>([])
   const [loading, setLoading] = useState<boolean>(false)
   const [index, setIndex] = useState<number[]>([])
-  const [groupIdOld, setGoupIdOld] = useState<string>('')
   
   const [selectedCategory, setSelectedCategory] = useState<ICategories>()
   const [base64, setBase64] = useState<ISizes[]>([])
@@ -75,10 +71,6 @@ export default function ProductForm ({ id }: { id?: string }) {
       .then(({ data }) => {
         setCategories(data)
       })
-
-    setValue('sizes.0.isMain', true)
-    setValue('sizes.1.isMain', false)
-    setValue('sizes.2.isMain', false)
   }, [])
 
   const {
@@ -112,15 +104,6 @@ export default function ProductForm ({ id }: { id?: string }) {
   const navigation = useRouter()
 
   useEffect(() => {
-    sizes.map((item, key) => {
-      if(item.src) {
-        setError(`sizes.${key}.src`, {message: 'Esse campo é necessario'})
-      }
-    })
-
-  }, [sizes])
-
-  useEffect(() => {
     if(id) {
       toast.info('Carregando as informações', {
         position: "top-right",
@@ -131,12 +114,12 @@ export default function ProductForm ({ id }: { id?: string }) {
   }, [id])
 
   useEffect(() => {
-    base64.map((item, key) => {
-      setValue(`sizes.${key}.src`, item.src)
+    base64.map((item) => {
+      setValue(`sizes.${item.key}.src`, item.src)
     })
   }, [base64])
 
-  const handleInputFile = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+  const handleInputFile = useCallback((event: ChangeEvent<HTMLInputElement>, key: number) => {
     const { files } = event.currentTarget
 
     if(!files) {
@@ -151,6 +134,7 @@ export default function ProductForm ({ id }: { id?: string }) {
       setBase64([
         ...base64,
         {
+          key,
           src: reader.result,
           alt: '',
           isMain: false,
@@ -160,18 +144,21 @@ export default function ProductForm ({ id }: { id?: string }) {
     }
 
     reader.readAsDataURL(selectedFile)
+
+    setValue('sizes.0.isMain', true)
+    setValue('sizes.1.isMain', false)
+    setValue('sizes.2.isMain', false)
   }, [setValue, base64])
   
   const onSubmit = useCallback((data: IProductForm) => {
-    // setLoading(true)
 
     if(!id) {
       BASE_URL_V2.post('/register-product', {
-          ...data,
-          groupName: selectedCategory?.Gruop.groupName,
-          contactLink: `${whatsappUrl}${encodeURI(data.contactLink)}`,
-          link: `${selectedCategory?.categoryLink}/${data.name.replace(' ', '-')}`,
-          isTop: false
+        ...data,
+        groupName: selectedCategory?.Gruop.groupName,
+        contactLink: `${whatsappUrl}${encodeURI(data.contactLink)}`,
+        link: `${selectedCategory?.categoryLink}/${data.name.replace(' ', '-')}`,
+        isTop: false
       })
         .then(() => {
           toast.dismiss()
@@ -194,11 +181,12 @@ export default function ProductForm ({ id }: { id?: string }) {
           setLoading(false)
         })
     } else {
+      console.log(data)
       BASE_URL_V2.put(`/edit-product/${idEdit}`, {
-          ...data,
-          groupName: selectedCategory?.Gruop.groupName || data.groupName,
-          contactLink: `${whatsappUrl}${encodeURI(data.contactLink)}`,
-          link: `${categories.find((item) => item.id === data.categoriesId)?.categoryLink}/${data.name.replace(' ', '-')}`,
+        ...data,
+        groupName: selectedCategory?.Gruop.groupName || data.groupName,
+        contactLink: `${whatsappUrl}${encodeURI(data.contactLink)}`,
+        link: `${categories.find((item) => item.id === data.categoriesId)?.categoryLink}/${data.name.replace(' ', '-')}`,
       })
         .then(() => {
           toast.dismiss()
@@ -221,7 +209,7 @@ export default function ProductForm ({ id }: { id?: string }) {
           setLoading(false)
         })
     }
-  }, [idEdit, id, index, groupIdOld, selectedCategory, categories])
+  }, [idEdit, id, selectedCategory, categories])
 
   return (
     <form
@@ -245,7 +233,7 @@ export default function ProductForm ({ id }: { id?: string }) {
                     priority
                     width={100}
                     height={100}
-                    src={sizes[size].src.toString()}
+                    src={sizes[size]?.src?.toString() || ''}
                     alt="Logo da Imgor branco"
                   />
                 ): (
@@ -265,7 +253,7 @@ export default function ProductForm ({ id }: { id?: string }) {
                 id={`image-${size}`}
                 accept="image/*"
                 className={styles.inputFile}
-                onChange={(event) => handleInputFile(event)}
+                onChange={(event) => handleInputFile(event, key)}
               />
 
               {errors.sizes && (
@@ -382,6 +370,30 @@ export default function ProductForm ({ id }: { id?: string }) {
         />
 
         <Controller
+          name='keyWords'
+          control={control}
+          rules={{
+            required: {
+              value: true,
+              message: 'Esse campo é necessario'
+            }
+          }}
+          render={({ field: { onChange, value }, fieldState: { error } }) => (
+            <TextField
+              label='Palavras-chaves separadas por ;'
+              value={value?.join(';')}
+              error={!!error}
+              helperText={error?.message}
+              aria-errormessage='teste'
+              defaultValue={id ? ' ': ''}
+              onChange={(e) => {
+                onChange(e.target.value.split(';'))
+              }}
+            />
+          )}
+        />
+
+        <Controller
           name='shortDescription'
           control={control}
           rules={{
@@ -445,7 +457,7 @@ export default function ProductForm ({ id }: { id?: string }) {
               error={!!error}
               helperText={error?.message}
               multiline
-              onChange={onChange}
+              onChange={(event) => onChange(event.target.value.replace(whatsappUrl, ''))}
             />
           )}
         />
