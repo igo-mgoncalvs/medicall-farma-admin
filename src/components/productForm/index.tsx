@@ -181,7 +181,6 @@ export default function ProductForm ({ id }: { id?: string }) {
           setLoading(false)
         })
     } else {
-      console.log(data)
       BASE_URL_V2.put(`/edit-product/${idEdit}`, {
         ...data,
         groupName: selectedCategory?.Gruop.groupName || data.groupName,
@@ -381,14 +380,12 @@ export default function ProductForm ({ id }: { id?: string }) {
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <TextField
               label='Palavras-chaves separadas por ;'
-              value={value?.join(';')}
+              value={value}
               error={!!error}
               helperText={error?.message}
               aria-errormessage='teste'
               defaultValue={id ? ' ': ''}
-              onChange={(e) => {
-                onChange(e.target.value.split(';'))
-              }}
+              onChange={onChange}
             />
           )}
         />
