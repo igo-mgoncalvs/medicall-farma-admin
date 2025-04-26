@@ -10,6 +10,7 @@ import HomeProductsForm from '@/components/pagesForm/home/products'
 import HomeProductsList from '@/components/pagesForm/home/products/list'
 import HomeBanners from '@/components/pagesForm/aboutUs/homeBanners'
 import GridBanners from '@/components/pagesForm/home/gridBanners'
+import FeaturedProducts from '@/components/pagesForm/home/featuredProducts'
 
 export default function Pages () {
 
@@ -19,6 +20,13 @@ export default function Pages () {
         <div>
           <p className={styles.title}>Banners da Home</p>
           <HomeBanners />
+        </div>
+
+        <Divider />
+
+        <div>
+          <p className={styles.title}>Produtos Destaques</p>
+          <FeaturedProducts />
         </div>
 
         <Divider />
@@ -55,6 +63,8 @@ export default function Pages () {
         </div>
 
         <Divider />
+
+
 
         <div>
           <p className={styles.title}>Home</p>
