@@ -12,6 +12,7 @@ import HomeBanners from '@/components/pagesForm/aboutUs/homeBanners'
 import GridBanners from '@/components/pagesForm/home/gridBanners'
 import FeaturedProducts from '@/components/pagesForm/home/featuredProducts'
 import HomeClients from '@/components/pagesForm/home/clients'
+import HomeSuppliers from '@/components/pagesForm/home/suppliers'
 
 export default function Pages () {
 
@@ -68,6 +69,13 @@ export default function Pages () {
         <div>
           <p className={styles.title}>Clientes</p>
           <HomeClients />
+        </div>
+
+        <Divider />
+
+        <div>
+          <p className={styles.title}>Fornecedores</p>
+          <HomeSuppliers />
         </div>
 
         <Divider />
