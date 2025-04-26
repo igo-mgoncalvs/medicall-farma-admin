@@ -14,8 +14,6 @@
   color: #fff
 }
 
-
-
 .imageLabelActive {
   padding: 30px;
 }
@@ -23,7 +21,7 @@
 .image {
   width: auto;
   height: auto;
-  max-height: 200px;
+  max-height: 170px;
 }
 
 .imageLabel:hover {

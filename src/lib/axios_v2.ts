@@ -2,7 +2,8 @@ import axios, { InternalAxiosRequestConfig } from "axios"
 import Cookies from 'js-cookie';
 
 const BASE_URL_V2 = axios.create({
-  baseURL: 'https://medicall.igormgoncalvs.com'
+  // baseURL: 'https://medicall.igormgoncalvs.com'
+  baseURL: 'http://localhost:3333'
 })
 
 BASE_URL_V2.interceptors.request.use(async (config: InternalAxiosRequestConfig) => {

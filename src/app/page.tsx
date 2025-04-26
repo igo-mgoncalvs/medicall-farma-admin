@@ -313,7 +313,7 @@ export default function Home() {
               className={styles.list_item}
             >
               <ListItemButton onClick={() => handleClick(group.id)}>
-                <ListItemText primary={group.groupName} />
+                <ListItemText primary={group.groupName} className={styles.grupName}/>
                 {openGroup ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
               <Collapse in={openGroup === group.id} timeout="auto" unmountOnExit>

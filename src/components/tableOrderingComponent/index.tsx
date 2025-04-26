@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 
 import styles from './styles.module.css'
 import BASE_URL from "@/lib/axios";
+import BASE_URL_V2 from "@/lib/axios_v2";
 
 interface IProps {
   rows: any[],
@@ -41,9 +42,9 @@ function TableReorderingComponent ({ rows, columns, size, editRoute, isEditing =
 
     list.splice(e.targetIndex, 0, removed)
     
-    const reorder = list.map((item, index) => ({
+    const reorder = list.map((item, order) => ({
       ...item,
-      index
+      order
     }))
 
     setOrder(reorder)
@@ -55,7 +56,7 @@ function TableReorderingComponent ({ rows, columns, size, editRoute, isEditing =
     setLoading(true)
 
     if(editRoute) {
-      BASE_URL.put(editRoute, rowsOrder)
+      BASE_URL_V2.put(editRoute, rowsOrder)
         .then(() => {
           toast.dismiss()
           toast.success('Lista editada com sucesso!', {
@@ -84,7 +85,6 @@ function TableReorderingComponent ({ rows, columns, size, editRoute, isEditing =
 
   useEffect(() => {
     const removeLicenseKeyDiv = () => {
-      console.log('teste')
       const invalidLicenseDiv = document.querySelectorAll("[style*='pointer-events: none']")[0]; // Substitua com o seletor correto
       if (invalidLicenseDiv) {
         invalidLicenseDiv.textContent = ''

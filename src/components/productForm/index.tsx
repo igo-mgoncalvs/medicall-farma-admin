@@ -4,7 +4,7 @@ import { useForm, Controller } from 'react-hook-form'
 import ImageIcon from '@mui/icons-material/Image';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { toast } from "react-toastify";
-import { FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField } from '@mui/material'
+import { Checkbox, FormControl, FormControlLabel, FormHelperText, InputLabel, MenuItem, Select, TextField } from '@mui/material'
 import { ChangeEvent, useCallback, useEffect, useState } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation';
@@ -58,7 +58,7 @@ interface IPostImage {
 export default function ProductForm ({ id }: { id?: string }) {
   const [categories, setCategories] = useState<ICategories[]>([])
   const [loading, setLoading] = useState<boolean>(false)
-  const [index, setIndex] = useState<number[]>([])
+  const [hasSizes, setHasSizes] = useState<boolean>(false)
   
   const [selectedCategory, setSelectedCategory] = useState<ICategories>()
   const [base64, setBase64] = useState<ISizes[]>([])
@@ -78,7 +78,6 @@ export default function ProductForm ({ id }: { id?: string }) {
     handleSubmit,
     setValue,
     watch,
-    setError,
     clearErrors,
     formState: { 
       errors,
@@ -210,6 +209,10 @@ export default function ProductForm ({ id }: { id?: string }) {
     }
   }, [idEdit, id, selectedCategory, categories])
 
+  const handleCheckbox = useCallback(() => {
+    setHasSizes(!hasSizes)
+  }, [hasSizes])
+
   return (
     <form
       className={styles.form}
@@ -221,11 +224,11 @@ export default function ProductForm ({ id }: { id?: string }) {
             className={styles.sizesContainer}
           >
             <FormControl
-              error={!!(errors?.sizes && errors?.sizes[size]?.size?.message) && isSubmitted}
+              error={(!sizes[size].src && size === 0) && isSubmitted}
             >
               <label
                 htmlFor={`image-${size}`}
-                className={`${styles.imageLabel} ${!!(errors?.sizes && errors?.sizes[size]?.size?.message)  && styles.imageError}`}
+                className={`${styles.imageLabel} ${(!sizes[size].src && size === 0)  && styles.imageError}`}
               >
                 {(sizes.length > 0 && sizes[size]?.src) ? (
                   <Image
@@ -237,10 +240,10 @@ export default function ProductForm ({ id }: { id?: string }) {
                   />
                 ): (
                   <div
-                    className={`${styles.icon_container} ${!!(errors?.sizes && errors?.sizes[size]?.size?.message)  && styles.icon_container_error}`}
+                    className={`${styles.icon_container} ${(!sizes[size].src && size === 0)  && styles.icon_container_error}`}
                   >
                     <ImageIcon
-                      className={`${styles.icon} ${!!(errors?.sizes && errors?.sizes[size]?.size?.message)  && styles.icon_error}`}
+                      className={`${styles.icon} ${(!sizes[size].src && size === 0)  && styles.icon_error}`}
                     />
                     {`Selecione a imagem do produto${key === 0 ? ' principal': ''}`}
                   </div>
@@ -262,12 +265,16 @@ export default function ProductForm ({ id }: { id?: string }) {
               )}
             </FormControl>
 
+            {size === 0 && (
+              <FormControlLabel control={<Checkbox onClick={handleCheckbox} />} label="Possui tamanhos?" />
+            )}
+
             <Controller
               name={`sizes.${size}.size`}
               control={control}
               rules={{
                 required: {
-                  value: true,
+                  value: hasSizes && !!sizes[size].src,
                   message: 'Esse campo é necessario'
                 }
               }}

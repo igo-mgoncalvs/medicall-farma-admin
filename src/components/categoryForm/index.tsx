@@ -42,7 +42,6 @@ export default function CategoryForm ({ id }: { id?: string }) {
   }, [])
 
   const onSubmit = useCallback((data: ICategories) => {
-    console.log(data)
     setLoading(true)
 
     if(!id) {
