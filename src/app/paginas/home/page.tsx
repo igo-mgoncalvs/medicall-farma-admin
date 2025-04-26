@@ -11,6 +11,7 @@ import HomeProductsList from '@/components/pagesForm/home/products/list'
 import HomeBanners from '@/components/pagesForm/aboutUs/homeBanners'
 import GridBanners from '@/components/pagesForm/home/gridBanners'
 import FeaturedProducts from '@/components/pagesForm/home/featuredProducts'
+import HomeClients from '@/components/pagesForm/home/clients'
 
 export default function Pages () {
 
@@ -60,6 +61,13 @@ export default function Pages () {
               id='a7782119-792c-4625-99c0-b5dca6d949f9'
             />
           </div>
+        </div>
+
+        <Divider />
+
+        <div>
+          <p className={styles.title}>Clientes</p>
+          <HomeClients />
         </div>
 
         <Divider />
