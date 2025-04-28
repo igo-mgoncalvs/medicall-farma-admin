@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useState } from "react"
-import { useForm } from "react-hook-form"
+import { Controller, useForm } from "react-hook-form"
 import { LoadingButton } from "@mui/lab"
 import { toast } from 'react-toastify'
 
@@ -15,7 +15,7 @@ export default function LogosForm () {
   const [loading, setLoading] = useState<boolean>(false)
   const [addForm, setAddForm] = useState<boolean>(false)
 
-  const { handleSubmit, watch, setValue, formState: { isSubmitted, errors } } = useForm<ILogos>({
+  const { handleSubmit, watch, setValue, control, formState: { isSubmitted, errors } } = useForm<ILogos>({
     defaultValues: async () => {
       return await BASE_URL.get<ILogos>('/logos')
       .then(({data}) => data)
@@ -91,32 +91,37 @@ export default function LogosForm () {
     >
       <div>
         <p className={style.label}>Logo colorida</p>
-        <InputImage
-          errors={errors.logoColor?.message?.toString()}
-          id="logoColor"
-          imageId={logoColorId}
-          imageUrl={logoColor}
-          isSubmitted={isSubmitted}
-          setValue={({link, file_name}) => {
-            setValue('logoColor', link)
-            setValue('logoColorId', file_name)
-          }}
+        <Controller
+          name="logoColor"
+          control={control}
+          render={({field: {value, onChange}}) => (
+            <InputImage
+              errors={errors.logoColor?.message?.toString()}
+              src={value}
+              isSubmitted={isSubmitted}
+              onChange={({src}) => {
+                onChange(src)
+              }}
+            />
+          )}
         />
       </div>
 
       <div>
         <p className={style.label}>Logo branco</p>
-        <InputImage
-          errors={errors.logoColor?.message?.toString()}
-          id="logoWhite"
-          imageId={logoWhiteId}
-          imageUrl={logoWhite}
-          backgroundColor="#c7c7c7"
-          isSubmitted={isSubmitted}
-          setValue={({link, file_name}) => {
-            setValue('logoWhite', link)
-            setValue('logoWhiteId', file_name)
-          }}
+        <Controller
+          name="logoWhite"
+          control={control}
+          render={({field: {value, onChange}}) => (
+            <InputImage
+              errors={errors.logoWhite?.message?.toString()}
+              src={value}
+              isSubmitted={isSubmitted}
+              onChange={({src}) => {
+                onChange(src)
+              }}
+            />
+          )}
         />
       </div>
 

@@ -178,16 +178,20 @@ export default function AboutUsDirectors () {
             </div>
 
             <div className={styles.inputImage}>
-              <InputImage
-                imageUrl={imageUrl}
-                imageId={imageId}
-                errors={errors.image?.message}
-                isSubmitted={isSubmitted}
-                id='directorsImage'
-                setValue={({link, file_name}) => {
-                  setValue('image', link)
-                  setValue('imageId', file_name)
-                }}    
+              <Controller
+                name='image'
+                control={control}
+                render={({field: {value, onChange}}) => (
+                  <InputImage
+                    errors={errors.image?.message}
+                    src={value}
+                    isSubmitted={isSubmitted}
+                    id='directorsImage'
+                    onChange={({src}) => {
+                      onChange(src)
+                    }}    
+                  />
+                )}
               />
             </div>
           </div>

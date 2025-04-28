@@ -16,7 +16,7 @@ export default function SuppliersForm () {
   const [loading, setLoading] = useState(false)
   const [addForm, setAddForm] = useState(false)
 
-  const { control, handleSubmit, watch, setValue, formState: { isSubmitted } } = useForm<ISuppliers_Screen | FieldValues>({
+  const { control, handleSubmit, watch, formState: { isSubmitted, errors } } = useForm<ISuppliers_Screen | FieldValues>({
     defaultValues: async () => {
       return await BASE_URL.get<ISuppliers_Screen>('/suppliers-screen')
       .then(({data}) => ({
@@ -179,15 +179,20 @@ export default function SuppliersForm () {
         </div>
 
         <div className={styles.inputImage}>
-          <InputImage
-            imageUrl={imageUrl}
-            imageId={imageId}
-            isSubmitted={isSubmitted}
-            setValue={({link, file_name}) => {
-              setValue('image', link)
-              setValue('imageId', file_name)
-            }}    
-          />
+        <Controller
+          name="image"
+          control={control}
+          render={({field: {value, onChange}}) => (
+            <InputImage
+              errors={errors.image?.message?.toString()}
+              src={value}
+              isSubmitted={isSubmitted}
+              onChange={({src}) => {
+                onChange(src)
+              }}
+            />
+          )}
+        />
         </div>
       </div>
 

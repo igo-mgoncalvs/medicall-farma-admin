@@ -133,15 +133,19 @@ export default function ClientsForm ({ id }: { id?: string }) {
       className={styles.form}
       onSubmit={handleSubmit(onSubmit)}
     >
-      <InputImage
-        imageUrl={imageUrl}
-        isSubmitted={isSubmitted}
-        errors={errors.image?.message}
-        imageId={imageId}
-        setValue={({link, file_name}) => {
-          setValue('image', link)
-          setValue('imageId', file_name)
-        }}
+      <Controller
+        name="image"
+        control={control}
+        render={({field: {value, onChange}}) => (
+          <InputImage
+            src={value}
+            isSubmitted={isSubmitted}
+            errors={errors.image?.message}
+            onChange={({src}) => {
+              onChange(src)
+            }}
+          />
+        )}
       />
 
       <Controller

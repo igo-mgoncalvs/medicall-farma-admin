@@ -178,16 +178,20 @@ export default function AboutUsValues () {
             </div>
 
             <div className={styles.inputImage}>
-              <InputImage
-                imageUrl={imageUrl}
-                imageId={imageId}
-                errors={errors.image?.message}
-                isSubmitted={isSubmitted}
-                id='valueImage'
-                setValue={({link, file_name}) => {
-                  setValue('image', link)
-                  setValue('imageId', file_name)
-                }}    
+              <Controller
+                name='image'
+                control={control}
+                render={({field: {value,onChange}}) => (
+                  <InputImage
+                    src={value}
+                    errors={errors.image?.message}
+                    isSubmitted={isSubmitted}
+                    id='valueImage'
+                    onChange={({src}) => {
+                      onChange(src)
+                    }}    
+                  />
+                )}
               />
             </div>
           </div>

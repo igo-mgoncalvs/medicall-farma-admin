@@ -224,11 +224,11 @@ export default function ProductForm ({ id }: { id?: string }) {
             className={styles.sizesContainer}
           >
             <FormControl
-              error={(!sizes[size].src && size === 0) && isSubmitted}
+              error={(!sizes[size]?.src && size === 0) && isSubmitted}
             >
               <label
                 htmlFor={`image-${size}`}
-                className={`${styles.imageLabel} ${(!sizes[size].src && size === 0)  && styles.imageError}`}
+                className={`${styles.imageLabel} ${(!sizes[size]?.src && size === 0)  && styles.imageError}`}
               >
                 {(sizes.length > 0 && sizes[size]?.src) ? (
                   <Image
@@ -240,10 +240,10 @@ export default function ProductForm ({ id }: { id?: string }) {
                   />
                 ): (
                   <div
-                    className={`${styles.icon_container} ${(!sizes[size].src && size === 0)  && styles.icon_container_error}`}
+                    className={`${styles.icon_container} ${(!sizes[size]?.src && size === 0)  && styles.icon_container_error}`}
                   >
                     <ImageIcon
-                      className={`${styles.icon} ${(!sizes[size].src && size === 0)  && styles.icon_error}`}
+                      className={`${styles.icon} ${(!sizes[size]?.src && size === 0)  && styles.icon_error}`}
                     />
                     {`Selecione a imagem do produto${key === 0 ? ' principal': ''}`}
                   </div>
@@ -274,7 +274,7 @@ export default function ProductForm ({ id }: { id?: string }) {
               control={control}
               rules={{
                 required: {
-                  value: hasSizes && !!sizes[size].src,
+                  value: hasSizes && !!sizes[size]?.src,
                   message: 'Esse campo é necessario'
                 }
               }}
