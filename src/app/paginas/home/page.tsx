@@ -79,30 +79,6 @@ export default function Pages () {
         </div>
 
         <Divider />
-
-
-
-        <div>
-          <p className={styles.title}>Home</p>
-          <MainForm />
-        </div>
-
-        <Divider />
-
-        <div>
-          <p className={styles.title}>Boas Vindas</p>
-          <HomeWelcomeForm />
-        </div>
-
-        <Divider />
-        
-        <div>
-          <p className={styles.title}>Produtos</p>
-          <HomeProductsForm />
-          <HomeProductsList />
-        </div>
-
-        <Divider />
         
         <div>
           <p className={styles.title}>Catálogo</p>

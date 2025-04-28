@@ -47,6 +47,7 @@ export default function HomeBanners () {
       setValue('href', bannersEdit?.href)
       setValue('alt', bannersEdit?.alt)
       setValue('external', bannersEdit?.external)
+      setValue('srcMobile', bannersEdit?.srcMobile)
     } else {
       reset()
     }
