@@ -12,6 +12,7 @@ import styles from './styles.module.css'
 import AboutUsValues from '@/components/pagesForm/aboutUs/values'
 import AboutUsDirectors from '@/components/pagesForm/aboutUs/directors'
 import Wellcome from '@/components/pagesForm/aboutUs/wellcome'
+import AboutUsSection from '@/components/pagesForm/aboutUs/aboutUsSection'
 
 export default function Pages () {
 
@@ -24,6 +25,14 @@ export default function Pages () {
         </div>
 
         <Divider />
+        
+        <div>
+          <p className={styles.title}>Sobre nós</p>
+          <AboutUsSection />
+        </div>
+
+        <Divider />
+
 
 
         <div>
