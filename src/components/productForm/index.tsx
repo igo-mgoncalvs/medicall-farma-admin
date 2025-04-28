@@ -144,12 +144,17 @@ export default function ProductForm ({ id }: { id?: string }) {
 
     reader.readAsDataURL(selectedFile)
 
-    setValue('sizes.0.isMain', true)
-    setValue('sizes.1.isMain', false)
-    setValue('sizes.2.isMain', false)
+    if(key === 0){
+      setValue('sizes.0.isMain', true)
+    } else {
+      setValue(`sizes.${key}.isMain`, false)
+    }
+
   }, [setValue, base64])
   
   const onSubmit = useCallback((data: IProductForm) => {
+
+    const sizesEdit = data.sizes.filter((s) => s.src)
 
     if(!id) {
       BASE_URL_V2.post('/register-product', {
@@ -157,7 +162,8 @@ export default function ProductForm ({ id }: { id?: string }) {
         groupName: selectedCategory?.Gruop.groupName,
         contactLink: `${whatsappUrl}${encodeURI(data.contactLink)}`,
         link: `${selectedCategory?.categoryLink}/${data.name.replace(' ', '-')}`,
-        isTop: false
+        isTop: false,
+        sizes: sizesEdit
       })
         .then(() => {
           toast.dismiss()
@@ -185,6 +191,7 @@ export default function ProductForm ({ id }: { id?: string }) {
         groupName: selectedCategory?.Gruop.groupName || data.groupName,
         contactLink: `${whatsappUrl}${encodeURI(data.contactLink)}`,
         link: `${categories.find((item) => item.id === data.categoriesId)?.categoryLink}/${data.name.replace(' ', '-')}`,
+        sizes: sizesEdit
       })
         .then(() => {
           toast.dismiss()

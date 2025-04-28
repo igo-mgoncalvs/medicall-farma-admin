@@ -13,6 +13,7 @@ import BASE_URL from "@/lib/axios";
 import InputImage from "../inputImage"
 
 import styles from './styles.module.css'
+import BASE_URL_V2 from "@/lib/axios_v2";
 
 export default function SupplierForm ({ id }: { id?: string }) {
   const [loading, setLoading] = useState<boolean>(false)
@@ -22,7 +23,6 @@ export default function SupplierForm ({ id }: { id?: string }) {
     control,
     handleSubmit,
     watch,
-    setValue,
     setError,
     clearErrors,
     formState: {
@@ -40,43 +40,13 @@ export default function SupplierForm ({ id }: { id?: string }) {
       }, 
     })
 
-  const imageUrl = watch('image')
-  const imageId = watch('imageId')
-
   const navigation = useRouter()
-
-  useEffect(() => {
-    const getData = () => {
-      BASE_URL.get<ISupplier[]>('/suppliers')
-        .then(({data}) => {
-          const list: number[] = []
-  
-          data.forEach((item) => {
-            list.push(item.index)
-          })
-  
-          setIndex(list)
-        })
-    }
-  
-    getData()
-  }, [])
-
-  useEffect(() => {
-    if(!imageUrl) {
-      setError('image', {
-        message: 'Esse campo é necessario'
-      })
-    } else {
-      clearErrors('image')
-    }
-  }, [imageUrl])
 
   const onSubmit = useCallback((data: ISupplier) => {
     setLoading(true)
 
-    if(!id) {
-      BASE_URL.post('/add-suppliers', {
+    if(id) {
+      BASE_URL_V2.post('/register-supplier', {
           ...data,
           index: index.length
       })
@@ -101,9 +71,8 @@ export default function SupplierForm ({ id }: { id?: string }) {
           setLoading(false)
         })
     } else {
-      BASE_URL.put(`/edit-suppliers/${id}`, {
+      BASE_URL.put(`/edit-supplier/${id}`, {
           ...data,
-          index: Number(data.index)
       })
         .then(() => {
           toast.dismiss()

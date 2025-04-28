@@ -28,9 +28,7 @@ export interface IInterfaceProducts {
 export interface ISupplier {
   id: string
   image: string
-  imageId: string
   name: string,
-  index: number
 }
 
 export interface IClient {

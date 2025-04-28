@@ -13,6 +13,7 @@ import BASE_URL from "@/lib/axios";
 import InputImage from "../inputImage"
 
 import styles from './styles.module.css'
+import BASE_URL_V2 from "@/lib/axios_v2";
 
 export default function ClientsForm ({ id }: { id?: string }) {
   const [loading, setLoading] = useState<boolean>(false)
@@ -22,7 +23,6 @@ export default function ClientsForm ({ id }: { id?: string }) {
     control,
     handleSubmit,
     watch,
-    setValue,
     setError,
     clearErrors,
     formState: {
@@ -30,7 +30,7 @@ export default function ClientsForm ({ id }: { id?: string }) {
       errors
     }} = useForm<IClient>({
       defaultValues: async () => {
-        return await BASE_URL.get<IClient>(`/find-client/${id}`)
+        return await BASE_URL_V2.get<IClient>(`/find-client/${id}`)
           .then(({data}) => ({
             ...data,
           }))
@@ -40,45 +40,15 @@ export default function ClientsForm ({ id }: { id?: string }) {
       }, 
     })
 
-  const imageUrl = watch('image')
-  const imageId = watch('imageId')
 
   const navigation = useRouter()
-
-  useEffect(() => {
-    const getData = () => {
-      BASE_URL.get<IClient[]>('/clients')
-        .then(({data}) => {
-          const list: number[] = []
-  
-          data.forEach((item) => {
-            list.push(item.index)
-          })
-  
-          setIndex(list)
-        })
-    }
-  
-    getData()
-  }, [])
-
-  useEffect(() => {
-    if(!imageUrl) {
-      setError('image', {
-        message: 'Esse campo é necessario'
-      })
-    } else {
-      clearErrors('image')
-    }
-  }, [imageUrl])
 
   const onSubmit = useCallback((data: IClient) => {
     setLoading(true)
 
     if(!id) {
-      BASE_URL.post('/add-client', {
+      BASE_URL_V2.post('/register-client', {
           ...data,
-          index: index.length
       })
         .then(() => {
           toast.dismiss()
@@ -101,9 +71,8 @@ export default function ClientsForm ({ id }: { id?: string }) {
           setLoading(false)
         })
     } else {
-      BASE_URL.put(`/edit-client/${id}`, {
+      BASE_URL_V2.put(`/edit-client/${id}`, {
           ...data,
-          index: Number(data.index)
       })
         .then(() => {
           toast.dismiss()

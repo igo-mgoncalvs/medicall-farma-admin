@@ -2,10 +2,9 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { GridColDef, GridRowsProp } from '@mui/x-data-grid';
+import { GridColDef } from '@mui/x-data-grid';
 import { toast } from "react-toastify";
 
-import search_icon from '@/components/icons/search.svg'
 import AddIcon from '@/components/icons/add'
 import TableComponent from "@/components/tableComponent";
 import BASE_URL from '@/lib/axios';
@@ -14,14 +13,14 @@ import styles from './styles.module.css'
 import { useCallback, useEffect, useState } from 'react';
 import { IClient } from '@/utils/interfaces';
 import TableActions from '@/components/tableComponent/actions';
-import TableReorderingComponent from '@/components/tableOrderingComponent';
+import BASE_URL_V2 from '@/lib/axios_v2';
 
 export default function Clients () {
   const [rows, setRows] = useState<IClient[]>([])
   const [searchRows, setSearchRows] = useState<IClient[]>([])
 
   const getData = async () => {
-    return await BASE_URL.get<IClient[]>('/clients')
+    return await BASE_URL_V2.get<IClient[]>('/get-clients')
     .then(({data}) => {
       setRows(data)
       setSearchRows(data)
@@ -39,7 +38,7 @@ export default function Clients () {
       autoClose: false,
     });
   
-    BASE_URL.delete(`/remove-client/${id}`)
+    BASE_URL_V2.delete(`/delete-client/${id}`)
       .then(() => {
         toast.dismiss()
         toast.success('Fornecedor excluido com sucesso!', {
@@ -121,7 +120,7 @@ export default function Clients () {
 
         <div className={styles.search_bar}>
           <input
-            placeholder='Pesquise pelo nome do fornecedor'
+            placeholder='Pesquise pelo nome do cliente'
             className={styles.search_bar_input}
             onChange={(e) => handleSearch(e.target.value)}
           />
@@ -147,11 +146,9 @@ export default function Clients () {
         <div
           className={styles.table}
         >
-          <TableReorderingComponent
+          <TableComponent
             columns={columns}
             rows={searchRows}
-            getData={getData}
-            editRoute='/reorder-clients'
           />
         </div>
       )}

@@ -222,7 +222,7 @@ export default function Home() {
       align: 'center',
       renderCell: (params: GridRenderCellParams) => (
         <Image
-          src={params.row.sizes[0].src}
+          src={params.row.sizes[0]?.src}
           alt=""
           width={50}
           height={50}
