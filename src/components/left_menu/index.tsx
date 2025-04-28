@@ -82,9 +82,9 @@ export default function LeftMenu() {
         },
         {
           id: 2,
-          title: 'Fornecedores',
-          activePage: ['paginas/fornecedores'],
-          route: '/paginas/fornecedores'
+          title: 'Politica de privacidade',
+          activePage: ['paginas/politica-de-privacidade'],
+          route: '/paginas/politica-de-privacidade'
         },
         {
           id: 3,

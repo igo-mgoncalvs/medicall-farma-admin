@@ -10,14 +10,16 @@ import { IPrivacyPolicy } from "@/utils/interfaces"
 import BASE_URL from '@/lib/axios'
 
 import styles from './styles.module.css'
+import InputImage from '@/components/inputImage'
+import BASE_URL_V2 from '@/lib/axios_v2'
 
 export default function PrivacyPolicy () {
   const [loading, setLoading] = useState(false)
   const [addForm, setAddForm] = useState(false)
 
-  const { control, handleSubmit } = useForm<IPrivacyPolicy | FieldValues>({
+  const { control, handleSubmit, formState: { errors, isSubmitted } } = useForm<IPrivacyPolicy | FieldValues>({
     defaultValues: async () => {
-      return await BASE_URL.get<IPrivacyPolicy>('/privacy-policy')
+      return await BASE_URL_V2.get<IPrivacyPolicy>('/get-privacy-policy')
       .then(({data}) => {
         return ({...data})
       })
@@ -38,7 +40,7 @@ export default function PrivacyPolicy () {
         autoClose: false,
       });
 
-      BASE_URL.post('/add-privacy-policy', data)
+      BASE_URL_V2.post('/register-privacy-policy', data)
         .then(() => {
           toast.dismiss()
           toast.success('Adicionado com sucesso!', {
@@ -65,7 +67,7 @@ export default function PrivacyPolicy () {
         autoClose: false,
       });
 
-      BASE_URL.put('/edit-privacy-policy', data)
+      BASE_URL_V2.put('/edit-privacy-policy', data)
         .then(() => {
           toast.dismiss()
           toast.success('Editado com sucesso!', {
@@ -90,27 +92,28 @@ export default function PrivacyPolicy () {
 
   return (
     <form className={styles.form_container} onSubmit={handleSubmit(onSubmit)}>
-      <div
-        className={styles.switch}
-      >
+      <div className={styles.form}>
         <Controller
+          name="image"
           control={control}
-          name="enable"
+          rules={{
+            required: {
+              value: true,
+              message: 'Esse campo é necessario'
+            }
+          }}
           render={({field: { onChange, value }}) => (
-            <FormControlLabel
-              label={`${value ? 'Desabilitar' : 'Habilitar' } sessão`}
-              control={
-                <Switch
-                  checked={value}
-                  onChange={(e) => onChange(e.target.checked)}
-                />
-              } 
+            <InputImage
+              errors={errors.image?.message?.toString()}
+              src={value}
+              isSubmitted={isSubmitted}
+              onChange={({src}) => {
+                onChange(src)
+              }}
             />
           )}
         />
-      </div>
 
-      <div className={styles.form}>
         <Controller
           name="title"
           control={control}
@@ -141,7 +144,7 @@ export default function PrivacyPolicy () {
               label='Descrição'
               onChange={onChange}
               value={value}
-              rows={6}
+              rows={15}
               multiline
               error={!!error}
               className={styles.inputText}

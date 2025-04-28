@@ -123,6 +123,7 @@ export interface IHomeProduct {
 export interface IPrivacyPolicy {
   title: string
   text: string
+  image: string
 }
 
 export interface ILogos {
