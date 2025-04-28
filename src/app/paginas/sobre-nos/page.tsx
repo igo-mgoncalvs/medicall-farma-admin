@@ -11,6 +11,7 @@ import AboutUsTeam from '@/components/pagesForm/aboutUs/team'
 import styles from './styles.module.css'
 import AboutUsValues from '@/components/pagesForm/aboutUs/values'
 import AboutUsDirectors from '@/components/pagesForm/aboutUs/directors'
+import Wellcome from '@/components/pagesForm/aboutUs/wellcome'
 
 export default function Pages () {
 
@@ -18,12 +19,20 @@ export default function Pages () {
     <div>
       <div className={styles.forms_container}>
         <div>
+          <p className={styles.title}>Boas Vindas</p>
+          <Wellcome />
+        </div>
+
+        <Divider />
+
+
+        <div>
           <p className={styles.title}>Banners</p>
           <AboutUsBanners />
         </div>
 
         <Divider />
-        
+
         <div>
           <p className={styles.title}>História</p>
           <OurHistory />
