@@ -6,7 +6,6 @@ import AboutUsBanners from '@/components/pagesForm/aboutUs/banners'
 import AboutUsBannersSpace from '@/components/pagesForm/aboutUs/space/bannersSpace'
 import OurHistory from '@/components/pagesForm/aboutUs/ourHistory'
 import AboutUsSpace from '@/components/pagesForm/aboutUs/space'
-import AboutUsTeam from '@/components/pagesForm/aboutUs/team'
 
 import styles from './styles.module.css'
 import AboutUsValues from '@/components/pagesForm/aboutUs/values'
@@ -16,6 +15,7 @@ import AboutUsSection from '@/components/pagesForm/aboutUs/aboutUsSection'
 import AboutUsUnits from '@/components/pagesForm/aboutUs/units'
 import HomeBanners from '@/components/pagesForm/aboutUs/homeBanners'
 import MedicallAddresses from '@/components/pagesForm/aboutUs/medicallAddresses'
+import AboutUsTeam from '@/components/pagesForm/aboutUs/aboutUsTeam'
 
 export default function Pages () {
 
@@ -50,6 +50,13 @@ export default function Pages () {
 
         <Divider />
 
+        <div>
+          <p className={styles.title}>Nossa Equipe</p>
+          <AboutUsTeam />
+        </div>
+
+        <Divider />
+
 
 
         <div>
@@ -65,14 +72,7 @@ export default function Pages () {
         </div>
 
         <Divider />
-        
-        <div>
-          <p className={styles.title}>Nossa Equipe</p>
-          <AboutUsTeam />
-        </div>
-
-        <Divider />
-        
+                
         <div>
           <p className={styles.title}>Nosso Espaço</p>
           <AboutUsSpace />
