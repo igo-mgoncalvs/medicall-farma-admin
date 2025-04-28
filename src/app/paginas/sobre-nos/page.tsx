@@ -13,6 +13,9 @@ import AboutUsValues from '@/components/pagesForm/aboutUs/values'
 import AboutUsDirectors from '@/components/pagesForm/aboutUs/directors'
 import Wellcome from '@/components/pagesForm/aboutUs/wellcome'
 import AboutUsSection from '@/components/pagesForm/aboutUs/aboutUsSection'
+import AboutUsUnits from '@/components/pagesForm/aboutUs/units'
+import HomeBanners from '@/components/pagesForm/aboutUs/homeBanners'
+import MedicallAddresses from '@/components/pagesForm/aboutUs/medicallAddresses'
 
 export default function Pages () {
 
@@ -29,6 +32,20 @@ export default function Pages () {
         <div>
           <p className={styles.title}>Sobre nós</p>
           <AboutUsSection />
+        </div>
+
+        <Divider />
+
+        <div>
+          <p className={styles.title}>Unidades</p>
+          <AboutUsUnits />
+        </div>
+
+        <Divider />
+
+        <div>
+          <p className={styles.title}>Endereços Medicall</p>
+          <MedicallAddresses />
         </div>
 
         <Divider />

@@ -1,13 +1,8 @@
 'use client'
 
-import MainForm from '@/components/pagesForm/home/main'
-
 import styles from './styles.module.css'
 import { Divider } from '@mui/material'
-import HomeWelcomeForm from '@/components/pagesForm/home/welcome'
 import CatalogForm from '@/components/pagesForm/home/catalog'
-import HomeProductsForm from '@/components/pagesForm/home/products'
-import HomeProductsList from '@/components/pagesForm/home/products/list'
 import HomeBanners from '@/components/pagesForm/aboutUs/homeBanners'
 import GridBanners from '@/components/pagesForm/home/gridBanners'
 import FeaturedProducts from '@/components/pagesForm/home/featuredProducts'
