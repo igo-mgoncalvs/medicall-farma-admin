@@ -14,37 +14,37 @@ import BASE_URL from "@/lib/axios";
 
 import styles from './styles.module.css'
 import TableReorderingComponent from "@/components/tableOrderingComponent";
-import { IFooterLinks } from "..";
+import { IFooterSocial } from "..";
 import BASE_URL_V2 from "@/lib/axios_v2";
 
 interface IParams {
   enableForm: boolean
   setEnableForm: Dispatch<SetStateAction<boolean>>
-  setBannersEdit: Dispatch<SetStateAction<IFooterLinks | undefined>>
+  setBannersEdit: Dispatch<SetStateAction<IFooterSocial | undefined>>
   getData: () => void
-  rows: IFooterLinks[]
+  rows: IFooterSocial[]
 }
 
-export default function FooterLinksTable ({ enableForm, setEnableForm, setBannersEdit, getData, rows }: IParams) {
+export default function FooterSocialTable ({ enableForm, setEnableForm, setBannersEdit, getData, rows }: IParams) {
   const [showButton, setShowButton] = useState(true)
 
   const handleButtonAction = useCallback(() => {
     setEnableForm(!enableForm)
   }, [enableForm])
 
-  const onEdit = (value: IFooterLinks) => {
+  const onEdit = (value: IFooterSocial) => {
     setBannersEdit(value)
     setEnableForm(true)
   }
 
-  const onDelete = useCallback((row: IFooterLinks) => {
+  const onDelete = useCallback((row: IFooterSocial) => {
     toast.info('Deletando as inforções, aguarde', {
       position: "top-right",
       pauseOnHover: false,
       autoClose: false,
     });
 
-    BASE_URL_V2.delete(`/delete-footer-link/${row.id}`)
+    BASE_URL_V2.delete(`/delete-footer-social/${row.id}`)
       .then(() =>{
         toast.dismiss()
         toast.success('Deletado com sucesso!', {
@@ -83,11 +83,24 @@ export default function FooterLinksTable ({ enableForm, setEnableForm, setBanner
       )
     },
     { 
-      field: 'name',
-      headerName: 'Nome',
-      flex: 1,
+      field: 'icon',
+      headerName: 'Icone',
+      width: 200,
       disableColumnMenu: true,
+      align: 'center',
+      headerAlign: 'center',
       sortable: false,
+      renderCell: (params) => (
+        <Image
+          src={params.value}
+          alt=""
+          width={50}
+          height={50}
+          style={{
+            padding: 10
+          }}
+        />
+      )
     },
     { 
       field: 'href',
@@ -95,7 +108,7 @@ export default function FooterLinksTable ({ enableForm, setEnableForm, setBanner
       flex: 1,
       disableColumnMenu: true,
       sortable: false,
-    }
+    },
   ]
 
   return (
