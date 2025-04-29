@@ -66,7 +66,7 @@ export default function LeftMenu() {
     {
       page_name: 'Páginas',
       page: '/paginas',
-      activeMenu: ['paginas', '/paginas/produtos', '/paginas/sobre-nos', '/paginas/fornecedores', '/paginas/contato'], 
+      activeMenu: ['paginas', '/paginas/produtos', '/paginas/sobre-nos', '/paginas/fornecedores', '/paginas/contato', '/paginas/footer'], 
       menus: [
         {
           id: 0,
@@ -88,24 +88,30 @@ export default function LeftMenu() {
         },
         {
           id: 3,
+          title: 'Roda pé',
+          activePage: ['paginas/footer'],
+          route: '/paginas/footer'
+        },
+        {
+          id: 4,
           title: 'Contato Whatsapp',
           activePage: ['paginas/contato'],
           route: '/paginas/contato'
         },
         {
-          id: 4,
+          id: 5,
           title: 'Contato Email',
           activePage: ['paginas/email'],
           route: '/paginas/email'
         },
         {
-          id: 5,
+          id: 6,
           title: 'Logos do site',
           activePage: ['paginas/logos'],
           route: '/paginas/logos'
         },
         {
-          id: 6,
+          id: 7,
           title: 'Catalogo',
           activePage: ['paginas/catalogo'],
           route: '/paginas/catalogo'
