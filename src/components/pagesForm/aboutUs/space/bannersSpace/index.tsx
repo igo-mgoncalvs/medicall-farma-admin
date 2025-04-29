@@ -4,7 +4,6 @@ import { useCallback, useState, useEffect, ChangeEvent } from 'react'
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd'
 import type { DropResult } from '@hello-pangea/dnd';
 import LoadingButton from '@mui/lab/LoadingButton';
-import Image from 'next/image';
 import { IAboutUs_Banners, IPostImage } from '@/utils/interfaces';
 import DeleteIcon from '@mui/icons-material/Delete';
 
@@ -26,7 +25,7 @@ export default function AboutUsBannersSpace () {
   const imageController = useForm()
 
   const getData = () => {
-    BASE_URL.get<IAboutUs_Banners[]>('/about-us-space-banners')
+    BASE_URL.get<IAboutUs_Banners[]>('/get-our-space-images')
       .then(({data}) => {
         setList(data)
       })

@@ -10,6 +10,7 @@ import { IAboutUs_History } from "@/utils/interfaces"
 import BASE_URL from '@/lib/axios'
 
 import styles from './styles.module.css'
+import BASE_URL_V2 from '@/lib/axios_v2'
 
 export default function AboutUsSpace () {
   const [loading, setLoading] = useState(false)
@@ -17,7 +18,7 @@ export default function AboutUsSpace () {
 
   const { control, handleSubmit } = useForm<IAboutUs_History | FieldValues>({
     defaultValues: async () => {
-      return await BASE_URL.get<IAboutUs_History>('/about-us-space')
+      return await BASE_URL_V2.get<IAboutUs_History>('/get-space')
       .then(({data}) => ({
         ...data, 
       }))
@@ -38,7 +39,7 @@ export default function AboutUsSpace () {
         autoClose: false,
       });
 
-      BASE_URL.post('/add-about-us-space', data)
+      BASE_URL_V2.post('/register-space', data)
         .then(() => {
           toast.dismiss()
           toast.success('Adicionado com sucesso!', {
@@ -65,7 +66,7 @@ export default function AboutUsSpace () {
         autoClose: false,
       });
 
-      BASE_URL.put('/edit-about-us-space', data)
+      BASE_URL_V2.put('/edit-space', data)
         .then(() => {
           toast.dismiss()
           toast.success('Editado com sucesso!', {
@@ -90,25 +91,6 @@ export default function AboutUsSpace () {
 
   return (
     <form className={styles.form_container} onSubmit={handleSubmit(onSubmit)}>
-      <div
-        className={styles.switch}
-      >
-        <Controller
-          control={control}
-          name="enable"
-          render={({field: { onChange, value }}) => (
-            <FormControlLabel
-              label={`${value ? 'Desabilitar' : 'Habilitar' } sessão`}
-              control={
-                <Switch
-                  checked={value}
-                  onChange={(e) => onChange(e.target.checked)}
-                />
-              } 
-            />
-          )}
-        />
-      </div>
       <div className={styles.form}>
         <Controller
           name="title"
@@ -133,7 +115,7 @@ export default function AboutUsSpace () {
         />
 
         <Controller
-          name="text"
+          name="description"
           control={control}
           render={({field: { onChange, value }, fieldState: { error }}) => (
             <TextField
