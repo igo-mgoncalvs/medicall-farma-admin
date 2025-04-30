@@ -17,6 +17,7 @@ import HomeBanners from '@/components/pagesForm/aboutUs/homeBanners'
 import MedicallAddresses from '@/components/pagesForm/aboutUs/medicallAddresses'
 import AboutUsTeam from '@/components/pagesForm/aboutUs/aboutUsTeam'
 import OurSpaceImages from '@/components/pagesForm/aboutUs/ourSpaceImages'
+import ValuesForm from '@/components/pagesForm/aboutUs/valuesForm'
 
 export default function Pages () {
 
@@ -62,6 +63,13 @@ export default function Pages () {
           <p className={styles.title}>Nosso Espaço</p>
           <AboutUsSpace />
           <OurSpaceImages />
+        </div>
+        
+        <Divider />
+
+        <div>
+          <p className={styles.title}>Valores</p>
+          <ValuesForm />
         </div>
       </div>
     </div>
