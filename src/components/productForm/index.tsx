@@ -29,6 +29,7 @@ interface IProductFormOld {
 }
 
 interface ISizes {
+  id: string
   key: number
   src: string | ArrayBuffer | null
   alt: string
@@ -133,6 +134,7 @@ export default function ProductForm ({ id }: { id?: string }) {
       setBase64([
         ...base64,
         {
+          id: '',
           key,
           src: reader.result,
           alt: '',

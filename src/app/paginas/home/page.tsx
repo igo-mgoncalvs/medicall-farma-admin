@@ -35,26 +35,26 @@ export default function Pages () {
             <div className={styles.gridBannersFixed}>
               <GridBanners
                 fixed={1}
-                id='9b877cbb-c816-4b8a-abd7-cb2e8b616945'
+                id='feb30e4d-d624-4011-a45b-758cbac021a8'
               />
               <GridBanners
                 fixed={2}
-                id='8fc15075-426f-439a-9684-d62b696f4c89'
+                id='3d3166ba-9fee-4559-8f27-3d48bf1e1330'
               />
             </div>
             <div className={styles.gridBannersRow}>
               <GridBanners
                 fixed={3}
-                id='9557d667-ba61-4df9-bff5-e704d5cc5b46'
+                id='b87d22d9-12d5-4b9b-b30c-99c8fa760ef7'
               />
               <GridBanners
                 fixed={4}
-                id='6a90e5fe-b732-4670-8447-c82e741f419f'
+                id='3255fa8e-181f-4c22-b22e-79813c46b539'
                 />
             </div>
             <GridBanners
               fixed={5}
-              id='a7782119-792c-4625-99c0-b5dca6d949f9'
+              id='52971faf-6de4-4292-a40b-dc741fa5a236'
             />
           </div>
         </div>

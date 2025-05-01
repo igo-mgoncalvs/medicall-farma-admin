@@ -1,16 +1,8 @@
-import axios, { InternalAxiosRequestConfig } from "axios"
-import Cookies from 'js-cookie';
+import axios from "axios"
 
 const BASE_URL_V2 = axios.create({
-  // baseURL: 'https://medicall.igormgoncalvs.com'
-  baseURL: 'http://localhost:3333'
-})
-
-BASE_URL_V2.interceptors.request.use(async (config: InternalAxiosRequestConfig) => {
-  const token = Cookies.get('token')
-  config.headers.Authorization = `Bearer ${token}`
-
-  return config
+  baseURL: 'https://medicall.igormgoncalvs.com'
+  // baseURL: 'http://localhost:3333'
 })
 
 export default BASE_URL_V2
