@@ -92,10 +92,13 @@ export interface ISuppliers_Screen {
 }
 
 export interface IContact {
+  id: string
+  phoneNumber: string
   link: string
 }
 
 export interface IContactEmail {
+  id: string
   email: string
 }
 

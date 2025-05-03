@@ -11,6 +11,7 @@ import BASE_URL from '@/lib/axios'
 
 import styles from './styles.module.css'
 import { PhoneMask } from '@/utils/phoneMask'
+import BASE_URL_V2 from '@/lib/axios_v2'
 
 export default function ContactForm () {
   const [loading, setLoading] = useState<boolean>(false)
@@ -20,9 +21,9 @@ export default function ContactForm () {
 
   const { control, handleSubmit } = useForm<IContact | FieldValues>({
     defaultValues: async () => {
-      return await BASE_URL.get<IContact>('/contact-link')
+      return await BASE_URL_V2.get<IContact>('/get-contact-phone')
       .then(({data}) => ({
-        link: PhoneMask(data.link.replace(whatsBaseLink, '')), 
+        ...data
       }))
       .catch(() => setAddForm(true))
       .finally(() => {
@@ -32,9 +33,9 @@ export default function ContactForm () {
   })
 
   const onSubmit = useCallback((data: IContact | FieldValues) => {
-    setLoading(true)
+    console.log(data)
+    const clearLink = data.phoneNumber.replace(/[^0-9]/g, '')
 
-    const clearLink = data.link.replace(/[^0-9]/g, '')
 
     toast.info('Adicionando inforções, aguarde', {
       position: "top-right",
@@ -42,7 +43,8 @@ export default function ContactForm () {
       autoClose: false,
     });
     if(addForm) {
-      BASE_URL.post('/add-contact-link', {
+      BASE_URL_V2.post('/register-contact-phone', {
+        phoneNumber: clearLink,
         link: `${whatsBaseLink}${clearLink}`
       })
         .then(() => {
@@ -66,7 +68,8 @@ export default function ContactForm () {
           setLoading(false)
         })
       } else {
-        BASE_URL.put('/edit-contact-link', {
+        BASE_URL_V2.put(`/edit-contact-phone/${data.id}`, {
+          phoneNumber: clearLink,
           link: `${whatsBaseLink}${clearLink}`
         })
           .then(() => {
@@ -94,7 +97,7 @@ export default function ContactForm () {
   return (
     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
       <Controller
-        name="link"
+        name="phoneNumber"
         control={control}
         rules={{
           required: {
@@ -105,8 +108,8 @@ export default function ContactForm () {
         render={({field: { onChange, value }, fieldState: { error }}) => (
           <TextField
             label='Número do whatsapp'
-            onChange={(e) => onChange(PhoneMask(e.target.value.slice(0, 15)))}
-            value={value}
+            onChange={(e) => onChange(PhoneMask(e.target.value))}
+            value={PhoneMask(value || '')}
             error={!!error}
             className={styles.inputText}
             helperText={error?.message}

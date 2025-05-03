@@ -10,7 +10,7 @@ import { toast } from 'react-toastify'
 import BASE_URL from '@/lib/axios'
 
 import styles from './styles.module.css'
-import { PhoneMask } from '@/utils/phoneMask'
+import BASE_URL_V2 from '@/lib/axios_v2'
 
 export default function ContactEmailForm () {
   const [loading, setLoading] = useState<boolean>(false)
@@ -18,7 +18,7 @@ export default function ContactEmailForm () {
 
   const { control, handleSubmit } = useForm<IContactEmail | FieldValues>({
     defaultValues: async () => {
-      return await BASE_URL.get<IContact>('/contact-email')
+      return await BASE_URL_V2.get<IContactEmail>('/get-contact-email')
       .then(({data}) => data)
       .catch(() => setAddForm(true))
       .finally(() => {
@@ -35,7 +35,7 @@ export default function ContactEmailForm () {
       autoClose: false,
     });
     if(addForm) {
-      BASE_URL.post('/contact-email', data)
+      BASE_URL_V2.post('/register-contact-email', data)
         .then(() => {
           toast.dismiss()
           toast.success('Adicionado com sucesso!', {
@@ -57,7 +57,7 @@ export default function ContactEmailForm () {
           setLoading(false)
         })
       } else {
-        BASE_URL.put('/edit-contact-email', data)
+        BASE_URL_V2.put(`/edit-contact-email/${data.id}`, data)
           .then(() => {
             toast.dismiss()
             toast.success('Editado com sucesso!', {

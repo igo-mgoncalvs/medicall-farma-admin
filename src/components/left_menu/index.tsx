@@ -106,15 +106,15 @@ export default function LeftMenu() {
         },
         {
           id: 6,
-          title: 'Logos do site',
-          activePage: ['paginas/logos'],
-          route: '/paginas/logos'
-        },
-        {
-          id: 7,
           title: 'Catalogo',
           activePage: ['paginas/catalogo'],
           route: '/paginas/catalogo'
+        },
+        {
+          id: 7,
+          title: 'Botões Flutuantes',
+          activePage: ['paginas/botoes-flutuantes'],
+          route: '/paginas/botoes-flutuantes'
         }
       ]
     },
