@@ -8,12 +8,7 @@ import { toast } from 'react-toastify'
 
 import TableActions from "@/components/tableComponent/actions";
 
-import { IAboutUs_Values } from "@/utils/interfaces";
-
-import BASE_URL from "@/lib/axios";
-
 import styles from './styles.module.css'
-import TableReorderingComponent from "@/components/tableOrderingComponent";
 import { IMedicallAddresses } from "..";
 import BASE_URL_V2 from "@/lib/axios_v2";
 import TableComponent from "@/components/tableComponent";
@@ -27,7 +22,6 @@ interface IParams {
 }
 
 export default function MedicallAddressesTable ({ enableForm, setEnableForm, setBannersEdit, getData, rows }: IParams) {
-  const [showButton, setShowButton] = useState(true)
 
   const handleButtonAction = useCallback(() => {
     setEnableForm(!enableForm)
@@ -115,16 +109,14 @@ export default function MedicallAddressesTable ({ enableForm, setEnableForm, set
 
   return (
     <div className={styles.container}>
-      {!showButton && (
-        <Button
-          variant="contained"
-          className={styles.button}
-          disabled={enableForm}
-          onClick={handleButtonAction}
-        >
-          Adiconar
-        </Button>
-      )}
+      <Button
+        variant="contained"
+        className={styles.button}
+        disabled={enableForm}
+        onClick={handleButtonAction}
+      >
+        Adiconar
+      </Button>
 
       {(columns && rows) && (
         <TableComponent

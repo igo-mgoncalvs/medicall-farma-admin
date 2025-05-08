@@ -7,11 +7,11 @@ import { TextField } from '@mui/material'
 import { LoadingButton } from '@mui/lab'
 import { toast } from 'react-toastify'
 
-import BASE_URL from '@/lib/axios'
 
 import styles from './styles.module.css'
 import { PhoneMask } from '@/utils/phoneMask'
 import BASE_URL_V2 from '@/lib/axios_v2'
+import InputImage from '@/components/inputImage'
 
 export default function ContactForm () {
   const [loading, setLoading] = useState<boolean>(false)
@@ -19,7 +19,7 @@ export default function ContactForm () {
 
   const whatsBaseLink = 'https://api.whatsapp.com/send/?phone='
 
-  const { control, handleSubmit } = useForm<IContact | FieldValues>({
+  const { control, handleSubmit, formState: { errors, isSubmitted } } = useForm<IContact | FieldValues>({
     defaultValues: async () => {
       return await BASE_URL_V2.get<IContact>('/get-contact-phone')
       .then(({data}) => ({
@@ -33,9 +33,7 @@ export default function ContactForm () {
   })
 
   const onSubmit = useCallback((data: IContact | FieldValues) => {
-    console.log(data)
     const clearLink = data.phoneNumber.replace(/[^0-9]/g, '')
-
 
     toast.info('Adicionando inforções, aguarde', {
       position: "top-right",
@@ -44,8 +42,9 @@ export default function ContactForm () {
     });
     if(addForm) {
       BASE_URL_V2.post('/register-contact-phone', {
+        ...data,
         phoneNumber: clearLink,
-        link: `${whatsBaseLink}${clearLink}`
+        link: `${whatsBaseLink}${clearLink}`,
       })
         .then(() => {
           toast.dismiss()
@@ -69,6 +68,7 @@ export default function ContactForm () {
         })
       } else {
         BASE_URL_V2.put(`/edit-contact-phone/${data.id}`, {
+          ...data,
           phoneNumber: clearLink,
           link: `${whatsBaseLink}${clearLink}`
         })
@@ -96,6 +96,21 @@ export default function ContactForm () {
 
   return (
     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+      <Controller
+        name="image"
+        control={control}
+        render={({field: {value, onChange}}) => (
+          <InputImage
+            errors={errors.image?.message?.toString()}
+            src={value}
+            isSubmitted={isSubmitted}
+            onChange={({src}) => {
+              onChange(src)
+            }}
+          />
+        )}
+      />
+
       <Controller
         name="phoneNumber"
         control={control}

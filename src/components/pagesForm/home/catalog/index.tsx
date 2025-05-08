@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 
 import styles from './styles.module.css'
 import BASE_URL_V2 from "@/lib/axios_v2";
+import InputImage from "@/components/inputImage";
 
 interface IHomeCatalogForm {
   title: string
@@ -16,13 +17,14 @@ interface IHomeCatalogForm {
   description: string
   buttonText: string
   catalogLink: string
+  image: string | ArrayBuffer
 }
 
 export default function CatalogForm () {
   const [loading, setLoading] = useState<boolean>(false)
   const [editForm, setEditForm] = useState<boolean>(true)
   
-  const { control, handleSubmit } = useForm<IHomeCatalogForm | FieldValues>({
+  const { control, handleSubmit, formState: { errors, isSubmitted } } = useForm<IHomeCatalogForm | FieldValues>({
     defaultValues: async () => {
       return await BASE_URL_V2.get<IHomeCatalogForm>('/get-home-catalog')
       .then(({data}) => ({
@@ -96,6 +98,21 @@ export default function CatalogForm () {
       onSubmit={handleSubmit(onSubmit)}
     >
       <div className={styles.form}>
+        <Controller
+          name="image"
+          control={control}
+          render={({field: {value, onChange}}) => (
+            <InputImage
+              errors={errors.image?.message?.toString()}
+              src={value}
+              isSubmitted={isSubmitted}
+              onChange={({src}) => {
+                onChange(src)
+              }}
+            />
+          )}
+        />
+        
         <div
           className={styles.inputsText_container}
         >

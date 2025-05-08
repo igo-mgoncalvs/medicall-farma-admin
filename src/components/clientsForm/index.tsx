@@ -1,14 +1,13 @@
 'use client'
 
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useState } from "react"
 import { Controller, useForm } from "react-hook-form"
-import { FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material"
+import { TextField } from "@mui/material"
 import LoadingButton from '@mui/lab/LoadingButton';
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 
-import { IClient, ISupplier } from "@/utils/interfaces"
-import BASE_URL from "@/lib/axios";
+import { IClient } from "@/utils/interfaces"
 
 import InputImage from "../inputImage"
 
@@ -17,14 +16,10 @@ import BASE_URL_V2 from "@/lib/axios_v2";
 
 export default function ClientsForm ({ id }: { id?: string }) {
   const [loading, setLoading] = useState<boolean>(false)
-  const [index, setIndex] = useState<number[]>([])
 
   const {
     control,
     handleSubmit,
-    watch,
-    setError,
-    clearErrors,
     formState: {
       isSubmitted,
       errors
@@ -95,7 +90,7 @@ export default function ClientsForm ({ id }: { id?: string }) {
           setLoading(false)
         })
     }
-  }, [id, index])
+  }, [id])
 
   return (
     <form

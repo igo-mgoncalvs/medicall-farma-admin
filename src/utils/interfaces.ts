@@ -95,6 +95,7 @@ export interface IContact {
   id: string
   phoneNumber: string
   link: string
+  image: string
 }
 
 export interface IContactEmail {

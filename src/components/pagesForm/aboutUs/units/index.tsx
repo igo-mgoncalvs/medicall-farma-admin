@@ -117,7 +117,7 @@ export default function AboutUsUnits () {
           <div className={styles.spaceHorizontal}>
             <Controller
               control={control}
-              name='title'
+              name='titleColor'
               render={({field: { onChange, value }, fieldState: { error }}) => (
                 <TextField
                   label='Título com cor'
@@ -133,7 +133,7 @@ export default function AboutUsUnits () {
 
             <Controller
               control={control}
-              name="titleColor"
+              name="title"
               render={({field: { onChange, value }, fieldState: { error }}) => (
                 <TextField
                   label='Titulo'

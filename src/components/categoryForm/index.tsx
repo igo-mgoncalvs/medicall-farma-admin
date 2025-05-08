@@ -47,7 +47,7 @@ export default function CategoryForm ({ id }: { id?: string }) {
     if(!id) {
       BASE_URL_V2.post('/register-category', {
         ...data,
-        categoryLink:`/${groups.find((item) => item.id === data.gruopId)?.groupName}/${data.categoryName.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9]/g, '').toLowerCase()}`,
+        categoryLink:`/${groups.find((item) => item.id === data.gruopId)?.groupLink}/${data.categoryName.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9]/g, '').toLowerCase()}`,
         isTop: false
       })
         .then(() => {

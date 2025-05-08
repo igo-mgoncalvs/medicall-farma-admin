@@ -1,0 +1,26 @@
+[debug] [2025-05-07T20:22:49.481Z] ----------------------------------------------------------------------
+[debug] [2025-05-07T20:22:49.483Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\igor2\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy
+[debug] [2025-05-07T20:22:49.484Z] CLI Version:   14.2.1
+[debug] [2025-05-07T20:22:49.484Z] Platform:      win32
+[debug] [2025-05-07T20:22:49.484Z] Node Version:  v22.12.0
+[debug] [2025-05-07T20:22:49.484Z] Time:          Wed May 07 2025 17:22:49 GMT-0300 (Horário Padrão de Brasília)
+[debug] [2025-05-07T20:22:49.484Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-05-07T20:22:49.685Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-05-07T20:22:49.685Z] > authorizing via signed-in user (igor2013mgoncalves@gmail.com)
+[debug] [2025-05-07T20:22:49.685Z] [iam] checking project medicall-farma for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2025-05-07T20:22:49.686Z] Checked if tokens are valid: true, expires at: 1746652061708
+[debug] [2025-05-07T20:22:49.687Z] Checked if tokens are valid: true, expires at: 1746652061708
+[debug] [2025-05-07T20:22:49.688Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/medicall-farma:testIamPermissions [none]
+[debug] [2025-05-07T20:22:49.688Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/medicall-farma:testIamPermissions x-goog-quota-user=projects/medicall-farma
+[debug] [2025-05-07T20:22:49.688Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/medicall-farma:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2025-05-07T20:22:50.696Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/medicall-farma:testIamPermissions 200
+[debug] [2025-05-07T20:22:50.696Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/medicall-farma:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2025-05-07T20:22:50.697Z] Checked if tokens are valid: true, expires at: 1746652061708
+[debug] [2025-05-07T20:22:50.697Z] Checked if tokens are valid: true, expires at: 1746652061708
+[debug] [2025-05-07T20:22:50.698Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/medicall-farma [none]
+[debug] [2025-05-07T20:22:51.173Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/medicall-farma 200
+[debug] [2025-05-07T20:22:51.173Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/medicall-farma {"projectId":"medicall-farma","projectNumber":"560615912268","displayName":"Medicall Farma","name":"projects/medicall-farma","resources":{"hostingSite":"medicall-farma","realtimeDatabaseInstance":"medicall-farma-default-rtdb","locationId":"us-central"},"state":"ACTIVE","etag":"1_ec4f8ba2-5fbe-4014-95ac-02180d15815f"}
+[debug] [2025-05-07T20:22:53.623Z] Checked if tokens are valid: true, expires at: 1746652061708
+[debug] [2025-05-07T20:22:53.623Z] Checked if tokens are valid: true, expires at: 1746652061708
+[debug] [2025-05-07T20:22:53.623Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/medicall-farma/sites pageToken=&pageSize=10

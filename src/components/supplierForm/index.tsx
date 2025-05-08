@@ -30,7 +30,7 @@ export default function SupplierForm ({ id }: { id?: string }) {
       errors
     }} = useForm<ISupplier>({
       defaultValues: async () => {
-        return await BASE_URL.get<ISupplier>(`/find-suppliers/${id}`)
+        return await BASE_URL_V2.get<ISupplier>(`/find-suppliers/${id}`)
           .then(({data}) => ({
             ...data,
           }))
@@ -45,7 +45,7 @@ export default function SupplierForm ({ id }: { id?: string }) {
   const onSubmit = useCallback((data: ISupplier) => {
     setLoading(true)
 
-    if(id) {
+    if(!id) {
       BASE_URL_V2.post('/register-supplier', {
           ...data,
           index: index.length
@@ -71,7 +71,7 @@ export default function SupplierForm ({ id }: { id?: string }) {
           setLoading(false)
         })
     } else {
-      BASE_URL.put(`/edit-supplier/${id}`, {
+      BASE_URL_V2.put(`/edit-supplier/${id}`, {
           ...data,
       })
         .then(() => {
