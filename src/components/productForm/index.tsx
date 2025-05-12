@@ -376,7 +376,7 @@ export default function ProductForm ({ id }: { id?: string }) {
               defaultValue={id ? ' ': ''}
               onChange={(e) => {
                 onChange(e)
-                setValue("contactLink", `Olá gostaria de informações sobre o produto ${e.target.value || ''}`)
+                setValue("contactLink", `Olá gostaria de informações sobre o produto ${e.target.value.replace(/[^a-z0-9]/gi, '') || ''}`)
                 setValue("link", `${selectedCategory?.categoryLink}/${e.target.value.replace(' ', '-')}`)
                 clearErrors('contactLink')
               }}
