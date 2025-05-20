@@ -87,11 +87,10 @@ export default function ProductForm ({ id }: { id?: string }) {
     defaultValues: async () => {
       return await BASE_URL_V2.get<IProductForm>(`/find-product/${id}`)
         .then(({data}) => {
-          categories.find((item) => item.id === data.categoriesId)
-          
           return ({
-          ...data, 
-        })})
+            ...data,
+            contactLink: decodeURI(data.contactLink.replace(whatsappUrl, '')),
+          })})
         .finally(() => {
           toast.dismiss()
         })
@@ -376,7 +375,7 @@ export default function ProductForm ({ id }: { id?: string }) {
               defaultValue={id ? ' ': ''}
               onChange={(e) => {
                 onChange(e)
-                setValue("contactLink", `Olá gostaria de informações sobre o produto ${e.target.value.replace(/[^a-z0-9]/gi, '') || ''}`)
+                setValue("contactLink", `Olá gostaria de informações sobre o produto ${e.target.value || ''}`)
                 setValue("link", `${selectedCategory?.categoryLink}/${e.target.value.replace(' ', '-')}`)
                 clearErrors('contactLink')
               }}
@@ -461,18 +460,19 @@ export default function ProductForm ({ id }: { id?: string }) {
               message: 'Esse campo é necessario'
             }
           }}
-          render={({ field: { onChange, value }, fieldState: { error } }) => (
+          render={({ field: { onChange, value }, fieldState: { error } }) => {
+            return (
             <TextField
               label='Digite a mensagem de contato pelo WhatsApp'
               rows={4}
-              value={decodeURI(value?.replace(whatsappUrl, '') || '')}
+              value={value}
               defaultValue={' '}
               error={!!error}
               helperText={error?.message}
               multiline
               onChange={(event) => onChange(event.target.value.replace(whatsappUrl, ''))}
             />
-          )}
+          )}}
         />
 
         <LoadingButton

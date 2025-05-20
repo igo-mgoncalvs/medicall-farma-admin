@@ -222,7 +222,7 @@ export default function Home() {
       align: 'center',
       renderCell: (params: GridRenderCellParams) => (
         <Image
-          src={params.row.sizes[0]?.src}
+          src={`${process.env.NEXT_PUBLIC_API_URL_V2}/product-image/${params.row.sizes[0]?.id}`}
           alt=""
           width={50}
           height={50}

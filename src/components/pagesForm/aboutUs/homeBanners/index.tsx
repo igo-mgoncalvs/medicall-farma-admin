@@ -205,9 +205,10 @@ export default function HomeBanners () {
                 name='external'
                 control={control}
                 render={({field: {value, onChange}}) => (
-                  <>
-                  <FormControlLabel control={<Checkbox onChange={(e) => onChange(e.target.checked)} />} label="É um link externo?" />
-                  </>
+                  <FormControlLabel
+                    control={<Checkbox checked={value} onChange={(e) => onChange(e.target.checked)} />}
+                    label="É um link externo?"
+                  />
                 )}
               />
             </div>

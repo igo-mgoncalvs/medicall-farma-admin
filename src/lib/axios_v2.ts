@@ -1,7 +1,7 @@
 import axios from "axios"
 
 const BASE_URL_V2 = axios.create({
-  baseURL: 'https://medicall.igormgoncalvs.com'
+  baseURL: process.env.NEXT_PUBLIC_API_URL_V2
   // baseURL: 'http://localhost:3333'
 })
 

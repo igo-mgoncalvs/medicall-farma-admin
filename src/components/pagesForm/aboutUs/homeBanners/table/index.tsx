@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback, Dispatch, SetStateAction } from "react";
+import { useState, useCallback, Dispatch, SetStateAction } from "react";
 import Image from "next/image";
 import { GridColDef } from "@mui/x-data-grid";
 import { Button } from "@mui/material";
@@ -8,9 +8,6 @@ import { toast } from 'react-toastify'
 
 import TableActions from "@/components/tableComponent/actions";
 
-import { IAboutUs_Values } from "@/utils/interfaces";
-
-import BASE_URL from "@/lib/axios";
 
 import styles from './styles.module.css'
 import TableReorderingComponent from "@/components/tableOrderingComponent";
