@@ -18,6 +18,7 @@ interface IHomeCatalogForm {
   buttonText: string
   catalogLink: string
   image: string | ArrayBuffer
+  imageMobile: string | ArrayBuffer
 }
 
 export default function CatalogForm () {
@@ -98,114 +99,55 @@ export default function CatalogForm () {
       onSubmit={handleSubmit(onSubmit)}
     >
       <div className={styles.form}>
+        <div className={styles.banners}>
+          <Controller
+            name="image"
+            control={control}
+            render={({field: {value, onChange}}) => (
+              <InputImage
+                id="image_catalog"
+                errors={errors.image?.message?.toString()}
+                src={value}
+                isSubmitted={isSubmitted}
+                onChange={({src}) => {
+                  onChange(src)
+                }}
+              />
+            )}
+          />
+
+          <Controller
+            name="imageMobile"
+            control={control}
+            render={({field: {value, onChange}}) => (
+              <InputImage
+                errors={errors.imageMobile?.message?.toString()}
+                id="imageMobile_catalog"
+                src={value}
+                isSubmitted={isSubmitted}
+                onChange={({src}) => {
+                  onChange(src)
+                }}
+              />
+            )}
+          />
+        </div>
+
         <Controller
-          name="image"
           control={control}
-          render={({field: {value, onChange}}) => (
-            <InputImage
-              errors={errors.image?.message?.toString()}
-              src={value}
-              isSubmitted={isSubmitted}
-              onChange={({src}) => {
-                onChange(src)
-              }}
+          name="catalogLink"
+          render={({field: { onChange, value }, fieldState: { error }}) => (
+            <TextField
+              label='Link do botão'
+              onChange={onChange}
+              value={value}
+              error={!!error}
+              className={styles.inputText}
+              helperText={error?.message}
+              defaultValue={' '}
             />
           )}
         />
-        
-        <div
-          className={styles.inputsText_container}
-        >
-          <div className={styles.spaceHorizontal}>
-            <Controller
-              control={control}
-              name='title'
-              render={({field: { onChange, value }, fieldState: { error }}) => (
-                <TextField
-                  label='Título'
-                  onChange={onChange}
-                  value={value}
-                  error={!!error}
-                  className={styles.inputText}
-                  helperText={error?.message}
-                  defaultValue={' '}
-                />
-              )}
-            />
-
-            <Controller
-              control={control}
-              name='titleColor'
-              render={({field: { onChange, value }, fieldState: { error }}) => (
-                <TextField
-                  label='Título com cor'
-                  onChange={onChange}
-                  value={value}
-                  error={!!error}
-                  className={styles.inputText}
-                  helperText={error?.message}
-                  defaultValue={' '}
-                />
-              )}
-            />
-
-            <Controller
-              control={control}
-              name="description"
-              render={({field: { onChange, value }, fieldState: { error }}) => (
-                <TextField
-                  label='Descrição'
-                  onChange={onChange}
-                  value={value}
-                  multiline
-                  rows={5}
-                  error={!!error}
-                  className={styles.inputText}
-                  helperText={error?.message}
-                  defaultValue={' '}
-                />
-              )}     
-            />
-          </div>
-          
-          <div className={styles.spaceHorizontal}>
-            <Controller
-              control={control}
-              name="buttonText"
-              render={({field: { onChange, value }, fieldState: { error }}) => (
-                <TextField
-                  label='Texto botão'
-                  onChange={onChange}
-                  value={value}
-                  error={!!error}
-                  className={styles.inputText}
-                  helperText={error?.message}
-                  defaultValue={' '}
-                />
-              )}
-            />
-            
-            <div
-              className={styles.inputText}
-            >
-              <Controller
-                control={control}
-                name="catalogLink"
-                render={({field: { onChange, value }, fieldState: { error }}) => (
-                  <TextField
-                    label='Link do botão'
-                    onChange={onChange}
-                    value={value}
-                    error={!!error}
-                    className={styles.inputText}
-                    helperText={error?.message}
-                    defaultValue={' '}
-                  />
-                )}
-              />
-            </div>
-          </div>
-        </div>
       </div>
 
       <LoadingButton

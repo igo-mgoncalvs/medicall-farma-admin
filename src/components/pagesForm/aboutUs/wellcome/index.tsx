@@ -138,42 +138,6 @@ export default function Wellcome () {
               />
             </div>
           </div>
-
-          <Controller
-            control={control}
-            name='title'
-            render={({field: { onChange, value }, fieldState: { error }}) => (
-              <TextField
-                label='Título'
-                onChange={onChange}
-                value={value}
-                error={!!error}
-                className={styles.inputText}
-                helperText={error?.message}
-                defaultValue={' '}
-              />
-            )}
-          />
-
-          <div className={styles.spaceHorizontal}>
-            <Controller
-              control={control}
-              name="description"
-              render={({field: { onChange, value }, fieldState: { error }}) => (
-                <TextField
-                  label='Descrição'
-                  onChange={onChange}
-                  value={value}
-                  multiline
-                  rows={5}
-                  error={!!error}
-                  className={styles.inputText}
-                  helperText={error?.message}
-                  defaultValue={' '}
-                />
-              )}     
-            />
-          </div>
         </div>
       </div>
 

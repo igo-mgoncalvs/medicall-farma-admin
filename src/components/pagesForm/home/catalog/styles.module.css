@@ -3,12 +3,22 @@
   padding-top: 20px;
 }
 
+.banners {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px
+}
+
+.banners div {
+  flex: 1 
+}
+
 .form {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   margin-top: 40px;
-  gap: 80px;
+  gap: 20px;
   margin-bottom: 15px;
 }
 

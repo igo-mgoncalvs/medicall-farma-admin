@@ -70,8 +70,6 @@ function Users () {
         return TableActions({
         editRoute: `/usuarios/${row.id}`,
         onDelete: () => handleDeleteProduct({ id: row.id }),
-        diabledDelete: row.id === getUserId,
-        diabledEdit: row.id === getUserId
       })}
     },
     { 
