@@ -1,18 +1,19 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { ChangeEvent, useCallback, useEffect, useState } from 'react'
 import Image from "next/image";
 import Link from "next/link";
 import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import BASE_URL from "@/lib/axios";
 import { toast } from "react-toastify";
+import Cookies from 'js-cookie';
 
 import AddIcon from '@/components/icons/add'
 
 import styles from "./page.module.css";
-import { ExpandLess, ExpandMore} from '@mui/icons-material';
+import { ExpandLess, ExpandMore, UploadFile, Edit} from '@mui/icons-material';
 import TableActions from '@/components/tableComponent/actions';
-import { Collapse, List, ListItemButton, ListItemText, MenuItem, Select, Switch } from '@mui/material';
+import { Button, Collapse, List, ListItemButton, ListItemText, MenuItem, Select, Switch } from '@mui/material';
 import TableReorderingComponent from '@/components/tableOrderingComponent';
 import { GridRowOrderChangeParams } from '@mui/x-data-grid-pro';
 import { IGroup, IProduct } from '@/utils/interfacesNew';
@@ -155,6 +156,50 @@ export default function Home() {
       })
   }
 
+  const handleInputFile = useCallback((event: ChangeEvent<HTMLInputElement>, productId: string) => {
+    const { files } = event.currentTarget
+
+    toast.info('Publicando arquivo, aguarde', {
+      position: "top-right",
+      pauseOnHover: false,
+      autoClose: false,
+    });
+
+    if(!files) {
+      return ""
+    }
+
+    const selectedFile = files[0]
+
+    const data = new FormData()
+
+    data.append('file', selectedFile)
+
+    const token = Cookies.get('token')
+
+    BASE_URL_V2.put(`/upload-certificate/${productId}`, data, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+      .then(() => {
+        toast.dismiss()
+        toast.success('Arquivo editado com sucesso!', {
+          position: "top-right",
+          pauseOnHover: false,
+          autoClose: 5000
+        });
+      })
+      .catch(() => {
+        toast.dismiss()
+        toast.error('Erro ao editar o arquivo', {
+          position: "top-right",
+          pauseOnHover: false,
+          autoClose: 5000
+        });
+      })
+  }, [])
+
   const ProductsColumns: GridColDef[] = [
     {
       field: 'action',
@@ -237,6 +282,35 @@ export default function Home() {
       width: 150,
       sortable: false,
       disableColumnMenu: true
+    },
+    { 
+      field: 'certificate',
+      headerName: 'Certificado',
+      headerAlign: 'center',
+      width: 250,
+      sortable: false,
+      disableColumnMenu: true,
+      renderCell: ({row}) => (
+        <div className={styles.upload_button_container}>
+          
+          <label
+            htmlFor={`file-${row.id}`}
+            data-status={!!row.certificateLink}
+            className={styles.upload_button}
+          >
+            {row.certificateLink ? <Edit /> : <UploadFile />}
+            {row.certificateLink ? 'Alterar arquivo': 'Enviar arquivo'}
+            
+          </label>
+
+          <input
+            type='file'
+            id={`file-${row.id}`}
+            onChange={(event) => handleInputFile(event, row.id)}
+            className={styles.file_input}
+          />
+        </div>
+      )
     },
     { 
       field: 'shortDescription',

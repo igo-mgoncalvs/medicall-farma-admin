@@ -87,3 +87,31 @@
 .grupName {
   text-transform: capitalize;
 }
+
+.file_input {
+  display: none;
+}
+
+.upload_button_container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.upload_button {
+  display: flex;
+  color: #fff;
+  background-color: #1F1F1F;
+  align-items: center;
+  justify-content: center;
+  padding: 8%;
+  border-radius: 8px;
+  height: 50px;
+  gap: 10px;
+  margin-top: 12px;
+  cursor: pointer;
+}
+
+.upload_button[data-status=true] {
+  background-color: #0E66CA;
+}
