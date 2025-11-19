@@ -140,3 +140,42 @@ export interface ICatalog {
   link: string
   fileName: string
 }
+
+export interface IBlogs {
+  id: string
+  title: string
+  content: string
+  resume: string
+  date: string
+  emphasis: boolean
+  image: {
+    src: string
+  }
+  hasReference?: boolean
+  relatedBlogs: {
+    id?: string,
+    blogId?: string
+    blogRelatedId?: string
+    title: string
+  }[]
+  relatedTo: {
+    id: string
+    title: string
+    blogId: string
+    blogRelatedId: string
+  }[]
+  similarProducts: {
+    id?: string
+    productLink: string
+    title: string
+    description: string
+  }[]
+} 
+
+export interface IMedicallCast {
+  id: string
+  title: string
+  description: string
+  link: string
+  date: string
+}

@@ -25,6 +25,43 @@ body {
   
 }
 
+
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+@media print {
+	body {
+		margin: 0 !important;
+	}
+}
+
+:root {
+	--ck-content-font-family: 'Lato';
+}
+
+.main-container {
+  display: flex;
+	font-family: var(--ck-content-font-family);
+  width: 100%;
+}
+
+.editor-container {
+  display: flex;
+  width: 100%;
+}
+
+.editor-container_classic-editor .editor-container__editor {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  width: 100%;
+	min-width: 795px;
+}
+
+.editor {
+  width: 100%;
+}
+
 .children_container {
   display: flex;
   height: 100vh;

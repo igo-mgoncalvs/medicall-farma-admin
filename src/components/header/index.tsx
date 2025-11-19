@@ -51,6 +51,12 @@ function Header () {
       activePage: ['/usuarios', '/usuarios/novo-usuario', 'usuarios'],
       route: '/usuarios',
       title: 'Usuários'
+    },
+    {
+      id: 3,
+      activePage: ['/blogs', 'blogs'],
+      route: '/blogs/post',
+      title: 'Blogs'
     }
   ]
 
