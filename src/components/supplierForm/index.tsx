@@ -13,6 +13,7 @@ import BASE_URL from "@/lib/axios";
 import InputImage from "../inputImage"
 
 import styles from './styles.module.css'
+import BASE_URL_V2 from "@/lib/axios_v2";
 
 export default function SupplierForm ({ id }: { id?: string }) {
   const [loading, setLoading] = useState<boolean>(false)
@@ -22,7 +23,6 @@ export default function SupplierForm ({ id }: { id?: string }) {
     control,
     handleSubmit,
     watch,
-    setValue,
     setError,
     clearErrors,
     formState: {
@@ -30,7 +30,7 @@ export default function SupplierForm ({ id }: { id?: string }) {
       errors
     }} = useForm<ISupplier>({
       defaultValues: async () => {
-        return await BASE_URL.get<ISupplier>(`/find-suppliers/${id}`)
+        return await BASE_URL_V2.get<ISupplier>(`/find-suppliers/${id}`)
           .then(({data}) => ({
             ...data,
           }))
@@ -40,43 +40,13 @@ export default function SupplierForm ({ id }: { id?: string }) {
       }, 
     })
 
-  const imageUrl = watch('image')
-  const imageId = watch('imageId')
-
   const navigation = useRouter()
-
-  useEffect(() => {
-    const getData = () => {
-      BASE_URL.get<ISupplier[]>('/suppliers')
-        .then(({data}) => {
-          const list: number[] = []
-  
-          data.forEach((item) => {
-            list.push(item.index)
-          })
-  
-          setIndex(list)
-        })
-    }
-  
-    getData()
-  }, [])
-
-  useEffect(() => {
-    if(!imageUrl) {
-      setError('image', {
-        message: 'Esse campo é necessario'
-      })
-    } else {
-      clearErrors('image')
-    }
-  }, [imageUrl])
 
   const onSubmit = useCallback((data: ISupplier) => {
     setLoading(true)
 
     if(!id) {
-      BASE_URL.post('/add-suppliers', {
+      BASE_URL_V2.post('/register-supplier', {
           ...data,
           index: index.length
       })
@@ -101,9 +71,8 @@ export default function SupplierForm ({ id }: { id?: string }) {
           setLoading(false)
         })
     } else {
-      BASE_URL.put(`/edit-suppliers/${id}`, {
+      BASE_URL_V2.put(`/edit-supplier/${id}`, {
           ...data,
-          index: Number(data.index)
       })
         .then(() => {
           toast.dismiss()
@@ -133,15 +102,19 @@ export default function SupplierForm ({ id }: { id?: string }) {
       className={styles.form}
       onSubmit={handleSubmit(onSubmit)}
     >
-      <InputImage
-        imageUrl={imageUrl}
-        isSubmitted={isSubmitted}
-        errors={errors.image?.message}
-        imageId={imageId}
-        setValue={({link, file_name}) => {
-          setValue('image', link)
-          setValue('imageId', file_name)
-        }}
+      <Controller
+        name="image"
+        control={control}
+        render={({field: {value, onChange}}) => (
+          <InputImage
+            errors={errors.image?.message?.toString()}
+            src={value}
+            isSubmitted={isSubmitted}
+            onChange={({src}) => {
+              onChange(src)
+            }}
+          />
+        )}
       />
 
       <Controller

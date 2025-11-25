@@ -1,4 +1,4 @@
-import { ChangeEvent, useCallback } from "react";
+import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { FormControl, FormHelperText } from "@mui/material";
 import ImageIcon from '@mui/icons-material/Image';
 import { toast } from "react-toastify";
@@ -16,29 +16,32 @@ interface IImageForm {
 interface IParams {
   errors?: string | undefined
   isSubmitted: boolean 
-  imageUrl: string
-  imageId: string
-  setValue: ({link, file_name}: {link: string, file_name: string}) => void
+  onChange: ({src}: {src: string | ArrayBuffer}) => void
   id?: string
   backgroundColor?: string
+  src: string | ArrayBuffer
+  description?: string
 }
 
-interface IPostImage {
-  link: string
-  file_name: string
-}
+export default function InputImage({errors, isSubmitted, onChange, src, id, backgroundColor, description}: IParams) {
+  const [base64, setBase64] = useState<string | ArrayBuffer | null>(src)
 
-export default function InputImage({errors, isSubmitted, imageUrl, imageId, setValue, id, backgroundColor}: IParams) {
   const errorMessageImage: undefined | boolean = !!errors && isSubmitted
 
-  const handleInputFile = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    const { files } = event.currentTarget
+  useEffect(() => {
+    if(src) {
+      setBase64(src)
+    }
+  }, [src])
 
-    toast.info('Publicando imagem, aguarde', {
-      position: "top-right",
-      pauseOnHover: false,
-      autoClose: false,
-    });
+  useEffect(() => {
+    if(base64) {
+      onChange({src: base64})
+    }
+  }, [base64])
+
+  const handleInputFile = (event: ChangeEvent<HTMLInputElement>) => {
+    const { files } = event.currentTarget
 
     if(!files) {
       return ""
@@ -46,44 +49,14 @@ export default function InputImage({errors, isSubmitted, imageUrl, imageId, setV
 
     const selectedFile = files[0]
 
-    const data = new FormData()
+    const reader = new FileReader()
 
-    data.append('file', selectedFile)
-
-    const token = Cookies.get('token')
-
-    BASE_URL.post<IPostImage>('/upload-image', data, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    })
-      .then(({data: { link, file_name }}) => {
-        toast.dismiss()
-        toast.success('Imagem publicada com sucesso!', {
-          position: "top-right",
-          pauseOnHover: false,
-          autoClose: 5000
-        });
-        setValue({file_name, link})
-      })
-      .catch((error) => {
-        toast.dismiss()
-        toast.error('Erro ao publicar a imagem', {
-          position: "top-right",
-          pauseOnHover: false,
-          autoClose: 5000
-        });
-      })
-
-    if(imageUrl) {
-      BASE_URL.delete<IPostImage>(`/delete-image/${imageId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
+    reader.onloadend = () => {
+      setBase64(reader.result)
     }
 
-  }, [imageUrl, setValue])
+    reader.readAsDataURL(selectedFile)
+  }
 
   return (
     <FormControl
@@ -91,16 +64,16 @@ export default function InputImage({errors, isSubmitted, imageUrl, imageId, setV
     >
       <label
         htmlFor={id || 'video'}
-        className={`${styles.imageLabel} ${errorMessageImage && styles.imageError} ${imageUrl && styles.imageLabelActive}`}
+        className={`${styles.imageLabel} ${errorMessageImage && styles.imageError} ${base64 && styles.imageLabelActive}`}
         style={{
           backgroundColor,
         }}
       >
-        {imageUrl ? (
+        {base64 ? (
           <img
             className={styles.image}
-            src={imageUrl}
-            alt=""
+            src={base64?.toString() || ''}
+            alt="upload-image"
           />
         ): (
           <div
@@ -109,7 +82,7 @@ export default function InputImage({errors, isSubmitted, imageUrl, imageId, setV
             <ImageIcon
               className={`${styles.icon} ${errorMessageImage && styles.icon_error} ${backgroundColor && styles.iconWhite}`}
             />
-            Selecione a imagem
+            Selecione a imagem {description}
           </div>
         )}
       </label>

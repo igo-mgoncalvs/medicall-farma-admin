@@ -206,17 +206,20 @@ export default function HomeWelcomeForm () {
             )}
           />
         </div>
-
-        <InputImage
-          errors={errors.image?.message?.toString()}
-          imageId={imageId}
-          imageUrl={image}
-          id="welcomeImageId"
-          isSubmitted={isSubmitted}
-          setValue={({link, file_name}) => {
-            setValue('image', link)
-            setValue('imageId', file_name)
-          }}
+        
+        <Controller
+          name="image"
+          control={control}
+          render={({field: {value, onChange}}) => (
+            <InputImage
+              errors={errors.image?.message?.toString()}
+              src={value}
+              isSubmitted={isSubmitted}
+              onChange={({src}) => {
+                onChange(src)
+              }}
+            />
+          )}
         />
       </div>
 

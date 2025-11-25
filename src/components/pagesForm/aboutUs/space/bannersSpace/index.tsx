@@ -4,7 +4,6 @@ import { useCallback, useState, useEffect, ChangeEvent } from 'react'
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd'
 import type { DropResult } from '@hello-pangea/dnd';
 import LoadingButton from '@mui/lab/LoadingButton';
-import Image from 'next/image';
 import { IAboutUs_Banners, IPostImage } from '@/utils/interfaces';
 import DeleteIcon from '@mui/icons-material/Delete';
 
@@ -13,6 +12,7 @@ import BASE_URL from '@/lib/axios';
 import styles from './styles.module.css'
 import { toast } from 'react-toastify';
 import { Controller, useForm } from 'react-hook-form';
+import BASE_URL_V2 from '@/lib/axios_v2';
 
 export default function AboutUsBannersSpace () {
   const [list, setList] = useState<IAboutUs_Banners[]>([])
@@ -26,7 +26,7 @@ export default function AboutUsBannersSpace () {
   const imageController = useForm()
 
   const getData = () => {
-    BASE_URL.get<IAboutUs_Banners[]>('/about-us-space-banners')
+    BASE_URL.get<IAboutUs_Banners[]>('/get-our-space-images')
       .then(({data}) => {
         setList(data)
       })
@@ -136,9 +136,7 @@ export default function AboutUsBannersSpace () {
       autoClose: false,
     });
 
-    BASE_URL.post(`/about-us-delete-space-banner/${image.imageId}`, {
-      imageId: image.imageId
-    })
+    BASE_URL_V2.delete(`/delete-our-space-image/${image.id}`)
       .then(async () => {
         toast.dismiss()
         toast.success('Imagem excluida com sucesso!', {

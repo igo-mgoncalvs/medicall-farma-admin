@@ -7,13 +7,14 @@ import Cookies from 'js-cookie';
 import BASE_URL from "@/lib/axios";
 
 import styles from './styles.module.css'
+import BASE_URL_V2 from "@/lib/axios_v2";
 
 interface IParams {
   errors?: string | undefined
   isSubmitted: boolean 
   imageUrl: string
   imageId: string
-  setValue: ({link, file_name}: {link: string, file_name: string}) => void
+  setValue: ({link, fileName}: {link: string, fileName: string}) => void
   id?: string
   backgroundColor?: string
   enableEdit: boolean
@@ -21,7 +22,7 @@ interface IParams {
 
 interface IPostImage {
   link: string
-  file_name: string
+  fileName: string
 }
 
 export default function InputFile({errors, isSubmitted, imageUrl, imageId, setValue, id, backgroundColor, enableEdit}: IParams) {
@@ -49,21 +50,21 @@ export default function InputFile({errors, isSubmitted, imageUrl, imageId, setVa
     const token = Cookies.get('token')
 
     if(enableEdit) {
-      BASE_URL.put<IPostImage>(`/edit-file`,
+      BASE_URL_V2.put<IPostImage>(`/edit-file`,
       data,
       {
         headers: {
           Authorization: `Bearer ${token}`
         }
       })
-        .then(({data: { link, file_name }}) => {
+        .then(({data: { link, fileName }}) => {
           toast.dismiss()
           toast.success('Arquivo editado com sucesso!', {
             position: "top-right",
             pauseOnHover: false,
             autoClose: 5000
           });
-          setValue({file_name, link})
+          setValue({fileName, link})
         })
         .catch((error) => {
           toast.dismiss()
@@ -74,19 +75,19 @@ export default function InputFile({errors, isSubmitted, imageUrl, imageId, setVa
           });
         })
     } else {
-      BASE_URL.post<IPostImage>('/upload-file', data, {
+      BASE_URL_V2.post<IPostImage>('/upload-file', data, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       })
-        .then(({data: { link, file_name }}) => {
+        .then(({data: { link, fileName }}) => {
           toast.dismiss()
           toast.success('Arquivo publicado com sucesso!', {
             position: "top-right",
             pauseOnHover: false,
             autoClose: 5000
           });
-          setValue({file_name, link})
+          setValue({fileName, link})
         })
         .catch((error) => {
           toast.dismiss()

@@ -28,9 +28,7 @@ export interface IInterfaceProducts {
 export interface ISupplier {
   id: string
   image: string
-  imageId: string
   name: string,
-  index: number
 }
 
 export interface IClient {
@@ -49,14 +47,13 @@ export interface IAboutUs_History_Banners {
 
 export interface IAboutUs_History {
   title: string
-  text: string
-  enable: boolean 
+  description: string
 }
 
 export interface IAboutUs_Banners {
   id: string
   image: string
-  imageId: string
+  order: number
 }
 
 export interface IPostImage {
@@ -95,10 +92,14 @@ export interface ISuppliers_Screen {
 }
 
 export interface IContact {
+  id: string
+  phoneNumber: string
   link: string
+  image: string
 }
 
 export interface IContactEmail {
+  id: string
   email: string
 }
 
@@ -125,6 +126,7 @@ export interface IHomeProduct {
 export interface IPrivacyPolicy {
   title: string
   text: string
+  image: string
 }
 
 export interface ILogos {

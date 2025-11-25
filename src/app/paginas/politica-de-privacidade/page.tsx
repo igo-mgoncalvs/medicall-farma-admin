@@ -9,11 +9,6 @@ export default function SuppliersPage () {
     <div>
       <div className={styles.forms_container}>
         <div>
-          <p className={styles.title}>Fornecedores</p>
-          <SuppliersForm />
-        </div>
-
-        <div>
           <p className={styles.title}>Política da qualidade</p>
           <PrivacyPolicy />
         </div>

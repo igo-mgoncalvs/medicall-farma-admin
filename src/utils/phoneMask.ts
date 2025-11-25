@@ -1,21 +1,16 @@
 export function PhoneMask(text: string) {
-  const num = text.replace(/[^0-9]/g, '');
+  const num = text.replace(/[^0-9]/g, '').replace(/^55/, '')
   const len = num.length;
 
   const format = () => {
-    if (len < 1 && len <= 5) {
-      return num.replace(/(\d{1,2})/, '($1) ')
+    if (len === 0) return '+55 ';
+    if (len < 3) return `+55 ${num}`;
+    if (len < 8) return `+55 (${num.slice(0, 2)}) ${num.slice(2)}`;
+    if (len <= 11) {
+      return `+55 (${num.slice(0, 2)}) ${num.slice(2, 7)}-${num.slice(7)}`;
     }
-    if (len <= 7) {
-      return num.replace(/(\d{2})(\d{1,4})/, '($1) $2')
-    }
-    if (len <= 10) {
-      return num.replace(/(\d{2})(\d{1,4})(\d{1,4})/g, '($1) $2-$3')
-    } if (len >= 11) {
-      return num.replace(/(\d{2})(\d{1,5})(\d{1,4})/g, '($1) $2-$3')
-    }
-    return num.replace(/(\d{2})(\d{1,5})(\d{1,4})/g, '($1) $2-$3')
-  }
-  
-  return format()
+    return `+55 (${num.slice(0, 2)}) ${num.slice(2, 7)}-${num.slice(7, 11)}`;
+  };
+
+  return format();
 }

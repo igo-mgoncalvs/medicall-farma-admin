@@ -2,7 +2,7 @@ import axios, { InternalAxiosRequestConfig } from "axios"
 import Cookies from 'js-cookie';
 
 const BASE_URL = axios.create({
-  baseURL: process.env.baseUrl
+  baseURL: process.env.NEXT_PUBLIC_API_URL
 })
 
 BASE_URL.interceptors.request.use(async (config: InternalAxiosRequestConfig) => {

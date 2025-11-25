@@ -2,15 +2,16 @@
 
 import { Divider } from '@mui/material'
 
-import AboutUsBanners from '@/components/pagesForm/aboutUs/banners'
-import AboutUsBannersSpace from '@/components/pagesForm/aboutUs/space/bannersSpace'
-import OurHistory from '@/components/pagesForm/aboutUs/ourHistory'
 import AboutUsSpace from '@/components/pagesForm/aboutUs/space'
-import AboutUsTeam from '@/components/pagesForm/aboutUs/team'
 
 import styles from './styles.module.css'
-import AboutUsValues from '@/components/pagesForm/aboutUs/values'
-import AboutUsDirectors from '@/components/pagesForm/aboutUs/directors'
+import Wellcome from '@/components/pagesForm/aboutUs/wellcome'
+import AboutUsSection from '@/components/pagesForm/aboutUs/aboutUsSection'
+import AboutUsUnits from '@/components/pagesForm/aboutUs/units'
+import MedicallAddresses from '@/components/pagesForm/aboutUs/medicallAddresses'
+import AboutUsTeam from '@/components/pagesForm/aboutUs/aboutUsTeam'
+import OurSpaceImages from '@/components/pagesForm/aboutUs/ourSpaceImages'
+import ValuesForm from '@/components/pagesForm/aboutUs/valuesForm'
 
 export default function Pages () {
 
@@ -18,44 +19,51 @@ export default function Pages () {
     <div>
       <div className={styles.forms_container}>
         <div>
-          <p className={styles.title}>Banners</p>
-          <AboutUsBanners />
+          <p className={styles.title}>Boas Vindas</p>
+          <Wellcome />
         </div>
 
         <Divider />
         
         <div>
-          <p className={styles.title}>História</p>
-          <OurHistory />
+          <p className={styles.title}>Sobre nós</p>
+          <AboutUsSection />
         </div>
 
         <Divider />
-        
+
+        <div>
+          <p className={styles.title}>Unidades</p>
+          <AboutUsUnits />
+        </div>
+
+        <Divider />
+
+        <div>
+          <p className={styles.title}>Endereços Medicall</p>
+          <MedicallAddresses />
+        </div>
+
+        <Divider />
+
         <div>
           <p className={styles.title}>Nossa Equipe</p>
           <AboutUsTeam />
         </div>
 
         <Divider />
-        
+
         <div>
           <p className={styles.title}>Nosso Espaço</p>
           <AboutUsSpace />
-          <AboutUsBannersSpace />
+          <OurSpaceImages />
         </div>
-
-        <Divider />
         
+        <Divider />
+
         <div>
           <p className={styles.title}>Valores</p>
-          <AboutUsValues />
-        </div>
-
-        <Divider />
-        
-        <div>
-          <p className={styles.title}>Diretores</p>
-          <AboutUsDirectors />
+          <ValuesForm />
         </div>
       </div>
     </div>

@@ -7,10 +7,11 @@ import { TextField } from '@mui/material'
 import { LoadingButton } from '@mui/lab'
 import { toast } from 'react-toastify'
 
-import BASE_URL from '@/lib/axios'
 
 import styles from './styles.module.css'
 import { PhoneMask } from '@/utils/phoneMask'
+import BASE_URL_V2 from '@/lib/axios_v2'
+import InputImage from '@/components/inputImage'
 
 export default function ContactForm () {
   const [loading, setLoading] = useState<boolean>(false)
@@ -18,11 +19,11 @@ export default function ContactForm () {
 
   const whatsBaseLink = 'https://api.whatsapp.com/send/?phone='
 
-  const { control, handleSubmit } = useForm<IContact | FieldValues>({
+  const { control, handleSubmit, formState: { errors, isSubmitted } } = useForm<IContact | FieldValues>({
     defaultValues: async () => {
-      return await BASE_URL.get<IContact>('/contact-link')
+      return await BASE_URL_V2.get<IContact>('/get-contact-phone')
       .then(({data}) => ({
-        link: PhoneMask(data.link.replace(whatsBaseLink, '')), 
+        ...data
       }))
       .catch(() => setAddForm(true))
       .finally(() => {
@@ -32,9 +33,7 @@ export default function ContactForm () {
   })
 
   const onSubmit = useCallback((data: IContact | FieldValues) => {
-    setLoading(true)
-
-    const clearLink = data.link.replace(/[^0-9]/g, '')
+    const clearLink = data.phoneNumber.replace(/[^0-9]/g, '')
 
     toast.info('Adicionando inforções, aguarde', {
       position: "top-right",
@@ -42,8 +41,10 @@ export default function ContactForm () {
       autoClose: false,
     });
     if(addForm) {
-      BASE_URL.post('/add-contact-link', {
-        link: `${whatsBaseLink}${clearLink}`
+      BASE_URL_V2.post('/register-contact-phone', {
+        ...data,
+        phoneNumber: clearLink,
+        link: `${whatsBaseLink}${clearLink}`,
       })
         .then(() => {
           toast.dismiss()
@@ -66,7 +67,9 @@ export default function ContactForm () {
           setLoading(false)
         })
       } else {
-        BASE_URL.put('/edit-contact-link', {
+        BASE_URL_V2.put(`/edit-contact-phone/${data.id}`, {
+          ...data,
+          phoneNumber: clearLink,
           link: `${whatsBaseLink}${clearLink}`
         })
           .then(() => {
@@ -94,7 +97,22 @@ export default function ContactForm () {
   return (
     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
       <Controller
-        name="link"
+        name="image"
+        control={control}
+        render={({field: {value, onChange}}) => (
+          <InputImage
+            errors={errors.image?.message?.toString()}
+            src={value}
+            isSubmitted={isSubmitted}
+            onChange={({src}) => {
+              onChange(src)
+            }}
+          />
+        )}
+      />
+
+      <Controller
+        name="phoneNumber"
         control={control}
         rules={{
           required: {
@@ -105,8 +123,8 @@ export default function ContactForm () {
         render={({field: { onChange, value }, fieldState: { error }}) => (
           <TextField
             label='Número do whatsapp'
-            onChange={(e) => onChange(PhoneMask(e.target.value.slice(0, 15)))}
-            value={value}
+            onChange={(e) => onChange(PhoneMask(e.target.value))}
+            value={PhoneMask(value || '')}
             error={!!error}
             className={styles.inputText}
             helperText={error?.message}

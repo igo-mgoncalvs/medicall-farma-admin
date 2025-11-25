@@ -158,14 +158,18 @@ export default function AboutUsTeam () {
         </div>
 
         <div className={styles.inputImage}>
-          <InputImage
-            imageUrl={imageUrl}
-            imageId={imageId}
-            isSubmitted={isSubmitted}
-            setValue={({link, file_name}) => {
-              setValue('image', link)
-              setValue('imageId', file_name)
-            }}    
+          <Controller
+            name='iamge'
+            control={control}
+            render={({field: {value, onChange}}) => (
+              <InputImage
+                src={value}
+                isSubmitted={isSubmitted}
+                onChange={({src}) => {
+                  onChange(src)
+                }}    
+              />
+            )}
           />
         </div>
       </div>

@@ -12,13 +12,14 @@ import BASE_URL from '@/lib/axios'
 import InputFile from '@/components/inputFile'
 
 import styles from './styles.module.css'
+import BASE_URL_V2 from '@/lib/axios_v2'
 
 export default function CatalogForm () {
   const [enableEdit, setEnableEdit] = useState<boolean>(false)
 
   const { watch, setValue, formState: { errors, isSubmitted } } = useForm<ICatalog | FieldValues>({
     defaultValues: async () => {
-      return await BASE_URL.get<IContact>('/catalog')
+      return await BASE_URL_V2.get<IContact>('/catalog')
       .then(({data}) => data)
       .finally(() => {
         toast.dismiss()
@@ -55,9 +56,9 @@ export default function CatalogForm () {
         imageUrl={link}
         enableEdit={enableEdit}
         isSubmitted={isSubmitted}
-        setValue={({link, file_name}) => {
+        setValue={({link, fileName}) => {
           setValue('link', link)
-          setValue('fileName', file_name)
+          setValue('fileName', fileName)
           setEnableEdit(false)
         }}
       />

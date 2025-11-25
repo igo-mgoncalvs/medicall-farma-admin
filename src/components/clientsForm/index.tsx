@@ -1,36 +1,31 @@
 'use client'
 
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useState } from "react"
 import { Controller, useForm } from "react-hook-form"
-import { FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material"
+import { TextField } from "@mui/material"
 import LoadingButton from '@mui/lab/LoadingButton';
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 
-import { IClient, ISupplier } from "@/utils/interfaces"
-import BASE_URL from "@/lib/axios";
+import { IClient } from "@/utils/interfaces"
 
 import InputImage from "../inputImage"
 
 import styles from './styles.module.css'
+import BASE_URL_V2 from "@/lib/axios_v2";
 
 export default function ClientsForm ({ id }: { id?: string }) {
   const [loading, setLoading] = useState<boolean>(false)
-  const [index, setIndex] = useState<number[]>([])
 
   const {
     control,
     handleSubmit,
-    watch,
-    setValue,
-    setError,
-    clearErrors,
     formState: {
       isSubmitted,
       errors
     }} = useForm<IClient>({
       defaultValues: async () => {
-        return await BASE_URL.get<IClient>(`/find-client/${id}`)
+        return await BASE_URL_V2.get<IClient>(`/find-client/${id}`)
           .then(({data}) => ({
             ...data,
           }))
@@ -40,45 +35,15 @@ export default function ClientsForm ({ id }: { id?: string }) {
       }, 
     })
 
-  const imageUrl = watch('image')
-  const imageId = watch('imageId')
 
   const navigation = useRouter()
-
-  useEffect(() => {
-    const getData = () => {
-      BASE_URL.get<IClient[]>('/clients')
-        .then(({data}) => {
-          const list: number[] = []
-  
-          data.forEach((item) => {
-            list.push(item.index)
-          })
-  
-          setIndex(list)
-        })
-    }
-  
-    getData()
-  }, [])
-
-  useEffect(() => {
-    if(!imageUrl) {
-      setError('image', {
-        message: 'Esse campo é necessario'
-      })
-    } else {
-      clearErrors('image')
-    }
-  }, [imageUrl])
 
   const onSubmit = useCallback((data: IClient) => {
     setLoading(true)
 
     if(!id) {
-      BASE_URL.post('/add-client', {
+      BASE_URL_V2.post('/register-client', {
           ...data,
-          index: index.length
       })
         .then(() => {
           toast.dismiss()
@@ -101,9 +66,8 @@ export default function ClientsForm ({ id }: { id?: string }) {
           setLoading(false)
         })
     } else {
-      BASE_URL.put(`/edit-client/${id}`, {
+      BASE_URL_V2.put(`/edit-client/${id}`, {
           ...data,
-          index: Number(data.index)
       })
         .then(() => {
           toast.dismiss()
@@ -126,22 +90,26 @@ export default function ClientsForm ({ id }: { id?: string }) {
           setLoading(false)
         })
     }
-  }, [id, index])
+  }, [id])
 
   return (
     <form
       className={styles.form}
       onSubmit={handleSubmit(onSubmit)}
     >
-      <InputImage
-        imageUrl={imageUrl}
-        isSubmitted={isSubmitted}
-        errors={errors.image?.message}
-        imageId={imageId}
-        setValue={({link, file_name}) => {
-          setValue('image', link)
-          setValue('imageId', file_name)
-        }}
+      <Controller
+        name="image"
+        control={control}
+        render={({field: {value, onChange}}) => (
+          <InputImage
+            src={value}
+            isSubmitted={isSubmitted}
+            errors={errors.image?.message}
+            onChange={({src}) => {
+              onChange(src)
+            }}
+          />
+        )}
       />
 
       <Controller

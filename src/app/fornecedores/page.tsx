@@ -14,6 +14,7 @@ import TableActions from '@/components/tableComponent/actions';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from "react-toastify";
 import TableReorderingComponent from '@/components/tableOrderingComponent';
+import BASE_URL_V2 from '@/lib/axios_v2';
 
 interface ISuppliers {
   id: string
@@ -27,7 +28,7 @@ export default function Fornecedores () {
   const [searchRows, setSearchRows] = useState<ISuppliers[]>([])
 
   const getData = async () => {
-    return await BASE_URL.get<ISuppliers[]>('/suppliers')
+    return await BASE_URL_V2.get<ISuppliers[]>('/get-suppliers')
       .then(({data}) => {
         setRows(data)
         setSearchRows(data)
@@ -45,7 +46,7 @@ export default function Fornecedores () {
       autoClose: false,
     });
   
-    BASE_URL.delete(`/remove-supplier/${id}`)
+    BASE_URL_V2.delete(`/delete-supplier/${id}`)
       .then(() => {
         toast.dismiss()
         toast.success('Fornecedor excluido com sucesso!', {
@@ -146,11 +147,9 @@ export default function Fornecedores () {
         <div
           className={styles.table}
         >
-          <TableReorderingComponent
+          <TableComponent
             columns={columns}
             rows={searchRows}
-            getData={getData}
-            editRoute='/reorder-suppliers'
           />
         </div>
       )}

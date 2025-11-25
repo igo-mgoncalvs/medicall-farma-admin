@@ -1,20 +1,19 @@
 'use client'
 
 import { useForm, Controller } from 'react-hook-form'
-import { encode } from 'base-64';
 import ImageIcon from '@mui/icons-material/Image';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { toast } from "react-toastify";
-import { FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField } from '@mui/material'
+import { Checkbox, FormControl, FormControlLabel, FormHelperText, InputLabel, MenuItem, Select, TextField } from '@mui/material'
 import { ChangeEvent, useCallback, useEffect, useState } from 'react'
-import BASE_URL from '@/lib/axios'
-import { IGroup, IInterfaceProducts } from '@/utils/interfaces'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation';
 
 import styles from './styles.module.css'
+import { ICategories } from '@/utils/interfacesNew';
+import BASE_URL_V2 from '@/lib/axios_v2';
 
-interface IProductForm {
+interface IProductFormOld {
   id: string 
   productsGroupsId: string 
   image: string 
@@ -29,78 +28,79 @@ interface IProductForm {
   index: number
 }
 
+interface ISizes {
+  id: string
+  key: number
+  src: string | ArrayBuffer | null
+  alt: string
+  isMain: boolean
+  size: string
+}
+
+interface IProductForm {
+  id: string
+  categoriesId: string
+  name: string
+  isTop: boolean,
+  link: string
+  shortDescription: string
+  description: string
+  contactLink: string
+  groupName: string
+  keyWords: string[]
+  sizes: ISizes[]
+}
+
 interface IPostImage {
   link: string
   file_name: string
 }
 
 export default function ProductForm ({ id }: { id?: string }) {
-  const [groups, setGroups] = useState<IGroup[]>([])
+  const [categories, setCategories] = useState<ICategories[]>([])
   const [loading, setLoading] = useState<boolean>(false)
-  const [index, setIndex] = useState<number[]>([])
-  const [groupIdOld, setGoupIdOld] = useState<string>('')
-
+  const [hasSizes, setHasSizes] = useState<boolean>(false)
+  
+  const [selectedCategory, setSelectedCategory] = useState<ICategories>()
+  const [base64, setBase64] = useState<ISizes[]>([])
+  const sizesLength = [0, 1, 2]
+  
   const whatsappUrl = 'https://api.whatsapp.com/send/?phone=+5511930209934&text='
+
+  useEffect(() => {
+    BASE_URL_V2.get<ICategories[]>('/list-categories')
+      .then(({ data }) => {
+        setCategories(data)
+      })
+  }, [])
 
   const {
     control,
     handleSubmit,
     setValue,
     watch,
-    setError,
     clearErrors,
     formState: { 
       errors,
       isSubmitted
     }} = useForm<IProductForm>({
     defaultValues: async () => {
-      return await BASE_URL.get<IProductForm>(`/find-product/${id}`)
+      return await BASE_URL_V2.get<IProductForm>(`/find-product/${id}`)
         .then(({data}) => {
-          setGoupIdOld(data.productsGroupsId)
-          
           return ({
-          ...data, 
-          whatsapp: decodeURI(data?.whatsapp.replace(whatsappUrl, '')),
-        })})
+            ...data,
+            contactLink: decodeURI(data.contactLink.replace(whatsappUrl, '')),
+          })})
         .finally(() => {
           toast.dismiss()
         })
     }, 
   })
 
-  const imageUrl = watch('image')
-  const imageId = watch('imageId')
+  const sizes = watch('sizes') || []
   const idEdit = watch('id')
-  const productsGroupsId = watch('productsGroupsId')
-
-  const errorMessageImage = errors.image && isSubmitted
 
   const navigation = useRouter()
-
-  useEffect(() => {
-    BASE_URL.get<IGroup[]>('/groups')
-      .then(({ data }) => {
-        setGroups(data)
-      })
-  }, [])
-
-  useEffect(() => {
-    BASE_URL.get<IInterfaceProducts[]>('/products')
-      .then(({ data }) => {
-        const list: number[] = []
-
-        const findGroup = data.find((item) => item.id === productsGroupsId)
-
-        if(findGroup) {
-          findGroup.products_list.forEach((item) => {
-            list.push(item.index)
-          })
-  
-          setIndex(list)
-        }
-      })
-  }, [productsGroupsId])
-
 
   useEffect(() => {
     if(id) {
@@ -113,23 +113,13 @@ export default function ProductForm ({ id }: { id?: string }) {
   }, [id])
 
   useEffect(() => {
-    if(!imageUrl) {
-      setError('image', {
-        message: 'Esse campo é necessario'
-      })
-    } else {
-      clearErrors('image')
-    }
-  }, [imageUrl])
+    base64.map((item) => {
+      setValue(`sizes.${item.key}.src`, item.src)
+    })
+  }, [base64])
 
-  const handleInputFile = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+  const handleInputFile = useCallback((event: ChangeEvent<HTMLInputElement>, key: number) => {
     const { files } = event.currentTarget
-
-    toast.info('Publicando imagem, aguarde', {
-      position: "top-right",
-      pauseOnHover: false,
-      autoClose: false,
-    });
 
     if(!files) {
       return ""
@@ -137,46 +127,44 @@ export default function ProductForm ({ id }: { id?: string }) {
 
     const selectedFile = files[0]
 
-    const data = new FormData()
+    const reader = new FileReader()
 
-    data.append('file', selectedFile)
-
-    BASE_URL.post<IPostImage>('/upload-image', data)
-      .then(({data: { link, file_name }}) => {
-        toast.dismiss()
-        toast.success('Imagem publicada com sucesso!', {
-          position: "top-right",
-          pauseOnHover: false,
-          autoClose: 5000
-        });
-        setValue('image', link)
-        setValue('imageId', file_name)
-      })
-      .catch((error) => {
-        toast.dismiss()
-        toast.error('Erro ao publicar a imagem', {
-          position: "top-right",
-          pauseOnHover: false,
-          autoClose: 5000
-        });
-      })
-
-    if(imageUrl) {
-      BASE_URL.delete<IPostImage>(`/delete-image/${imageId}`)
+    reader.onloadend = () => {
+      setBase64([
+        ...base64,
+        {
+          id: '',
+          key,
+          src: reader.result,
+          alt: '',
+          isMain: false,
+          size: 'teste'
+        }
+      ])
     }
 
-  }, [imageUrl, setValue])
+    reader.readAsDataURL(selectedFile)
 
+    if(key === 0){
+      setValue('sizes.0.isMain', true)
+    } else {
+      setValue(`sizes.${key}.isMain`, false)
+    }
+
+  }, [setValue, base64])
+  
   const onSubmit = useCallback((data: IProductForm) => {
-    setLoading(true)
+
+    const sizesEdit = data.sizes.filter((s) => s.src)
 
     if(!id) {
-      BASE_URL.post('/add-product', {
-          ...data,
-          route: encode(data.route).replaceAll('/', ''),
-          whatsapp: `${whatsappUrl}${encodeURI(data.whatsapp)}`,
-          index: index.length,
-          subTitle: data.subTitle || ''
+      BASE_URL_V2.post('/register-product', {
+        ...data,
+        groupName: selectedCategory?.Gruop.groupName,
+        contactLink: `${whatsappUrl}${encodeURI(data.contactLink)}`,
+        link: `${selectedCategory?.categoryLink}/${data.name.replace(' ', '-')}`,
+        isTop: false,
+        sizes: sizesEdit
       })
         .then(() => {
           toast.dismiss()
@@ -199,14 +187,12 @@ export default function ProductForm ({ id }: { id?: string }) {
           setLoading(false)
         })
     } else {
-      const changeIndex = groupIdOld !== data.productsGroupsId ? index.length : data.index
-
-      BASE_URL.put(`/edit-product/${idEdit}`, {
-          ...data,
-          route: encode(data.route).replaceAll('/', ''),
-          whatsapp: `${whatsappUrl}${encodeURI(data.whatsapp)}`,
-          index: changeIndex,
-          subTitle: data.subTitle || ''
+      BASE_URL_V2.put(`/edit-product/${idEdit}`, {
+        ...data,
+        groupName: selectedCategory?.Gruop.groupName || data.groupName,
+        contactLink: `${whatsappUrl}${encodeURI(data.contactLink)}`,
+        link: `${categories.find((item) => item.id === data.categoriesId)?.categoryLink}/${data.name.replace(' ', '-')}`,
+        sizes: sizesEdit
       })
         .then(() => {
           toast.dismiss()
@@ -229,7 +215,11 @@ export default function ProductForm ({ id }: { id?: string }) {
           setLoading(false)
         })
     }
-  }, [idEdit, id, index, groupIdOld])
+  }, [idEdit, id, selectedCategory, categories])
+
+  const handleCheckbox = useCallback(() => {
+    setHasSizes(!hasSizes)
+  }, [hasSizes])
 
   return (
     <form
@@ -237,50 +227,90 @@ export default function ProductForm ({ id }: { id?: string }) {
       onSubmit={handleSubmit(onSubmit)}
     >
       <div className={styles.forms_collumns}>
-        <FormControl
-          error={errors.image && isSubmitted}
-        >
-          <label
-            htmlFor="video"
-            className={`${styles.imageLabel} ${errorMessageImage && styles.imageError}`}
+        {sizesLength.map((size, key) => (
+          <div
+            className={styles.sizesContainer}
           >
-            {imageUrl ? (
-              <Image
-                priority
-                width={100}
-                height={100}
-                src={imageUrl}
-                alt="Logo da Imgor branco"
-              />
-            ): (
-              <div
-                className={`${styles.icon_container} ${errorMessageImage && styles.icon_container_error}`}
+            <FormControl
+              error={(!sizes[size]?.src && size === 0) && isSubmitted}
+            >
+              <label
+                htmlFor={`image-${size}`}
+                className={`${styles.imageLabel} ${(!sizes[size]?.src && size === 0)  && styles.imageError}`}
               >
-                <ImageIcon
-                  className={`${styles.icon} ${errorMessageImage && styles.icon_error}`}
-                />
-                Selecione a imagem do produto
-              </div>
+                {(sizes.length > 0 && sizes[size]?.src) ? (
+                  <Image
+                    priority
+                    width={100}
+                    height={100}
+                    src={sizes[size]?.src?.toString() || ''}
+                    alt="Logo da Imgor branco"
+                  />
+                ): (
+                  <div
+                    className={`${styles.icon_container} ${(!sizes[size]?.src && size === 0)  && styles.icon_container_error}`}
+                  >
+                    <ImageIcon
+                      className={`${styles.icon} ${(!sizes[size]?.src && size === 0)  && styles.icon_error}`}
+                    />
+                    {`Selecione a imagem do produto${key === 0 ? ' principal': ''}`}
+                  </div>
+                )}
+              </label>
+              
+              <input
+                type="file"
+                id={`image-${size}`}
+                accept="image/*"
+                className={styles.inputFile}
+                onChange={(event) => handleInputFile(event, key)}
+              />
+
+              {errors.sizes && (
+                <FormHelperText>
+                  {errors.sizes[size]?.size?.message}
+                </FormHelperText>
+              )}
+            </FormControl>
+
+            {size === 0 && (
+              <FormControlLabel control={<Checkbox onClick={handleCheckbox} />} label="Possui tamanhos?" />
             )}
-          </label>
-          
-          <input
-            type="file"
-            id='video'
-            accept="image/*"
-            className={styles.inputFile}
-            onChange={handleInputFile}
-          />
 
-          {errorMessageImage && (
-            <FormHelperText>
-              {errors.image?.message}
-            </FormHelperText>
-          )}
-        </FormControl>
+            <Controller
+              name={`sizes.${size}.size`}
+              control={control}
+              rules={{
+                required: {
+                  value: hasSizes && !!sizes[size]?.src,
+                  message: 'Esse campo é necessario'
+                }
+              }}
+              render={({ field: { onChange, value }, fieldState: { error } }) => (
+                <TextField
+                  label={`Digite o tamanho do produto ${key === 0 ? 'principal': ''}`}
+                  value={value}
+                  error={!!error}
+                  helperText={error?.message}
+                  aria-errormessage='teste'
+                  defaultValue={id ? ' ': ''}
+                  onChange={(e) => {
+                    onChange(e)
+                    setValue(`sizes.${size}.alt`, e.target.value)
+                  }}
+                />
+              )}
+            />
+          </div>
+        ))}
+      </div>
 
+
+      <div
+        className={styles.forms_collumns}
+      >
         <Controller
-          name='productsGroupsId'
+          name='categoriesId'
           control={control}
           rules={{
             required: {
@@ -292,25 +322,28 @@ export default function ProductForm ({ id }: { id?: string }) {
             <FormControl
               error={!!error}
             >
-              <InputLabel id="demo-simple-select-helper-label">Selecione o grupo</InputLabel>
+              <InputLabel id="demo-simple-select-helper-label">Selecione a categoria</InputLabel>
               <Select
                 labelId="demo-simple-select-helper-label"
                 id="demo-simple-select-helper"
-                label="Selecione o grupo"
-                onChange={onChange}
-                value={groups?.length > 0 ? value : ''}
+                label="Selecione a categoria"
+                onChange={(event) => {
+                  onChange(event)
+                  setSelectedCategory(categories.find((item) => item.id === event.target.value))
+                }}
+                value={categories?.length > 0 ? value : ''}
               >
                 <MenuItem
                   value={''}
                 >
-                  Selecione o grupo
+                  Selecione a categoria
                 </MenuItem>
-                {groups?.map((item) => (
+                {categories?.map((item) => (
                   <MenuItem
                     key={item.id}
                     value={item.id}
                   >
-                    {item.group_name}
+                    {`${item.Gruop.groupName} | ${item.categoryName}`}
                   </MenuItem>
                 ))}
               </Select>
@@ -333,40 +366,25 @@ export default function ProductForm ({ id }: { id?: string }) {
             }
           }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
-              <TextField
-                label='Nome do produto'
-                value={value}
-                error={!!error}
-                helperText={error?.message}
-                aria-errormessage='teste'
-                defaultValue={id ? ' ': ''}
-                onChange={(e) => {
-                  onChange(e)
-                  setValue("whatsapp", `Olá gostaria de informações sobre o produto ${e.target.value || ''}`)
-                  setValue("route", e.target.value.replace(' ', '-'))
-                  clearErrors('whatsapp')
-                }}
-              />
+            <TextField
+              label='Nome do produto'
+              value={value}
+              error={!!error}
+              helperText={error?.message}
+              aria-errormessage='teste'
+              defaultValue={id ? ' ': ''}
+              onChange={(e) => {
+                onChange(e)
+                setValue("contactLink", `Olá gostaria de informações sobre o produto ${e.target.value || ''}`)
+                setValue("link", `${selectedCategory?.categoryLink}/${e.target.value.replace(' ', '-')}`)
+                clearErrors('contactLink')
+              }}
+            />
           )}
         />
 
         <Controller
-          name='subTitle'
-          control={control}
-          render={({ field: { onChange, value }}) => (
-              <TextField
-                label='Subtítulo'
-                value={value}
-                defaultValue={id ? ' ': ''}
-                onChange={(e) => {
-                  onChange(e)
-                }}
-              />
-          )}
-        />
-
-        <Controller
-          name='summary'
+          name='keyWords'
           control={control}
           rules={{
             required: {
@@ -376,22 +394,40 @@ export default function ProductForm ({ id }: { id?: string }) {
           }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <TextField
-              label='Resumo'
-              rows={3}
+              label='Palavras-chaves separadas por ;'
               value={value}
               error={!!error}
               helperText={error?.message}
+              aria-errormessage='teste'
               defaultValue={id ? ' ': ''}
-              multiline
               onChange={onChange}
             />
           )}
         />
-      </div>
 
-      <div
-        className={styles.forms_collumns}
-      >
+        <Controller
+          name='shortDescription'
+          control={control}
+          rules={{
+            required: {
+              value: true,
+              message: 'Esse campo é necessario'
+            }
+          }}
+          render={({ field: { onChange, value }, fieldState: { error }}) => (
+            <TextField
+              label='Subtítulo'
+              value={value}
+              error={!!error}
+              helperText={error?.message}
+              defaultValue={id ? ' ': ''}
+              onChange={(e) => {
+                onChange(e)
+              }}
+            />
+          )}
+        />
+
         <Controller
           name='description'
           control={control}
@@ -416,7 +452,7 @@ export default function ProductForm ({ id }: { id?: string }) {
         />
 
         <Controller
-          name='whatsapp'
+          name='contactLink'
           control={control}
           rules={{
             required: {
@@ -424,7 +460,8 @@ export default function ProductForm ({ id }: { id?: string }) {
               message: 'Esse campo é necessario'
             }
           }}
-          render={({ field: { onChange, value }, fieldState: { error } }) => (
+          render={({ field: { onChange, value }, fieldState: { error } }) => {
+            return (
             <TextField
               label='Digite a mensagem de contato pelo WhatsApp'
               rows={4}
@@ -433,26 +470,11 @@ export default function ProductForm ({ id }: { id?: string }) {
               error={!!error}
               helperText={error?.message}
               multiline
-              onChange={onChange}
+              onChange={(event) => onChange(event.target.value.replace(whatsappUrl, ''))}
             />
-          )}
+          )}}
         />
 
-        <Controller
-          name='link'
-          control={control}
-          render={({ field: { onChange, value }, fieldState: { error } }) => (
-            <TextField
-              value={value}
-              error={!!error}
-              helperText={error?.message}
-              defaultValue={id ? ' ': ''}
-              label='Link do catalogo'
-              onChange={onChange}
-            />
-          )}
-        />
-        
         <LoadingButton
           variant='contained'
           className={styles.button}

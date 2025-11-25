@@ -67,6 +67,7 @@
 .list_item {
   border: 1px solid rgb(167, 167, 167);
   border-radius: 10px;
+  margin: 20px;
 }
 
 .table {
@@ -81,4 +82,8 @@
 .cell_aling {
   height: 100%;
   width: 100%;
+}
+
+.grupName {
+  text-transform: capitalize;
 }

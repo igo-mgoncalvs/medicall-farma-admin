@@ -8,3 +8,19 @@
   flex-direction: column;
   gap: 20px
 }
+
+.gridBanners {
+  display: flex;
+  flex-direction: column;
+}
+
+.gridBannersFixed {
+  display: flex;
+  flex: 1;
+  gap: 16px;
+}
+
+.gridBannersRow {
+  display: flex;
+  gap: 16px;
+}

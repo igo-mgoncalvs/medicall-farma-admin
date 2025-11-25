@@ -1,0 +1,37 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.form {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 40px;
+  gap: 80px;
+  margin-bottom: 15px;
+}
+
+.inputsText_container {
+  display: flex;
+  justify-content: space-between;
+  flex: 1;
+  gap: 20px
+}
+
+.spaceHorizontal {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex: 1;
+}
+
+.inputText {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.button {
+  align-self: flex-start;
+}

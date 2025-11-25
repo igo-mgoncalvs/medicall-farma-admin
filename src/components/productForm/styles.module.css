@@ -12,6 +12,12 @@
   flex-direction: column;
 }
 
+.sizesContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
 .imageLabel {
   margin-bottom: 8px;
   border: 0.5px dashed #27272a;
