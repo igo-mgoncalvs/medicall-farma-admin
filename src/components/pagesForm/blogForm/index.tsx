@@ -1,9 +1,9 @@
 'use client'
 
 import Editor from "@/components/editor";
-import { IBlogs, IUsers } from "@/utils/interfaces";
-import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
-import { Controller, useFieldArray, useForm } from "react-hook-form";
+import { IBlogs } from "@/utils/interfaces";
+import { FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
+import { Controller, useForm } from "react-hook-form";
 import styles from './styles.module.css'
 import InputImage from "@/components/inputImage";
 import BASE_URL_V2 from "@/lib/axios_v2";
@@ -11,7 +11,6 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { GridColDef, GridDeleteIcon } from "@mui/x-data-grid";
-import TableActions from "@/components/tableComponent/actions";
 import TableComponent from "@/components/tableComponent";
 import { LoadingButton } from "@mui/lab";
 
@@ -30,11 +29,6 @@ export default function BlogForm ({
     defaultValues
   })
 
-  const { append, remove, fields } = useFieldArray({
-    control,
-    name: 'relatedBlogs'
-  })
-
   const navigation = useRouter()
 
   const getBlog = (id: string) => {
@@ -50,7 +44,7 @@ export default function BlogForm ({
       setRelatedBlogs(defaultValues.relatedBlogs)
       setManualId(false)
     }
-  }, [defaultValues, fields, manualAdd])
+  }, [defaultValues, manualAdd])
 
   useEffect(() => {
     BASE_URL_V2.get<IBlogs[]>('/blogs')
@@ -159,7 +153,7 @@ export default function BlogForm ({
           })
         })
     }
-  }, [fields])
+  }, [])
 
   const UsersColumns: GridColDef[] = [
       {
@@ -301,7 +295,7 @@ export default function BlogForm ({
             id="demo-simple-select-helper"
             label="Selecione um produto já existente"
             onChange={(event) => {
-              if(!fields.find((item) => item.blogId === event.target.value)) {
+              if(!similarProducts.find((item) => item.id === event.target.value)) {
                 const product = similarProducts.find((item) => item.id === event.target.value)
 
                 setValue('similarProducts.0', {

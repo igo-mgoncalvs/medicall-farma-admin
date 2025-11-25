@@ -1,5 +1,3 @@
-'use client'
-
 import BlogForm from "@/components/pagesForm/blogForm";
 import styles from './styles.module.css'
 
