@@ -10,6 +10,7 @@
     "deploy": "firebase deploy"
   },
   "dependencies": {
+    "@ckeditor/ckeditor5-react": "^11.0.0",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@hello-pangea/dnd": "^16.6.0",
@@ -21,6 +22,7 @@
     "@mui/x-license": "^7.2.1",
     "axios": "^1.6.8",
     "base-64": "^1.0.0",
+    "ckeditor5": "^47.2.0",
     "firebase": "^10.11.1",
     "js-cookie": "^3.0.5",
     "jwt-decode": "^4.0.0",

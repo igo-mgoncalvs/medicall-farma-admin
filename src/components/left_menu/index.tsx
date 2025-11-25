@@ -130,9 +130,28 @@ export default function LeftMenu() {
           route: '/usuarios'
         }
       ]
+    },
+    {
+      page_name: 'Blog',
+      page: '/blogs/post',
+      activeMenu: ['blogs'], 
+      menus: [
+        {
+          id: 0,
+          title: 'Posts',
+          activePage: ['blogs/post', 'blogs/post/novo-blog', 'blogs/post/edtar-blog'],
+          route: '/blogs/post'
+        },
+        {
+          id: 1,
+          title: 'Medicall Cast',
+          activePage: ['blogs/medicall-cast', 'blogs/medicall-cast'],
+          route: '/blogs/medicall-cast'
+        },
+      ]
     }
   ]
-  
+
   return (
     <div className={styles.menu_container}>
       <h2>{types.find(e => e.activeMenu.find((page) => routeEdit.startsWith(page)))?.page_name}</h2>
