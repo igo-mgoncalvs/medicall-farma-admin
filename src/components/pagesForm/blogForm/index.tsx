@@ -23,9 +23,10 @@ export default function BlogForm ({
   const [manualAdd, setManualId] = useState<boolean>(true)
   const [loading, setLoading] = useState<boolean>(false)
   const [blogs, setBlogs] = useState<IBlogs[]>([])
+  const [relatedBlogs, setRelatedBlogs] = useState<IBlogs['relatedBlogs']>([])
   const [similarProducts, setSimilarProducts] = useState<IBlogs['similarProducts']>([])
 
-  const { control, setValue, handleSubmit, formState: { isSubmitted } } =  useForm<IBlogs>({
+  const { control, setValue, reset, handleSubmit, formState: { isSubmitted } } =  useForm<IBlogs>({
     defaultValues
   })
 
@@ -36,9 +37,17 @@ export default function BlogForm ({
 
   const navigation = useRouter()
 
+  const getBlog = (id: string) => {
+    BASE_URL_V2.get<IBlogs>(`/blogs/${id}`)
+      .then(({data}) => {
+        reset(data)
+        setRelatedBlogs(data.relatedBlogs)
+      })
+  }
+
   useEffect(() => {
-    if(defaultValues?.relatedBlogs.length && fields.length === 0 && manualAdd) {
-      append(defaultValues.relatedBlogs)
+    if(defaultValues?.relatedBlogs.length) {
+      setRelatedBlogs(defaultValues.relatedBlogs)
       setManualId(false)
     }
   }, [defaultValues, fields, manualAdd])
@@ -58,6 +67,9 @@ export default function BlogForm ({
   const onSubmit = useCallback(async (data: IBlogs) => {
     setLoading(true)
 
+    const url = new URL(data.similarProducts[0].productLink)
+    const searchParams = url.searchParams.get('v')
+
     if(!defaultValues) {
       BASE_URL_V2.post('/blog-image', {
          alt: data.title,
@@ -69,11 +81,10 @@ export default function BlogForm ({
             resume: data.resume,
             content: data.content,
             imageId: reponse.data.id,
-            relatedBlogs: data.relatedBlogs.map((item) => ({
-              title: item.title,
-              relatedId: item.blogRelatedId
-            })),
-            similarProducts: data.similarProducts?.[0] || undefined
+            similarProducts: data.similarProducts.map((product) => ({
+              ...product,
+              productLink: searchParams ? `https://www.youtube.com/embed/${searchParams}` : product.productLink
+            })) || undefined
            })
              .then(() => {
                 toast.success('Blog cadastrado com sucesso!')
@@ -124,6 +135,31 @@ export default function BlogForm ({
           })
     }
   }, [defaultValues])
+
+  const handleAddRelated = useCallback((id: unknown) => {
+    if(defaultValues) {
+      BASE_URL_V2.post('blog-related', {
+        blogId: defaultValues.id,
+        blogRelatedId: id,
+        blogRelatedTitle: blogs.find((item) => item.id === id)?.title || ''
+      })
+        .then(() => {
+          getBlog(defaultValues.id)
+        })
+    }
+  }, [defaultValues])
+
+  const handleDelete = useCallback((id: string) => {
+    if(defaultValues) {
+      BASE_URL_V2.delete(`/blog-related/${id}`)
+        .then(() => {
+          getBlog(defaultValues.id)
+          toast.success('Relacionamento deletado com sucesso!', {
+            pauseOnFocusLoss: false
+          })
+        })
+    }
+  }, [fields])
 
   const UsersColumns: GridColDef[] = [
       {
@@ -213,48 +249,47 @@ export default function BlogForm ({
         )}
       />
 
-      <div className={styles.reletad_blogs}>
-        <h3>Blogs Relacionados</h3>
+      {defaultValues?.id && (
+        <div className={styles.reletad_blogs}>
+          <h3>Blogs Relacionados</h3>
 
-        <FormControl>
-          <InputLabel id="demo-simple-select-helper-label">Selecione um blog para adicionar a lista</InputLabel>
-          <Select
-            labelId="demo-simple-select-helper-label"
-            id="demo-simple-select-helper"
-            label="Selecione um blog para adicionar a lista"
-            onChange={(event) => {
-              if(!fields.find((item) => item.blogId === event.target.value)) {
-                append({
-                  title: blogs.find((item) => item.id === event.target.value)?.title || '',
-                  blogRelatedId: event.target.value as string,
-                })
-              }
-            }}
-          >
-            {blogs.filter((item) => item.id !== defaultValues?.id)?.map((item) => (
-              <MenuItem
-                key={item.id}
-                value={item.id}
-              >
-                {item.title}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+          <FormControl>
+            <InputLabel id="demo-simple-select-helper-label">Selecione um blog para adicionar a lista</InputLabel>
+            <Select
+              labelId="demo-simple-select-helper-label"
+              id="demo-simple-select-helper"
+              label="Selecione um blog para adicionar a lista"
+              onChange={(event) => {
+                if(!relatedBlogs.find((item) => item.blogId === event.target.value)) {
+                  handleAddRelated(event.target.value)
+                }
+              }}
+            >
+              {blogs.filter((item) => item.id !== defaultValues?.id)?.map((item) => (
+                <MenuItem
+                  key={item.id}
+                  value={item.id}
+                >
+                  {item.title}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
 
-        <TableComponent
-          columns={UsersColumns}
-          rows={fields.map((item, index) => ({
-            ...item,
-            action: () => (
-              <GridDeleteIcon
-                onClick={() => remove(index)}
-                className={`${styles.action_icon_delete}`}
-              />
-            )
-          }))}
-        />
-      </div>
+          <TableComponent
+            columns={UsersColumns}
+            rows={relatedBlogs.map((item, index) => ({
+              ...item,
+              action: () => (
+                <GridDeleteIcon
+                  onClick={() => handleDelete(item.id || '')}
+                  className={`${styles.action_icon_delete}`}
+                />
+              )
+            }))}
+          />
+        </div>
+      )}
 
       <div className={styles.reletad_blogs}>
         <h3>Produtos Semelhantes</h3>

@@ -30,7 +30,7 @@ export default function MedicallCastForm ({
     
     if(!defaultValues) {
       BASE_URL_V2.post('/medicall-cast', {
-        link: `https://www.youtube.com/embed/${searchParams}`,
+        link: searchParams ? `https://www.youtube.com/embed/${searchParams}` : data.link,
         title: data.title,
         description: data.description,
       })
