@@ -25,12 +25,11 @@ export default function MedicallCastForm ({
   const onSubmit = useCallback(async (data: IMedicallCast) => {
     setLoading(true)
 
-    const url = new URL(data.link)
-    const searchParams = url.searchParams.get('v')
+    const base = 'https://www.youtube.com/embed/'
     
     if(!defaultValues) {
       BASE_URL_V2.post('/medicall-cast', {
-        link: searchParams ? `https://www.youtube.com/embed/${searchParams}` : data.link,
+        link: `${base}${data.link.replace(base, '')}`,
         title: data.title,
         description: data.description,
       })
@@ -46,7 +45,7 @@ export default function MedicallCastForm ({
         })
       } else {
         BASE_URL_V2.put(`/medicall-cast/${defaultValues.id}`, {
-          link: data.link.includes('embed') ? data.link : `https://www.youtube.com/embed/${searchParams}`,
+          link: `${base}${data.link.replace(base, '')}`,
           title: data.title,
           description: data.description,
         })
@@ -74,7 +73,7 @@ export default function MedicallCastForm ({
         control={control}
         render={({ field: { value, onChange }, fieldState: { error } }) => (
           <TextField
-            label='Link do vídeo'
+            label='Código do vídeo'
             value={value}
             error={!!error}
             helperText={error?.message}

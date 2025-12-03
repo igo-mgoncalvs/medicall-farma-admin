@@ -1,7 +1,7 @@
 {
   "hosting": {
     "source": ".",
-    "site": "medicall-admin-v2",
+    "site": "medicall-admin-hml",
     "ignore": [
       "firebase.json",
       "**/.*",

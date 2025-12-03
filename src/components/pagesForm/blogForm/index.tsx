@@ -61,8 +61,7 @@ export default function BlogForm ({
   const onSubmit = useCallback(async (data: IBlogs) => {
     setLoading(true)
 
-    const url = new URL(data.similarProducts[0].productLink)
-    const searchParams = url.searchParams.get('v')
+    const base = 'https://www.youtube.com/embed/'
 
     if(!defaultValues) {
       BASE_URL_V2.post('/blog-image', {
@@ -77,7 +76,7 @@ export default function BlogForm ({
             imageId: reponse.data.id,
             similarProducts: data.similarProducts.map((product) => ({
               ...product,
-              productLink: searchParams ? `https://www.youtube.com/embed/${searchParams}` : product.productLink
+              productLink: `${base}${data.similarProducts[0].productLink.replace(base, '')}`
             })) || undefined
            })
              .then(() => {
@@ -110,7 +109,10 @@ export default function BlogForm ({
                 title: item.title,
                 relatedId: item.blogRelatedId
               })),
-              similarProducts: data.similarProducts?.[0] || undefined
+              similarProducts: data.similarProducts.map((product) => ({
+                ...product,
+                productLink: `${base}${data.similarProducts[0].productLink.replace(base, '')}`
+              }))[0] || undefined
             })
               .then(() => {
                 toast.success('Blog editado com sucesso!')
@@ -322,7 +324,7 @@ export default function BlogForm ({
           control={control}
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <TextField
-              label='Link do vídeo'
+              label='Código do vídeo'
               value={value}
               defaultValue=' '
               error={!!error}
