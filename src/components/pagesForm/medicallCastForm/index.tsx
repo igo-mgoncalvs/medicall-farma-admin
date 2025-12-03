@@ -22,10 +22,10 @@ export default function MedicallCastForm ({
   })
   const navigation = useRouter()
 
+  const base = 'https://www.youtube.com/embed/'
+
   const onSubmit = useCallback(async (data: IMedicallCast) => {
     setLoading(true)
-
-    const base = 'https://www.youtube.com/embed/'
     
     if(!defaultValues) {
       BASE_URL_V2.post('/medicall-cast', {
@@ -74,7 +74,7 @@ export default function MedicallCastForm ({
         render={({ field: { value, onChange }, fieldState: { error } }) => (
           <TextField
             label='Código do vídeo'
-            value={value}
+            value={value.replace(base, '')}
             error={!!error}
             helperText={error?.message}
             onChange={(e) => {

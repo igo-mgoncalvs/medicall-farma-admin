@@ -58,10 +58,10 @@ export default function BlogForm ({
       })
   }, [])
 
+  const base = 'https://www.youtube.com/embed/'
+
   const onSubmit = useCallback(async (data: IBlogs) => {
     setLoading(true)
-
-    const base = 'https://www.youtube.com/embed/'
 
     if(!defaultValues) {
       BASE_URL_V2.post('/blog-image', {
@@ -325,7 +325,7 @@ export default function BlogForm ({
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <TextField
               label='Código do vídeo'
-              value={value}
+              value={value.replace(base, '')}
               defaultValue=' '
               error={!!error}
               helperText={error?.message}
