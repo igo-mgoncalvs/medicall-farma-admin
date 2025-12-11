@@ -3,8 +3,7 @@
 import { ChangeEvent, useCallback, useEffect, useState } from 'react'
 import Image from "next/image";
 import Link from "next/link";
-import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
-import BASE_URL from "@/lib/axios";
+import { GridColDef, GridDeleteIcon, GridRenderCellParams } from "@mui/x-data-grid";
 import { toast } from "react-toastify";
 import Cookies from 'js-cookie';
 
@@ -13,9 +12,7 @@ import AddIcon from '@/components/icons/add'
 import styles from "./page.module.css";
 import { ExpandLess, ExpandMore, UploadFile, Edit} from '@mui/icons-material';
 import TableActions from '@/components/tableComponent/actions';
-import { Button, Collapse, List, ListItemButton, ListItemText, MenuItem, Select, Switch } from '@mui/material';
-import TableReorderingComponent from '@/components/tableOrderingComponent';
-import { GridRowOrderChangeParams } from '@mui/x-data-grid-pro';
+import { Button, Collapse, List, ListItemButton, ListItemText, Switch } from '@mui/material';
 import { IGroup, IProduct } from '@/utils/interfacesNew';
 import BASE_URL_V2 from '@/lib/axios_v2';
 import TableComponent from '@/components/tableComponent';
@@ -68,6 +65,33 @@ export default function Home() {
       .catch(() => {
         toast.dismiss()
         toast.error('Erro ao excluir o produto', {
+          position: "top-right",
+          pauseOnHover: false,
+          autoClose: 5000
+        });
+      })
+  }
+
+  const handleDeleteCertificate = ({ id } : { id: string }) => {
+    toast.info('Aguarde um instante', {
+      position: "top-right",
+      pauseOnHover: false,
+      autoClose: false,
+    });
+  
+    BASE_URL_V2.delete(`/delete-certificate/${id}`)
+      .then(() => {
+        toast.dismiss()
+        toast.success('Cerificado excluido com sucesso!', {
+          position: "top-right",
+          pauseOnHover: false,
+          autoClose: 5000,
+        });
+        getData()
+      })
+      .catch(() => {
+        toast.dismiss()
+        toast.error('Erro ao excluir o cerificado', {
           position: "top-right",
           pauseOnHover: false,
           autoClose: 5000
@@ -287,7 +311,7 @@ export default function Home() {
       field: 'certificate',
       headerName: 'Certificado',
       headerAlign: 'center',
-      width: 250,
+      width: 300,
       sortable: false,
       disableColumnMenu: true,
       renderCell: ({row}) => (
@@ -309,6 +333,13 @@ export default function Home() {
             onChange={(event) => handleInputFile(event, row.id)}
             className={styles.file_input}
           />
+
+          {row.certificateLink && <div
+            className={styles.trash_icon}
+            onClick={() => handleDeleteCertificate({id: row.id})}
+          >
+            <GridDeleteIcon />
+          </div>}
         </div>
       )
     },
